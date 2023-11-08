@@ -2,6 +2,9 @@
 #define GAMESTATE_H
 
 #include "State.h"
+#include "Entity.h"
+
+#include <queue>
 
 
 
@@ -16,11 +19,13 @@ public:
     // FUNCTIONS
     void handleEvent     (sf::Event) override;
     void updateLogic     ()          override;
-    void renderFrame     ()          override;
+    void renderFrame     (sf::RenderWindow &)          override;
     int getNextState     ()          override;
     void spawnFriendly   ();
 
-
+private:
+    // VARIABLES
+    std::deque<Entity*> friendlyQueue {};
 
 };
 
