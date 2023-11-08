@@ -23,7 +23,7 @@ class Game
     void handleEvents();
     void updateLogic ();
     void renderFrame ();
-    int getNextState ();
+    void getNextState ();
     
 
     private:

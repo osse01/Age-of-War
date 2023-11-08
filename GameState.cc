@@ -39,5 +39,5 @@ void GameState::renderFrame     ()
 
 int GameState::getNextState     ()       
 {
-    return 5;
+    return nextState;
 }

@@ -6,8 +6,8 @@
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-: window { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE },
-    currentState { GAME_STATE }, running { true }
+: window { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE }, event {},
+  running { true }, gameStates {}, currentState { GAME_STATE }
 {
     // Place Possible Game States in States Vector
 
@@ -39,7 +39,7 @@ void Game::startGame ()
         updateLogic();
 
         // Clear Frame
-        window.clear();
+        window.clear(sf::Color(255, 255, 255));
 
         // Render Frame
         renderFrame();
@@ -89,7 +89,7 @@ void Game::renderFrame()
     gameStates.at(currentState)->renderFrame();
 }
 
-int Game::getNextState()
+void Game::getNextState()
 {
-    gameStates.at(currentState)->getNextState();
+    currentState = gameStates.at(currentState)->getNextState();
 }

@@ -13,7 +13,7 @@ class State
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State() = default;
+    State();
     virtual ~State() = default;
 
     // FUNCTIONS
@@ -22,7 +22,9 @@ public:
     virtual void renderFrame () = 0;
     virtual int getNextState () = 0;
 
-
+protected:
+    // Variables
+    int nextState;
 };
 
 #endif
