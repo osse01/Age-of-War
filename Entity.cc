@@ -12,3 +12,12 @@ Entity::render()
 {
     window.draw(rekt)
 }
+
+void Entity::updatePos()
+{
+    if (rekt.getPosition() >= GAME_WIDTH)
+    {
+        xpos = 0;
+    }
+    xpos += MVMSPD;
+}
