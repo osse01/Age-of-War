@@ -18,6 +18,7 @@ public:
     void updateLogic     ()          override;
     void renderFrame     ()          override;
     int getNextState     ()          override;
+    void spawnFriendly   ();
 
 
 
