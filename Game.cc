@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "MenuState.h"
+// #include "MenuState.h"
 #include "GameState.h"
 
 #include <memory>
@@ -10,10 +10,14 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     currentState { GAME_STATE }, running { true }
 {
     // Place Possible Game States in States Vector
-    //std::unique_ptr<MenuState> menuState = std::make_unique<MenuState>();
-    gameStates.push_back(std::make_unique<MenuState>());
 
-    gameStates.push_back(std::make_unique<GameState>());
+    //gameStates.push_back(std::make_unique<MenuState>());
+//
+    //State* ptr = new MenuState;
+    //gameStates.push_back(ptr);
+    
+    State* ptr = new GameState;
+    gameStates.push_back(ptr);
 
 }
 
@@ -31,7 +35,6 @@ void Game::startGame ()
         // Handle Events
         handleEvents();
 
-
         // Update Logic
         updateLogic();
 
@@ -44,7 +47,7 @@ void Game::startGame ()
         // Display Frame
         window.display();
 
-        // Update Current Frame
+        // Update Current State
         getNextState();
 
     }
@@ -63,13 +66,6 @@ void Game::handleEvents()
         {
         case sf::Event::Closed:
             window.close();
-            break;
-
-        case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Escape)
-            {
-                window.close();
-            }
             break;
 
         default:
@@ -91,4 +87,9 @@ void Game::updateLogic()
 void Game::renderFrame()
 {
     gameStates.at(currentState)->renderFrame();
+}
+
+int Game::getNextState()
+{
+    gameStates.at(currentState)->getNextState();
 }

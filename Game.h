@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
+#include <memory>
 
 
 
@@ -32,7 +33,7 @@ class Game
     bool running;
     
     // States
-    std::vector<std::unique_ptr<State>> gameStates;
+    std::vector<State*> gameStates;
     int currentState;
 
 

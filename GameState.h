@@ -10,14 +10,14 @@ class GameState : public State
 {
 public:
     // CONSTRUCTORS
-    GameState();
-    virtual ~GameState() = 0;
+    GameState() = default;
+    ~GameState() = default;
 
     // FUNCTIONS
-    void handleEvent     (sf::Event);
-    void updateLogic     ();
-    void renderFrame     ();
-    int getNextGameState ();
+    void handleEvent     (sf::Event) override;
+    void updateLogic     ()          override;
+    void renderFrame     ()          override;
+    int getNextState     ()          override;
 
 
 };
