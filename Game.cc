@@ -27,6 +27,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 // Start Game
 void Game::startGame ()
 {
+    window.setFramerateLimit(30);
 
     // Main Game Loop, One Iteration is a Frame
     while ( running )

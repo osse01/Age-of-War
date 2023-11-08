@@ -19,10 +19,10 @@ class Game
     virtual ~Game() = default;
 
     //  FUNCTIONS //
-    void startGame   ();
-    void handleEvents();
-    void updateLogic ();
-    void renderFrame (sf::RenderWindow &);
+    void startGame    ();
+    void handleEvents ();
+    void updateLogic  ();
+    void renderFrame  (sf::RenderWindow &);
     void getNextState ();
     
 

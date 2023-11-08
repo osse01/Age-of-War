@@ -1,5 +1,4 @@
 #include "GameState.h"
-#include "Entity.h"
 
 
 
@@ -26,20 +25,23 @@ void GameState::handleEvent(sf::Event event)
 
 
 
-void GameState::updateLogic     ()         
-{
-    
-}
-
-void GameState::renderFrame     (sf::RenderWindow & window)  
+void GameState::updateLogic()         
 {
     for(auto &it: friendlyQueue)
         {
-            it->render();
+            it->updatePos();
         }
 }
 
-int GameState::getNextState     ()       
+void GameState::renderFrame(sf::RenderWindow & window)  
+{
+    for(auto &it: friendlyQueue)
+        {
+            window.draw(it->render());
+        }
+}
+
+int GameState::getNextState()       
 {
     return nextState;
 }

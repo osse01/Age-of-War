@@ -13,15 +13,15 @@ class GameState : public State
 {
 public:
     // CONSTRUCTORS
-    GameState() = default;
-    ~GameState() = default;
-
+    GameState  () = default;
+    ~GameState () = default;
+ 
     // FUNCTIONS
-    void handleEvent     (sf::Event) override;
-    void updateLogic     ()          override;
-    void renderFrame     (sf::RenderWindow &)          override;
-    int getNextState     ()          override;
-    void spawnFriendly   ();
+    void handleEvent   (sf::Event)          override;
+    void updateLogic   ()                   override;
+    void renderFrame   (sf::RenderWindow &) override;
+    int getNextState   ()                   override;
+    void spawnFriendly ();
 
 private:
     // VARIABLES

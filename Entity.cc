@@ -8,24 +8,25 @@ unsigned    const GAME_HEIGHT { 320 };
 
 Entity::Entity(bool FRIENDLY)
     :xpos{0}, ypos{GAME_HEIGHT/2}, 
-    IS_FRIENDLY{FRIENDLY}, MVMSPD{5}, 
+    IS_FRIENDLY{FRIENDLY}, MVMSPD{0.5}, 
     hasCollided{false},
-    sf::RectangleShape rekt{10, 40}
+    rekt{sf::Vector2f{10.f, 40.f}}
 {
-    rekt.setFillCcolor(sf::Color::blue);
-    rekt.setPosition(0, xpos, ypos);
+    rekt.setFillColor(sf::Color::Blue);
+    rekt.setPosition(xpos, ypos);
 }
 
-void Entity::render()
+sf::RectangleShape Entity::render()
 {
-    window.draw(rekt)
+    return rekt;
 }
 
 void Entity::updatePos()
 {
-    if (rekt.getPosition() >= GAME_WIDTH)
+    if (rekt.getPosition().x >= GAME_WIDTH)
     {
         xpos = 0;
     }
     xpos += MVMSPD;
+    rekt.setPosition(xpos, ypos);
 }

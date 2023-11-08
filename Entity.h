@@ -1,12 +1,13 @@
-
+#ifndef ENTITY_H
+#define ENTITY_H
 
 class Entity
 {
     public:
         Entity(bool FRIENDLY);
-        ~Entity() = default;
+        virtual ~Entity() = default;
         void handleCollison();
-        void render();
+        sf::RectangleShape render();
         void updatePos();
 
     private:
@@ -18,3 +19,5 @@ class Entity
         bool hasCollided;
         sf::RectangleShape rekt;
 };
+
+#endif
