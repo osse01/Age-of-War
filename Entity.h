@@ -6,6 +6,7 @@ class Entity
         Entity(bool FRIENDLY);
         ~Entity() = default;
         void handleCollison();
+        render();
 
     private:
         void detectCollision();
@@ -14,4 +15,5 @@ class Entity
         double MVMSPD;
         bool IS_FRIENDLY;
         bool hasCollided;
+        sf::RectangleShape rekt;
 }
