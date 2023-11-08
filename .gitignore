@@ -1,0 +1,6 @@
+#   .gitignorefile that ignores all files but .cc, .h and .txt files
+*
+!*.cc
+!*.h
+!*.txt
+!*.gitignore
