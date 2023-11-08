@@ -42,7 +42,7 @@ void Game::startGame ()
         window.clear(sf::Color(255, 255, 255));
 
         // Render Frame
-        renderFrame();
+        renderFrame(window);
 
         // Display Frame
         window.display();
@@ -84,9 +84,9 @@ void Game::updateLogic()
 
 
 // Render Frame
-void Game::renderFrame()
+void Game::renderFrame(sf::RenderWindow & window)
 {
-    gameStates.at(currentState)->renderFrame();
+    gameStates.at(currentState)->renderFrame(window);
 }
 
 void Game::getNextState()

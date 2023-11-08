@@ -22,7 +22,7 @@ class Game
     void startGame   ();
     void handleEvents();
     void updateLogic ();
-    void renderFrame ();
+    void renderFrame (sf::RenderWindow &);
     void getNextState ();
     
 

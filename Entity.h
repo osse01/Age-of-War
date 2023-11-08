@@ -1,4 +1,4 @@
-#include "GameState"
+
 
 class Entity
 {
@@ -6,7 +6,7 @@ class Entity
         Entity(bool FRIENDLY);
         ~Entity() = default;
         void handleCollison();
-        render();
+        void render();
 
     private:
         void detectCollision();
@@ -16,4 +16,4 @@ class Entity
         bool IS_FRIENDLY;
         bool hasCollided;
         sf::RectangleShape rekt;
-}
+};
