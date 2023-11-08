@@ -7,6 +7,7 @@ class Entity
         ~Entity() = default;
         void handleCollison();
         void render();
+        void updatePos();
 
     private:
         void detectCollision();
