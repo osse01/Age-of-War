@@ -1,24 +1,26 @@
 #include "Game.h"
-// #include "MenuState.h"
+#include "MenuState.h"
 #include "GameState.h"
 
 #include <memory>
+#include <iostream>
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-: window { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE }, event {},
-  running { true }, gameStates {}, currentState { GAME_STATE }
+: window { new sf::RenderWindow {sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE} }, event {},
+  running { true }, gameStates {}, currentState { MENU_STATE }
 {
     // Place Possible Game States in States Vector
 
     //gameStates.push_back(std::make_unique<MenuState>());
-//
-    //State* ptr = new MenuState;
-    //gameStates.push_back(ptr);
-    
-    State* ptr = new GameState;
-    gameStates.push_back(ptr);
 
+    int* tmp{&currentState};
+
+    State* ptr = new MenuState{window, tmp};
+    gameStates.push_back(ptr);
+    
+    ptr = new GameState{tmp};
+    gameStates.push_back(ptr);
 }
 
 
@@ -42,13 +44,13 @@ void Game::startGame ()
         updateLogic(frameDuration);
 
         // Clear Frame
-        window.clear(sf::Color(255, 255, 255));
+        window->clear(sf::Color(255, 255, 255));
 
         // Render Frame
         renderFrame(window);
 
         // Display Frame
-        window.display();
+        window->display();
 
         // Update Current State
         getNextState();
@@ -59,7 +61,7 @@ void Game::startGame ()
 // Handle Events
 void Game::handleEvents()
 {
-    while (window.pollEvent(event))
+    while (window->pollEvent(event))
     {
         switch (event.type)
         /*  Game Only Handles Events That Result in The Game Terminating
@@ -68,7 +70,7 @@ void Game::handleEvents()
         */
         {
         case sf::Event::Closed:
-            window.close();
+            window->close();
             running = false;
             break;
 
@@ -88,9 +90,9 @@ void Game::updateLogic(sf::Time const & frameDuration)
 
 
 // Render Frame
-void Game::renderFrame(sf::RenderWindow & window)
+void Game::renderFrame(sf::RenderWindow* window)
 {
-    gameStates.at(currentState)->renderFrame(window);
+    gameStates.at(currentState)->renderFrame(*window);
 }
 
 void Game::getNextState()

@@ -1,8 +1,10 @@
 #include "GameState.h"
 
-
-
-
+GameState::GameState(int* curr)
+: currentState{curr}
+{
+    nextState = GAME_STATE;
+}
 void GameState::handleEvent(sf::Event event)
 {
 
@@ -17,8 +19,11 @@ void GameState::handleEvent(sf::Event event)
         {
             spawnEnemy();
         }
+        if (event.key.code == sf::Keyboard::M)
+        {
+            nextState = MENU_STATE;
+        }
         break;
-
     default:
         break;
 

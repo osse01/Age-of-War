@@ -6,14 +6,14 @@
 
 
 int const MENU_STATE { 0 };
-int const GAME_STATE { 0 };
+int const GAME_STATE { 1 };
 
 class State
 //  =============   State CLASS    ===============
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State();
+    State() = default;
     virtual ~State() = default;
 
     // FUNCTIONS
@@ -22,9 +22,8 @@ public:
     virtual void renderFrame (sf::RenderWindow &) = 0;
     virtual int getNextState () = 0;
 
-protected:
-    // Variables
-    int nextState;
+    int    nextState;
+
 };
 
 #endif

@@ -22,13 +22,13 @@ class Game
     void startGame    ();
     void handleEvents ();
     void updateLogic  (sf::Time const &);
-    void renderFrame  (sf::RenderWindow &);
+    void renderFrame  (sf::RenderWindow*);
     void getNextState ();
     
 
     private:
     // Variables //
-    sf::RenderWindow window; // Possibly Use RenderWindow* Instead
+    sf::RenderWindow* window; // Possibly Use RenderWindow* Instead
     sf::Event event;
     bool running;
     

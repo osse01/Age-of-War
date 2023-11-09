@@ -13,8 +13,9 @@ class GameState : public State
 {
 public:
     // CONSTRUCTORS
-    GameState  () = default;
+    GameState  (int*);
     ~GameState () = default;
+ 
  
     // FUNCTIONS
     void handleEvent      (sf::Event)          override;
@@ -25,11 +26,11 @@ public:
     void spawnEnemy       ();
     void handleCollisions (sf::Time const &);
 
-private:
     // VARIABLES
+    int*    currentState;
+
     std::deque<Entity*> friendlyQueue {};
     std::deque<Entity*> enemyQueue    {};
-
 };
 
 #endif
