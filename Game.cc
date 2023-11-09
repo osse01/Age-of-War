@@ -67,6 +67,7 @@ void Game::handleEvents()
         {
         case sf::Event::Closed:
             window.close();
+            running = false;
             break;
 
         default:
