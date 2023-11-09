@@ -21,6 +21,12 @@ sf::RectangleShape Entity::render()
     return rekt;
 }
 
+bool Entity::collides(Entity* const other)
+{
+    // Check whether this collides with other
+    return rekt.getGlobalBounds().intersects((other->render()).getGlobalBounds());
+}
+
 void Entity::updatePos()
 {
     if (rekt.getPosition().x >= GAME_WIDTH)

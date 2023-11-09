@@ -9,6 +9,8 @@ class Entity
         void handleCollison();
         sf::RectangleShape render();
         void updatePos();
+        bool collides(Entity* const other);
+
 
     private:
         void detectCollision();
