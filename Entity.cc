@@ -8,7 +8,7 @@ unsigned    const GAME_HEIGHT { 320 };
 
 Entity::Entity(bool FRIENDLY)
     :xpos{0}, ypos{GAME_HEIGHT/2}, 
-    IS_FRIENDLY{FRIENDLY}, MVMSPD{0.5}, 
+    MVMSPD{0.5}, IS_FRIENDLY{FRIENDLY}, 
     hasCollided{false},
     rekt{sf::Vector2f{10.f, 40.f}}
 {
