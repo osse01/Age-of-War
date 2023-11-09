@@ -28,7 +28,6 @@ void GameState::handleEvent(sf::Event event)
 }
 
 
-
 void GameState::updateLogic(sf::Time const & frameDuration)         
 {
     for(auto &it: friendlyQueue)
@@ -45,58 +44,35 @@ void GameState::updateLogic(sf::Time const & frameDuration)
 
 void GameState::handleCollisions(sf::Time const & frameDuration)
 {
-    // if (friendlyQueue.size() > 1)
-    // {
-    //     for(auto &it: friendlyQueue)
-    //     {
-    //         if(it->collides(std::next(it,1)))
-    //         {
-    //             it->handleCollison();
-    //         }
-    //     }
-    // }
-
-    // if (enemyQueue.size() > 1)
-    // {
-    // for(auto &it: enemyQueue)
-    //     {
-    //         if (&*it != *enemyQueue.end())    
-    //         {
-    //             if(it->collides(std::next(it,1)))
-    //             {
-    //                 std::cout << enemyQueue.size() << std::endl;
-    //                 it->handleCollison();
-    //             }
-    //         }
-    //     }
-    // }
-
+    // Handle Collision between Friendly and Enemy
     if (friendlyQueue.size() > 0 && enemyQueue.size() > 0)
     {
         if (friendlyQueue.at(0)->collides(enemyQueue.at(0)))
         {
-            friendlyQueue.at(0)->handleCollison(frameDuration);
-            enemyQueue.at(0)->handleCollison(frameDuration);
+            friendlyQueue.at(0) ->handleCollison(frameDuration);
+            enemyQueue.at(0)    ->handleCollison(frameDuration);
 
         }
     }
     
-    
-    
+    // Handle Collision between Enemies
     int behind{ 1 };
     for(int inFront{ 0 }; inFront < static_cast<int>(enemyQueue.size()) - 1; inFront++, behind++)
         { 
-            if(enemyQueue.at(inFront)->collides(enemyQueue.at(behind)))
+            if(enemyQueue.at(behind)->collides(enemyQueue.at(inFront)))
             {
+                // Enemy Behind waits for Enemy in Front
                 enemyQueue.at(behind)->handleCollison(frameDuration);
             }
         }
     
+    // Handle Collision between Friends
     behind = 1;
     for(int inFront{ 0 }; inFront < static_cast<int>(friendlyQueue.size()) - 1; inFront++, behind++)
         { 
-            if(friendlyQueue.at(inFront)->collides(friendlyQueue.at(behind)))
+            if(friendlyQueue.at(behind)->collides(friendlyQueue.at(inFront)))
             {
+                // Friend Behind waits for Friend in Front
                 friendlyQueue.at(behind)->handleCollison(frameDuration);
             }
         }
