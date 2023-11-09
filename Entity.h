@@ -2,26 +2,17 @@
 #define ENTITY_H
 
 class Entity
-//  =============   Entity CLASS    ===============
 {
     public:
-    // CONSTRUCTORS
-        Entity          (bool FRIENDLY);
+        Entity(bool FRIENDLY);
         virtual ~Entity() = default;
-
-    // FUNCTIONS
-        void handleCollison       ();
-        sf::RectangleShape render ();
-        void updatePos            ();
-        bool collides (Entity* const other);
-
-
+        void handleCollison(sf::Time const & frameDuration);
+        sf::RectangleShape render();
+        void updatePos(sf::Time const &);
+        bool collides( Entity* const );
 
     private:
-    // FUNCTIONS
-        void detectCollision      ();
-
-    // VARIABLES   
+        void detectCollision();
         double xpos;
         double ypos;
         double movementSpeed;

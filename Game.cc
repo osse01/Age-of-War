@@ -27,17 +27,19 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 // Start Game
 void Game::startGame ()
 {
-    window.setFramerateLimit(30);
+
+    sf::Clock clock;
 
     // Main Game Loop, One Iteration is a Frame
     while ( running )
     {
-        
+        sf::Time frameDuration {clock.restart()};
+
         // Handle Events
         handleEvents();
 
         // Update Logic
-        updateLogic();
+        updateLogic(frameDuration);
 
         // Clear Frame
         window.clear(sf::Color(255, 255, 255));
@@ -79,9 +81,9 @@ void Game::handleEvents()
 }
 
 // Update Game Logic
-void Game::updateLogic()
+void Game::updateLogic(sf::Time const & frameDuration)
 {
-    gameStates.at(currentState)->updateLogic();
+    gameStates.at(currentState)->updateLogic(frameDuration);
 }
 
 

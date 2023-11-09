@@ -6,25 +6,25 @@ unsigned    const GAME_WIDTH  { 640 };
 unsigned    const GAME_HEIGHT { 320 };
 
 
-Entity::Entity( bool FRIENDLY)
-    :xpos{ 0 }, ypos{ GAME_HEIGHT - 40 }, 
-    movementSpeed{ 0.5 }, IS_FRIENDLY{ FRIENDLY }, 
-    hasCollided{ false },
-    rekt{sf::Vector2f{ 10.f, 40.f }}
+Entity::Entity(bool FRIENDLY)
+    :xpos{0}, ypos{GAME_HEIGHT/2}, 
+    movementSpeed{20}, IS_FRIENDLY{FRIENDLY}, 
+    hasCollided{false},
+    rekt{sf::Vector2f{10.f, 40.f}}
 {
     rekt.setFillColor( sf::Color::Blue );
     rekt.setPosition( xpos, ypos );
     if ( !IS_FRIENDLY )
     {
-        movementSpeed = - movementSpeed;
+        movementSpeed *= -1;
         xpos = GAME_WIDTH - 10;
+        rekt.setFillColor( sf::Color::Red );
     }
 }
 
-void Entity::handleCollison()
+void Entity::handleCollison(sf::Time const & frameDuration)
 {
-    xpos -= movementSpeed;
-    rekt.setPosition(xpos, ypos);
+    xpos -= movementSpeed * frameDuration.asSeconds();
 }
 
 sf::RectangleShape Entity::render()
@@ -39,12 +39,8 @@ bool Entity::collides( Entity* const other )
             ( other->render() ).getGlobalBounds() );
 }
 
-void Entity::updatePos()
+void Entity::updatePos(sf::Time const & frameDuration)
 {
-    if (rekt.getPosition().x >= GAME_WIDTH)
-    {
-        xpos = 0;
-    }
-    xpos += movementSpeed;
+    xpos += movementSpeed * frameDuration.asSeconds();
     rekt.setPosition(xpos, ypos);
 }

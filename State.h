@@ -18,7 +18,7 @@ public:
 
     // FUNCTIONS
     virtual void handleEvent (sf::Event) = 0;
-    virtual void updateLogic () = 0;
+    virtual void updateLogic (sf::Time const & frameDuration) = 0;
     virtual void renderFrame (sf::RenderWindow &) = 0;
     virtual int getNextState () = 0;
 

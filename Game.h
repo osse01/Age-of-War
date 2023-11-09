@@ -21,7 +21,7 @@ class Game
     //  FUNCTIONS //
     void startGame    ();
     void handleEvents ();
-    void updateLogic  ();
+    void updateLogic  (sf::Time const &);
     void renderFrame  (sf::RenderWindow &);
     void getNextState ();
     
