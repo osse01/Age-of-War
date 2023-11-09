@@ -25,11 +25,11 @@ void GameState::handleEvent(sf::Event event)
 
 
 
-void GameState::updateLogic()         
+void GameState::updateLogic(sf::Time const & frameDuration)         
 {
     for(auto &it: friendlyQueue)
         {
-            it->updatePos();
+            it->updatePos(frameDuration);
         }
 }
 

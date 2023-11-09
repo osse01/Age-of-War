@@ -17,10 +17,10 @@ public:
     ~GameState () = default;
  
     // FUNCTIONS
-    void handleEvent   (sf::Event)          override;
-    void updateLogic   ()                   override;
-    void renderFrame   (sf::RenderWindow &) override;
-    int getNextState   ()                   override;
+    void handleEvent   (sf::Event)                      override;
+    void updateLogic   (sf::Time const & frameDuration) override;
+    void renderFrame   (sf::RenderWindow &)             override;
+    int getNextState   ()                               override;
     void spawnFriendly ();
 
 private:

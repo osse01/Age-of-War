@@ -8,7 +8,7 @@ unsigned    const GAME_HEIGHT { 320 };
 
 Entity::Entity(bool FRIENDLY)
     :xpos{0}, ypos{GAME_HEIGHT/2}, 
-    MVMSPD{0.5}, IS_FRIENDLY{FRIENDLY}, 
+    MVMSPD{20}, IS_FRIENDLY{FRIENDLY}, 
     hasCollided{false},
     rekt{sf::Vector2f{10.f, 40.f}}
 {
@@ -21,12 +21,12 @@ sf::RectangleShape Entity::render()
     return rekt;
 }
 
-void Entity::updatePos()
+void Entity::updatePos(sf::Time const & frameDuration)
 {
     if (rekt.getPosition().x >= GAME_WIDTH)
     {
         xpos = 0;
     }
-    xpos += MVMSPD;
+    xpos += MVMSPD * frameDuration.asSeconds();
     rekt.setPosition(xpos, ypos);
 }

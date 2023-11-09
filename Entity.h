@@ -8,7 +8,7 @@ class Entity
         virtual ~Entity() = default;
         void handleCollison();
         sf::RectangleShape render();
-        void updatePos();
+        void updatePos(sf::Time const &);
 
     private:
         void detectCollision();
