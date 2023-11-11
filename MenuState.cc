@@ -3,23 +3,23 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(sf::RenderWindow* screen)
-: image{new sf::Image {}}, texture{new sf::Texture {}}, sprite{new sf::Sprite {}},
-  textFont{new sf::Font}, gameTitle{new sf::Text {}}, instructionText{new sf::Text {}},
+MenuState::MenuState(sf::RenderWindow* screen, int* curr)
+: currentState{curr}, image{new sf::Image {}}, texture{new sf::Texture {}}, 
+  sprite{new sf::Sprite {}}, textFont{new sf::Font}, gameTitle{new sf::Text {}}, instructionText{new sf::Text {}},
   scale{1.0f}, t{0.0f}, fontFile{"coolFont.ttf"}, backroundFile{"backround.jpeg"}
-  , window{screen}
+  , window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and Backround Image, the Name of the Files
 //  are Saved in the fontFile and backroundFile Variables.
+//
+//  For Now File Names are Hardcoded Values. This must Change!!!
 //  -------------------------------------------------------
 {
-    nextState = MENU_STATE;
-
     if(image->loadFromFile(backroundFile))
     {
     texture->loadFromImage(*image);
     sprite->setTexture(*texture);
-    
+    sprite->setScale(zoomFactor);
     }
     else
     {
@@ -30,11 +30,17 @@ MenuState::MenuState(sf::RenderWindow* screen)
     {
         gameTitle->setFont(*textFont);
         gameTitle->setString("AGE OF WAR");
-        gameTitle->setCharacterSize(50);
+        gameTitle->setCharacterSize(75);
+        gameTitle->setOrigin(gameTitle->getLocalBounds().width / 2, gameTitle->getLocalBounds().height / 2);
+        gameTitle->setPosition(window->getSize().x / 2, window->getSize().y / 3);
+        gameTitle->setFillColor(sf::Color::Black); 
 
         instructionText->setFont(*textFont);
         instructionText->setString("PRESS ANY KEY TO START");
         instructionText->setCharacterSize(20);
+        instructionText->setOrigin(instructionText->getLocalBounds().width / 2, instructionText->getLocalBounds().height / 2);
+        instructionText->setPosition(window->getSize().x / 2, window->getSize().y / 1.8);
+        instructionText->setFillColor(sf::Color::Black); 
     }
     else
     {
@@ -51,8 +57,7 @@ void MenuState::handleEvent(sf::Event event)
     {
     case sf::Event::KeyPressed:
         startAnimation();
-        nextState = GAME_STATE;
-
+        *currentState = GAME_STATE;        
         break;
     
     default:
@@ -65,7 +70,7 @@ int MenuState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    return  nextState;
+    return  *currentState;
 }
 
 void MenuState::updateLogic(sf::Time const & frameDuration)
@@ -83,72 +88,65 @@ void MenuState::startAnimation()
 {
     double  step{1};
     double  delay{0.5};
-
-    sf::Vector2f zoomFactor(0.7f, 0.5f);
-
+    double  stepBackground{1};
+    float   backroundScale{1};
     
-    while (step > 0)
+    while (step > 0 && stepBackground >0)
     {
-    window->clear(sf::Color(255, 255, 255));
+        window->clear(sf::Color(255, 255, 255));
 
-    step = step - 0.0003;
-    scale = std::pow(step, 2);
+        step -= 0.0003;
+        stepBackground -= 0.00006;
 
-    sprite->setScale(zoomFactor);
+        scale = std::pow(step, 2);
+        backroundScale = std::pow(stepBackground, 2);
 
-    gameTitle->setOrigin(gameTitle->getLocalBounds().width / 2, gameTitle->getLocalBounds().height / 2);
-    gameTitle->setPosition(320, 80);
-    gameTitle->setFillColor(sf::Color::Black); 
-    gameTitle->setCharacterSize(50*scale);
+        gameTitle->setOrigin(gameTitle->getLocalBounds().width / 2, gameTitle->getLocalBounds().height / 2);
+        gameTitle->setScale(zoomFactor*scale);
 
-    instructionText->setOrigin(instructionText->getLocalBounds().width / 2, instructionText->getLocalBounds().height / 2);
-    instructionText->setPosition(320, 160);
-    instructionText->setFillColor(sf::Color::Black); 
-    instructionText->setCharacterSize(20*scale);
+        instructionText->setOrigin(instructionText->getLocalBounds().width / 2, instructionText->getLocalBounds().height / 2);
+        instructionText->setScale(zoomFactor*scale);
+
+        if(sprite->getGlobalBounds().width >= window->getSize().x)
+        {
+            sprite->setScale(zoomFactor*backroundScale);    
+        }
+
+        window->draw(*sprite);
+        window->draw(*gameTitle);
+        window->draw(*instructionText);
+        window->display();
 
 
-    window->draw(*sprite);
-    window->draw(*gameTitle);
-    window->draw(*instructionText);
-    window->display();
-
-    sf::sleep(sf::milliseconds(delay)); 
+        sf::sleep(sf::milliseconds(delay)); 
     }
 
     window->clear(sf::Color(255, 255, 255));
 
-    sprite->setScale(zoomFactor);
-
-    window->draw(*sprite);
+    //window->draw(*sprite);
     window->display();
 }
 
 
-void MenuState::renderFrame(sf::RenderWindow& window)
+void MenuState::renderFrame()
 //  ---------------------------------------------
 //  Funcion Explaination
 //  ---------------------------------------------
 {
-    window.clear(sf::Color(255, 255, 255));
+    window->clear(sf::Color(255, 255, 255));
 
     t = t + 0.0003;
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
-    sf::Vector2f zoomFactor(0.7f, 0.5f);
-
     sprite->setScale(zoomFactor);
 
     gameTitle->setOrigin(gameTitle->getLocalBounds().width / 2, gameTitle->getLocalBounds().height / 2);
-    gameTitle->setPosition(320, 80);
-    gameTitle->setFillColor(sf::Color::Black); 
-    gameTitle->setCharacterSize(50*scale);
+    gameTitle->setScale(zoomFactor*scale);
 
-    instructionText->setOrigin(instructionText->getLocalBounds().width / 2, instructionText->getLocalBounds().height / 2);
-    instructionText->setPosition(320, 160);
-    instructionText->setFillColor(sf::Color::Black); 
+    instructionText->setScale(zoomFactor);
 
-    window.draw(*sprite);
-    window.draw(*gameTitle);
-    window.draw(*instructionText);
+    window->draw(*sprite);
+    window->draw(*gameTitle);
+    window->draw(*instructionText);
 }
 

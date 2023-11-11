@@ -22,7 +22,7 @@ class Game
     void startGame    ();
     void handleEvents ();
     void updateLogic  (sf::Time const &);
-    void renderFrame  (sf::RenderWindow*);
+    void renderFrame  ();
     void getNextState ();
     
 
@@ -34,7 +34,12 @@ class Game
     
     // States
     std::vector<State*> gameStates;
-    int currentState;
+    int     currentState;
+    int*    currentStatePtr;
+
+    protected:
+        int    nextState;
+
 
 
 

@@ -1,25 +1,25 @@
-#ifndef MENUSTATE_H
-#define MENUSTATE_H
+    #ifndef MENUSTATE_H
+    #define MENUSTATE_H
 
-#include "State.h"
+    #include "State.h"
 
-#include <string>
+    #include <string>
 
 
 
-class MenuState : public State
-//  =============   MenuState CLASS    ===============
-//  This Class Handles ...
-{
-public:
+    class MenuState : public State
+    //  =============   MenuState CLASS    ===============
+    //  This Class Handles ...
+    {
+    public:
     // CONSTRUCTORS
-    MenuState   (sf::RenderWindow*, int&);
+    MenuState   (sf::RenderWindow*, int*);
     ~MenuState  () = default;
 
-private:
+    private:
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     (sf::RenderWindow&)                 override;
+    void    renderFrame     ()                                  override;
     int     getNextState    ()                                  override;
     void    updateLogic     (sf::Time const & frameDuration)    override;
     void    startAnimation  ();
@@ -27,6 +27,7 @@ private:
     // VARIABLES
     float   scale;
     float   t;
+    int*    currentState;
 
     std::string     fontFile;
     std::string     backroundFile;
@@ -38,6 +39,7 @@ private:
     sf::Text*           gameTitle;
     sf::Text*           instructionText;
     sf::RenderWindow*   window;
-};
+    sf::Vector2f        zoomFactor;
+    };
 
-#endif
+    #endif

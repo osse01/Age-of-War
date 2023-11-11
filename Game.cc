@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "MenuState.h"
 #include "GameState.h"
+#include "PauseState.h"
 
 #include <memory>
 #include <iostream>
@@ -8,19 +9,21 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 : window { new sf::RenderWindow {sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE} }, event {},
-  running { true }, gameStates {}, currentState { MENU_STATE }
+  running { true }, gameStates {}, currentState { MENU_STATE }, currentStatePtr{&currentState}
 {
     // Place Possible Game States in States Vector
 
     //gameStates.push_back(std::make_unique<MenuState>());
 
-    int* tmp{&currentState};
-
-    State* ptr = new MenuState{window, tmp};
+    State* ptr = new MenuState{window, currentStatePtr};
     gameStates.push_back(ptr);
     
-    ptr = new GameState{tmp};
+    ptr = new GameState{window, currentStatePtr};
     gameStates.push_back(ptr);
+
+    ptr = new PauseState{window, currentStatePtr};
+    gameStates.push_back(ptr);
+
 }
 
 
@@ -43,11 +46,8 @@ void Game::startGame ()
         // Update Logic
         updateLogic(frameDuration);
 
-        // Clear Frame
-        window->clear(sf::Color(255, 255, 255));
-
         // Render Frame
-        renderFrame(window);
+        renderFrame();
 
         // Display Frame
         window->display();
@@ -90,9 +90,9 @@ void Game::updateLogic(sf::Time const & frameDuration)
 
 
 // Render Frame
-void Game::renderFrame(sf::RenderWindow* window)
+void Game::renderFrame()
 {
-    gameStates.at(currentState)->renderFrame(*window);
+    gameStates.at(currentState)->renderFrame();
 }
 
 void Game::getNextState()

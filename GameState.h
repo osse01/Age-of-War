@@ -13,24 +13,40 @@ class GameState : public State
 {
 public:
     // CONSTRUCTORS
-    GameState  (int*);
+    GameState  (sf::RenderWindow*, int*);
     ~GameState () = default;
  
  
     // FUNCTIONS
-    void handleEvent      (sf::Event)          override;
-    void updateLogic      (sf::Time const &) override;
-    void renderFrame      (sf::RenderWindow &) override;
-    int getNextState      ()                   override;
+    void handleEvent      (sf::Event)           override;
+    void updateLogic      (sf::Time const &)    override;
+    void renderFrame      ()                    override;
+    int getNextState      ()                    override;
     void spawnFriendly    ();
     void spawnEnemy       ();
     void handleCollisions (sf::Time const &);
 
     // VARIABLES
-    int*    currentState;
-
     std::deque<Entity*> friendlyQueue {};
     std::deque<Entity*> enemyQueue    {};
+
+    std::string     backroundFile;
+    std::string     treeFile;
+
+    sf::RenderWindow*   window;
+    sf::Image*          spriteImage;
+    sf::Image*          backgroundImage;
+
+    sf::Texture*        backgroundTexture;
+    sf::Texture*        treeTexture;
+
+    sf::Sprite*         backgroundSprite;
+    sf::Sprite*         treeSprite;
+    
+    sf::Vector2f        zoomFactor;
+
+
+    int*    currentState;
 };
 
 #endif

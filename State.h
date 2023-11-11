@@ -5,8 +5,9 @@
 #include <iostream>
 
 
-int const MENU_STATE { 0 };
-int const GAME_STATE { 1 };
+int const MENU_STATE    { 0 };
+int const GAME_STATE    { 1 };
+int const PAUSE_STATE   { 2 };
 
 class State
 //  =============   State CLASS    ===============
@@ -17,13 +18,13 @@ public:
     virtual ~State() = default;
 
     // FUNCTIONS
-    virtual void handleEvent (sf::Event) = 0;
+    virtual void handleEvent (sf::Event)                      = 0;
     virtual void updateLogic (sf::Time const & frameDuration) = 0;
-    virtual void renderFrame (sf::RenderWindow &) = 0;
-    virtual int getNextState () = 0;
+    virtual void renderFrame ()                               = 0;
+    virtual int getNextState ()                               = 0;
 
-    int    nextState;
-
+protected:
+    int*    currentState;
 };
 
 #endif

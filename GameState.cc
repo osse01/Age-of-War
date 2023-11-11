@@ -1,13 +1,40 @@
 #include "GameState.h"
 
-GameState::GameState(int* curr)
-: currentState{curr}
+#include <iostream>
+
+GameState::GameState(sf::RenderWindow * screen, int* curr)
+: window{screen}, currentState{curr}, spriteImage{new sf::Image {}},
+  backgroundImage{new sf::Image {}}, backgroundTexture{new sf::Texture {}}, 
+  treeTexture{new sf::Texture {}}, backgroundSprite{new sf::Sprite {}},
+  treeSprite{new sf::Sprite {}}, backroundFile{"backround.jpeg"},
+  zoomFactor{sf::Vector2f(0.9f, 0.6f)}, treeFile{"tree.png"}
 {
-    nextState = GAME_STATE;
+    if(backgroundImage->loadFromFile(treeFile))
+    {
+        treeTexture->loadFromImage(*backgroundImage);
+        treeSprite->setTexture(*treeTexture);
+    }
+    else
+    {
+        throw std::logic_error("    >> Error: Could Not Find backround image. Error in GameState::GameState().");
+    }
+    //  Load in Background Image
+    if(spriteImage->loadFromFile(backroundFile))
+    {
+        backgroundTexture->loadFromImage(*spriteImage);
+        backgroundSprite->setTexture(*backgroundTexture);
+    }
+    else
+    {
+        throw std::logic_error("    >> Error: Could Not Find background image. Error in GameState::GameState().");
+    }
+
+    //  Load in Tree
+
 }
+
 void GameState::handleEvent(sf::Event event)
 {
-
     switch (event.type)
     {
     case sf::Event::KeyPressed:
@@ -21,17 +48,18 @@ void GameState::handleEvent(sf::Event event)
         }
         if (event.key.code == sf::Keyboard::M)
         {
-            nextState = MENU_STATE;
+            *currentState = MENU_STATE;
+        }
+        if (event.key.code == sf::Keyboard::P)
+        {
+            *currentState = PAUSE_STATE;
         }
         break;
     default:
         break;
 
     }
-
-
 }
-
 
 void GameState::updateLogic(sf::Time const & frameDuration)         
 {
@@ -84,22 +112,36 @@ void GameState::handleCollisions(sf::Time const & frameDuration)
 
 }
 
-void GameState::renderFrame(sf::RenderWindow & window)  
+void GameState::renderFrame()  
 {
+    //  Fix Background
+    window->clear(sf::Color(255, 255, 255));
+
+    backgroundSprite->setScale(zoomFactor*0.694422f);
+
+    treeSprite->setOrigin(treeSprite->getLocalBounds().width / 2, treeSprite->getLocalBounds().height / 2);
+    treeSprite->setPosition(window->getSize().x / 2, window->getSize().y / 1.25);
+    treeSprite->setScale(zoomFactor*0.1f);
+
+    
+    window->draw(*backgroundSprite);
+    window->draw(*treeSprite);
+    
+    //  Render units
     for(auto &it: friendlyQueue)
         {
-            window.draw(it->render());
+            window->draw(it->render());
         }
 
     for(auto &it: enemyQueue)
         {
-            window.draw(it->render());
+            window->draw(it->render());
         }
 }
 
 int GameState::getNextState()       
 {
-    return nextState;
+    return *currentState;
 }
 
 void GameState::spawnFriendly()
@@ -107,6 +149,7 @@ void GameState::spawnFriendly()
     Entity* friendly = new Entity{true};
     friendlyQueue.push_back(friendly);
 }
+
 void GameState::spawnEnemy()
 {
     Entity* enemy = new Entity{false};
