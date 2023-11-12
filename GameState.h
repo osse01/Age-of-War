@@ -19,7 +19,7 @@ public:
     ~GameState ();
     GameState (const GameState&) = delete;
 
-    GameState operator= (const GameState&) = delete;
+    GameState& operator= (const GameState&) = delete;
  
  
     // FUNCTIONS
