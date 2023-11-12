@@ -16,7 +16,9 @@ class State
 public:
     // CONSTRUCTORS / DESTRUCTORS
     State() = default;
-    virtual ~State() = default;
+    ~State();
+    State(const State&) = delete;
+    State& operator= (const State&) = delete;
 
     // FUNCTIONS
     virtual void handleEvent (sf::Event)                      = 0;

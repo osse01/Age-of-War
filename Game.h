@@ -20,7 +20,7 @@ class Game
     Game( std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight );
     ~Game();
     Game(const Game&) = delete;
-    Game operator= (const Game&) = delete;
+    Game& operator= (const Game&) = delete;
 
 
     //  FUNCTIONS //
