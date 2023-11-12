@@ -18,7 +18,7 @@ class Game
     public:
     //  CONSTRUCTORS / DESTRUCTORS //
     Game( std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight );
-    virtual ~Game() = default;
+    ~Game();
 
     //  FUNCTIONS //
     void startGame    ();

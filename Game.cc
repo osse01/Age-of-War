@@ -35,6 +35,16 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 
 }
 
+Game::~Game()
+{
+    delete states.at(MENU_STATE);
+    delete states.at(GAME_STATE);
+    delete states.at(PAUSE_STATE);
+    delete music;
+    delete currentStatePtr;
+    delete window;
+}
+
 
 // Functions //
 
