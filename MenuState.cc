@@ -4,7 +4,7 @@
 #include <cmath>
 
 MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound)
-:   scale{1.0f}, t{0.0f}, currentState{curr}, music{sound}, fontFile{"coolFont.ttf"}, backgroundFile{"background.jpeg"},
+:   scale{1.0f}, t{0.0f}, currentState{curr}, music{sound}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     image{new sf::Image {}}, texture{new sf::Texture {}}, 
     sprite{new sf::Sprite {}}, textFont{new sf::Font}, gameTitle{new sf::Text {}}, instructionText{new sf::Text {}},
     window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}

@@ -4,7 +4,7 @@
 #include <cmath>
 
 PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound)
-:   currentState { curr }, fontFile { "coolFont.ttf" }, window { screen },
+:   currentState { curr }, fontFile { "assets/coolFont.ttf" }, window { screen },
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }, music { sound }
   

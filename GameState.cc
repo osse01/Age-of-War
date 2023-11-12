@@ -3,7 +3,7 @@
 #include <iostream> 
 
 GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound)
-:   friendlyQueue {}, enemyQueue {}, backgroundFile { "background.jpeg" }, treeFile { "tree.png" },
+:   friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" }, treeFile { "assets/tree.png" },
     window { screen }, spriteImage { new sf::Image {} }, backgroundImage { new sf::Image {} },
     backgroundTexture { new sf::Texture {} }, treeTexture { new sf::Texture {} }, backgroundSprite { new sf::Sprite {} },
     treeSprite { new sf::Sprite {} }, zoomFactor { sf::Vector2f(0.9f, 0.6f) },  currentState { curr }, music { sound } 

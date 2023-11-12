@@ -14,7 +14,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 {
 
     // Open Audio File
-    std::string file{"Age-of-War-Theme-Song.ogg"};
+    std::string file{"assets/Age-of-War-Theme-Song.ogg"};
     if (!music->openFromFile(file))
     {
         std::cout << "  >> Error: Could Not Find Audio File. Error in GameState::GameState()." << std::endl;
