@@ -7,7 +7,7 @@ unsigned    const GAME_HEIGHT { 320 };
 
 
 Entity::Entity(bool FRIENDLY)
-    :xpos{0}, ypos{GAME_HEIGHT/2}, 
+    :xpos{0}, ypos{GAME_HEIGHT - 50}, 
     movementSpeed{20}, IS_FRIENDLY{FRIENDLY}, 
     hasCollided{false}, texture{}, sprite{}, boundingbox{sf::Vector2f(40.f,50.f)}
 {
