@@ -16,7 +16,10 @@ class GameState : public State
 public:
     // CONSTRUCTORS
     GameState  (sf::RenderWindow*, int*, sf::Music*);
-    ~GameState () = default;
+    ~GameState ();
+    GameState (const GameState&) = delete;
+
+    GameState operator= (const GameState&) = delete;
  
  
     // FUNCTIONS
@@ -33,17 +36,11 @@ public:
     std::deque<Entity*> enemyQueue    {};
 
     std::string     backgroundFile;
-    std::string     treeFile;
 
     sf::RenderWindow*   window;
-    sf::Image*          spriteImage;
-    sf::Image*          backgroundImage;
 
-    sf::Texture*        backgroundTexture;
-    sf::Texture*        treeTexture;
-
-    sf::Sprite*         backgroundSprite;
-    sf::Sprite*         treeSprite;
+    sf::Texture        backgroundTexture;
+    sf::Sprite         backgroundSprite;
     
     sf::Vector2f        zoomFactor;
 

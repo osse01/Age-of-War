@@ -3,33 +3,30 @@
 #include <iostream> 
 
 GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound)
-:   friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" }, treeFile { "assets/tree.png" },
-    window { screen }, spriteImage { new sf::Image {} }, backgroundImage { new sf::Image {} },
-    backgroundTexture { new sf::Texture {} }, treeTexture { new sf::Texture {} }, backgroundSprite { new sf::Sprite {} },
-    treeSprite { new sf::Sprite {} }, zoomFactor { sf::Vector2f(0.9f, 0.6f) },  currentState { curr }, music { sound } 
+:   friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
+    window { screen }, backgroundTexture {}, backgroundSprite {},
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr },
+    music { sound } 
 {
-    if(backgroundImage->loadFromFile(treeFile))
-    {
-        treeTexture->loadFromImage(*backgroundImage);
-        treeSprite->setTexture(*treeTexture);
-    }
-    else
-    {
-        throw std::logic_error("    >> Error: Could Not Find background image. Error in GameState::GameState().");
-    }
     //  Load in Background Image
-    if(spriteImage->loadFromFile(backgroundFile))
+    if(!backgroundTexture.loadFromFile(backgroundFile))
     {
-        backgroundTexture->loadFromImage(*spriteImage);
-        backgroundSprite->setTexture(*backgroundTexture);
+        throw std::logic_error(
+        "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
-    else
-    {
-        throw std::logic_error("    >> Error: Could Not Find background image. Error in GameState::GameState().");
-    }
+    backgroundSprite.setTexture(backgroundTexture);
+}
 
-    //  Load in Tree
-
+GameState::~GameState()
+{
+    for(auto &it: friendlyQueue)
+        {
+            delete it;
+        }
+    for(auto &it: enemyQueue)
+        {
+            delete it;
+        }
 }
 
 void GameState::handleEvent(sf::Event event)
@@ -118,15 +115,9 @@ void GameState::renderFrame()
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
 
-    backgroundSprite->setScale(zoomFactor*0.694422f);
-
-    treeSprite->setOrigin(treeSprite->getLocalBounds().width / 2, treeSprite->getLocalBounds().height / 2);
-    treeSprite->setPosition(window->getSize().x / 2, window->getSize().y / 1.25);
-    treeSprite->setScale(zoomFactor*0.1f);
-
+    backgroundSprite.setScale(zoomFactor*0.694422f);
     
-    window->draw(*backgroundSprite);
-    window->draw(*treeSprite);
+    window->draw(backgroundSprite);
     
     //  Render units
     for(auto &it: friendlyQueue)
