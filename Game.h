@@ -4,6 +4,8 @@
 #include "State.h"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <string>
 #include <iostream>
 #include <memory>
@@ -33,9 +35,10 @@ class Game
     bool running;
     
     // States
-    std::vector<State*> gameStates;
+    std::vector<State*> states;
     int     currentState;
     int*    currentStatePtr;
+    sf::Music* music;
 
     protected:
         int    nextState;

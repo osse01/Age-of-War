@@ -3,10 +3,11 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(sf::RenderWindow* screen, int* curr)
-: window{screen}, currentState{curr}, textFont{new sf::Font{}},
-  pausedText{new sf::Text {}}, greyOut{new sf::RectangleShape{}},
-  fontFile{"coolFont.ttf"}
+PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound)
+:   currentState { curr }, fontFile { "coolFont.ttf" }, window { screen },
+    textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
+    greyOut      { new sf::RectangleShape{} }, music { sound }
+  
 //  -------------------------------------------------------
 //  PauseState constructor. Loads in the Font Used for Text and Backround Image, the Name of the Files
 //  are Saved in the fontFile and backroundFile Variables.
@@ -16,12 +17,12 @@ PauseState::PauseState(sf::RenderWindow* screen, int* curr)
 {
     if(textFont->loadFromFile(fontFile))
     {
-        pausedText->setFont(*textFont);
-        pausedText->setString("PAUSED");
-        pausedText->setCharacterSize(50);
-        pausedText->setOrigin(pausedText->getLocalBounds().width / 2, pausedText->getLocalBounds().height / 2);
-        pausedText->setPosition(window->getSize().x / 2, window->getSize().y / 3);
-        pausedText->setFillColor(sf::Color::Black); 
+        pausedText->setFont          (*textFont);
+        pausedText->setString        ("PAUSED");
+        pausedText->setCharacterSize (50);
+        pausedText->setOrigin        (pausedText->getLocalBounds().width / 2, pausedText->getLocalBounds().height / 2);
+        pausedText->setPosition      (window->getSize().x / 2, window->getSize().y / 3);
+        pausedText->setFillColor     (sf::Color::Black); 
     }
     else
     {
@@ -39,11 +40,10 @@ void PauseState::handleEvent(sf::Event event)
     switch (event.type)
     {
     case sf::Event::KeyPressed:
+        music->play();
         startAnimation();
-        *currentState = GAME_STATE;        
-
+        *currentState = GAME_STATE;      
         break;
-    
     default:
         break;
     }
@@ -70,7 +70,6 @@ void PauseState::startAnimation()
 //  Looks like an animation.
 //  ---------------------------------------------
 {}
-
 
 void PauseState::renderFrame()
 //  ---------------------------------------------

@@ -4,6 +4,8 @@
 #include "State.h"
 #include "Entity.h"
 
+#include <SFML/Audio.hpp>
+
 #include <queue>
 
 
@@ -13,7 +15,7 @@ class GameState : public State
 {
 public:
     // CONSTRUCTORS
-    GameState  (sf::RenderWindow*, int*);
+    GameState  (sf::RenderWindow*, int*, sf::Music*);
     ~GameState () = default;
  
  
@@ -30,7 +32,7 @@ public:
     std::deque<Entity*> friendlyQueue {};
     std::deque<Entity*> enemyQueue    {};
 
-    std::string     backroundFile;
+    std::string     backgroundFile;
     std::string     treeFile;
 
     sf::RenderWindow*   window;
@@ -46,7 +48,9 @@ public:
     sf::Vector2f        zoomFactor;
 
 
-    int*    currentState;
+
+    int* currentState;
+    sf::Music* music;
 };
 
 #endif

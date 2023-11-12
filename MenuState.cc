@@ -3,19 +3,19 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(sf::RenderWindow* screen, int* curr)
-: currentState{curr}, image{new sf::Image {}}, texture{new sf::Texture {}}, 
-  sprite{new sf::Sprite {}}, textFont{new sf::Font}, gameTitle{new sf::Text {}}, instructionText{new sf::Text {}},
-  scale{1.0f}, t{0.0f}, fontFile{"coolFont.ttf"}, backroundFile{"backround.jpeg"}
-  , window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
+MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound)
+:   scale{1.0f}, t{0.0f}, currentState{curr}, music{sound}, fontFile{"coolFont.ttf"}, backgroundFile{"background.jpeg"},
+    image{new sf::Image {}}, texture{new sf::Texture {}}, 
+    sprite{new sf::Sprite {}}, textFont{new sf::Font}, gameTitle{new sf::Text {}}, instructionText{new sf::Text {}},
+    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
 //  -------------------------------------------------------
-//  MenuState constructor. Loads in the Font Used for Text and Backround Image, the Name of the Files
-//  are Saved in the fontFile and backroundFile Variables.
+//  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
+//  are Saved in the fontFile and backgroundFile Variables.
 //
 //  For Now File Names are Hardcoded Values. This must Change!!!
 //  -------------------------------------------------------
 {
-    if(image->loadFromFile(backroundFile))
+    if(image->loadFromFile(backgroundFile))
     {
     texture->loadFromImage(*image);
     sprite->setTexture(*texture);
@@ -23,7 +23,7 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr)
     }
     else
     {
-        throw std::logic_error("    >> Error: Could Not Find backround image. Error in MenuState::MenuState().");
+        throw std::logic_error("    >> Error: Could Not Find background image. Error in MenuState::MenuState().");
     }
 
     if(textFont->loadFromFile(fontFile))
@@ -57,7 +57,8 @@ void MenuState::handleEvent(sf::Event event)
     {
     case sf::Event::KeyPressed:
         startAnimation();
-        *currentState = GAME_STATE;        
+        *currentState = GAME_STATE;  
+        music->play();      
         break;
     
     default:
@@ -82,14 +83,14 @@ void MenuState::updateLogic(sf::Time const & frameDuration)
 
 void MenuState::startAnimation()
 //  ---------------------------------------------
-//  This Fuction Rescales the Backround Such That it
+//  This Fuction Rescales the background Such That it
 //  Looks like an animation.
 //  ---------------------------------------------
 {
     double  step{1};
     double  delay{0.5};
     double  stepBackground{1};
-    float   backroundScale{1};
+    float   backgroundScale{1};
     
     while (step > 0 && stepBackground >0)
     {
@@ -99,7 +100,7 @@ void MenuState::startAnimation()
         stepBackground -= 0.00006;
 
         scale = std::pow(step, 2);
-        backroundScale = std::pow(stepBackground, 2);
+        backgroundScale = std::pow(stepBackground, 2);
 
         gameTitle->setOrigin(gameTitle->getLocalBounds().width / 2, gameTitle->getLocalBounds().height / 2);
         gameTitle->setScale(zoomFactor*scale);
@@ -109,7 +110,7 @@ void MenuState::startAnimation()
 
         if(sprite->getGlobalBounds().width >= window->getSize().x)
         {
-            sprite->setScale(zoomFactor*backroundScale);    
+            sprite->setScale(zoomFactor*backgroundScale);    
         }
 
         window->draw(*sprite);

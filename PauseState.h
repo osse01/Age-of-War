@@ -13,7 +13,7 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (sf::RenderWindow*, int*);
+    PauseState   (sf::RenderWindow*, int*, sf::Music*);
     ~PauseState  () = default;
 
 private:
@@ -33,6 +33,8 @@ private:
     sf::Font*           textFont;
     sf::Text*           pausedText;
     sf::RectangleShape* greyOut;
+
+    sf::Music* music;
 };
 
 #endif

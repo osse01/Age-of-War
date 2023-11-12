@@ -13,7 +13,7 @@
     {
     public:
     // CONSTRUCTORS
-    MenuState   (sf::RenderWindow*, int*);
+    MenuState   (sf::RenderWindow*, int*, sf::Music*);
     ~MenuState  () = default;
 
     private:
@@ -28,9 +28,10 @@
     float   scale;
     float   t;
     int*    currentState;
+    sf::Music* music;
 
     std::string     fontFile;
-    std::string     backroundFile;
+    std::string     backgroundFile;
 
     sf::Image*          image;
     sf::Texture*        texture;

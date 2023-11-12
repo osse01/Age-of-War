@@ -2,6 +2,7 @@
 #define STATE_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 
 
@@ -25,6 +26,7 @@ public:
 
 protected:
     int*    currentState;
+    sf::Music* music;
 };
 
 #endif

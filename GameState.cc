@@ -1,13 +1,12 @@
 #include "GameState.h"
 
-#include <iostream>
+#include <iostream> 
 
-GameState::GameState(sf::RenderWindow * screen, int* curr)
-: window{screen}, currentState{curr}, spriteImage{new sf::Image {}},
-  backgroundImage{new sf::Image {}}, backgroundTexture{new sf::Texture {}}, 
-  treeTexture{new sf::Texture {}}, backgroundSprite{new sf::Sprite {}},
-  treeSprite{new sf::Sprite {}}, backroundFile{"backround.jpeg"},
-  zoomFactor{sf::Vector2f(0.9f, 0.6f)}, treeFile{"tree.png"}
+GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound)
+:   friendlyQueue {}, enemyQueue {}, backgroundFile { "background.jpeg" }, treeFile { "tree.png" },
+    window { screen }, spriteImage { new sf::Image {} }, backgroundImage { new sf::Image {} },
+    backgroundTexture { new sf::Texture {} }, treeTexture { new sf::Texture {} }, backgroundSprite { new sf::Sprite {} },
+    treeSprite { new sf::Sprite {} }, zoomFactor { sf::Vector2f(0.9f, 0.6f) },  currentState { curr }, music { sound } 
 {
     if(backgroundImage->loadFromFile(treeFile))
     {
@@ -16,10 +15,10 @@ GameState::GameState(sf::RenderWindow * screen, int* curr)
     }
     else
     {
-        throw std::logic_error("    >> Error: Could Not Find backround image. Error in GameState::GameState().");
+        throw std::logic_error("    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
     //  Load in Background Image
-    if(spriteImage->loadFromFile(backroundFile))
+    if(spriteImage->loadFromFile(backgroundFile))
     {
         backgroundTexture->loadFromImage(*spriteImage);
         backgroundSprite->setTexture(*backgroundTexture);
@@ -49,10 +48,12 @@ void GameState::handleEvent(sf::Event event)
         if (event.key.code == sf::Keyboard::M)
         {
             *currentState = MENU_STATE;
+            music->stop();
         }
         if (event.key.code == sf::Keyboard::P)
         {
             *currentState = PAUSE_STATE;
+            music->pause();
         }
         break;
     default:
