@@ -4,8 +4,11 @@
 #include "State.h"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <string>
 #include <iostream>
+#include <memory>
 
 
 
@@ -15,25 +18,31 @@ class Game
     public:
     //  CONSTRUCTORS / DESTRUCTORS //
     Game( std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight );
-    virtual ~Game() = default;
+    ~Game();
 
     //  FUNCTIONS //
-    void startGame   ();
-    void handleEvents();
-    void updateLogic ();
-    void renderFrame ();
-    int getNextState ();
+    void startGame    ();
+    void handleEvents ();
+    void updateLogic  (sf::Time const &);
+    void renderFrame  ();
+    void getNextState ();
     
 
     private:
     // Variables //
-    sf::RenderWindow window; // Possibly Use RenderWindow* Instead
+    sf::RenderWindow* window; // Possibly Use RenderWindow* Instead
     sf::Event event;
     bool running;
     
     // States
-    std::vector<std::unique_ptr<State>> gameStates;
-    int currentState;
+    std::vector<State*> states;
+    int     currentState;
+    int*    currentStatePtr;
+    sf::Music* music;
+
+    protected:
+        int    nextState;
+
 
 
 

@@ -1,20 +1,48 @@
 #include "Game.h"
 #include "MenuState.h"
 #include "GameState.h"
+#include "PauseState.h"
 
 #include <memory>
+#include <iostream>
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-: window { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE },
-    currentState { GAME_STATE }, running { true }
+:   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE } },
+    event {}, running { true }, states {}, currentState { MENU_STATE }, 
+    currentStatePtr { &currentState }, music { new sf::Music }, nextState {}
 {
+
+    // Open Audio File
+    std::string file{"assets/Age-of-War-Theme-Song.ogg"};
+    if (!music->openFromFile(file))
+    {
+        std::cout << "  >> Error: Could Not Find Audio File. Error in GameState::GameState()." << std::endl;
+    }
+    music->setVolume(50);
+    music->setLoop(true);
+    
     // Place Possible Game States in States Vector
-    //std::unique_ptr<MenuState> menuState = std::make_unique<MenuState>();
-    gameStates.push_back(std::make_unique<MenuState>());
+    State* ptr = new MenuState{window, currentStatePtr, music};
+    states.push_back(ptr);
+    
+    ptr = new GameState{window, currentStatePtr, music};
+    states.push_back(ptr);
 
-    gameStates.push_back(std::make_unique<GameState>());
+    ptr = new PauseState{window, currentStatePtr, music};
+    states.push_back(ptr);
 
+
+}
+
+Game::~Game()
+{
+    delete states.at(MENU_STATE);
+    delete states.at(GAME_STATE);
+    delete states.at(PAUSE_STATE);
+    delete music;
+    delete currentStatePtr;
+    delete window;
 }
 
 
@@ -24,27 +52,26 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 void Game::startGame ()
 {
 
+    sf::Clock clock;
+
     // Main Game Loop, One Iteration is a Frame
     while ( running )
     {
-        
+        sf::Time frameDuration {clock.restart()};
+
         // Handle Events
         handleEvents();
 
-
         // Update Logic
-        updateLogic();
-
-        // Clear Frame
-        window.clear();
+        updateLogic(frameDuration);
 
         // Render Frame
         renderFrame();
 
         // Display Frame
-        window.display();
+        window->display();
 
-        // Update Current Frame
+        // Update Current State
         getNextState();
 
     }
@@ -53,7 +80,7 @@ void Game::startGame ()
 // Handle Events
 void Game::handleEvents()
 {
-    while (window.pollEvent(event))
+    while (window->pollEvent(event))
     {
         switch (event.type)
         /*  Game Only Handles Events That Result in The Game Terminating
@@ -62,33 +89,38 @@ void Game::handleEvents()
         */
         {
         case sf::Event::Closed:
-            window.close();
-            break;
-
-        case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Escape)
-            {
-                window.close();
-            }
+            window->close();
+            running = false;
             break;
 
         default:
             // Let Current Game State Handle Event
-            gameStates.at(currentState)->handleEvent(event);
+            states.at(currentState)->handleEvent(event);
             break;
         }
     }
 }
 
 // Update Game Logic
-void Game::updateLogic()
+void Game::updateLogic(sf::Time const & frameDuration)
 {
-    gameStates.at(currentState)->updateLogic();
+    states.at(currentState)->updateLogic(frameDuration);
 }
 
 
 // Render Frame
 void Game::renderFrame()
 {
-    gameStates.at(currentState)->renderFrame();
+    states.at(currentState)->renderFrame();
+}
+
+void Game::getNextState()
+{
+    currentState = states.at(currentState)->getNextState();
+    if (currentState == MENU_STATE)
+    {
+        delete states.at(GAME_STATE);
+        State* ptr = new GameState{window, currentStatePtr, music};
+        states.at(GAME_STATE) = ptr;
+    }
 }
