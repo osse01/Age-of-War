@@ -1,9 +1,12 @@
 #include "State.h"
-#include <iostream>
+
+State::State(sf::Music* music, sf::Time* frameDuration)
+:music { music }, frameDuration { frameDuration }
+{}
 
 State::~State()
 {
     currentState = nullptr;
     music = nullptr;
-    std::cout << "Hej" << std::endl;
+    frameDuration = nullptr;
 }

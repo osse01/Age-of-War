@@ -15,20 +15,21 @@ class State
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State() = default;
-    ~State();
+    State(sf::Music*, sf::Time*);
+    virtual ~State();
     State(const State&) = delete;
     State& operator= (const State&) = delete;
 
     // FUNCTIONS
-    virtual void handleEvent (sf::Event)                      = 0;
-    virtual void updateLogic (sf::Time const & frameDuration) = 0;
-    virtual void renderFrame ()                               = 0;
-    virtual int getNextState ()                               = 0;
+    virtual void handleEvent (sf::Event) = 0;
+    virtual void updateLogic ()          = 0;
+    virtual void renderFrame ()          = 0;
+    virtual int getNextState ()          = 0;
 
 protected:
-    int*    currentState;
-    sf::Music* music;
+    int*    currentState{};
+    sf::Music* music{};
+    sf::Time* frameDuration{};
 };
 
 #endif

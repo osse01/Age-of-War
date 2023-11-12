@@ -13,15 +13,17 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (sf::RenderWindow*, int*, sf::Music*);
-    ~PauseState  () = default;
+    PauseState   (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
+    ~PauseState  () override;
+    PauseState   (const PauseState&) = delete;
+    PauseState& operator= ( const PauseState& ) = delete;
 
 private:
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
     void    renderFrame     ()                                  override;
     int     getNextState    ()                                  override;
-    void    updateLogic     (sf::Time const & frameDuration)    override;
+    void    updateLogic     ()    override;
     void    startAnimation  ();
 
     // VARIABLES
@@ -33,8 +35,6 @@ private:
     sf::Font*           textFont;
     sf::Text*           pausedText;
     sf::RectangleShape* greyOut;
-
-    sf::Music* music;
 };
 
 #endif

@@ -9,7 +9,7 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE } },
-    event {}, running { true }, states {}, currentState { MENU_STATE }, 
+    event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE }, 
     currentStatePtr { &currentState }, music { new sf::Music }, nextState {}
 {
 
@@ -23,13 +23,13 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     music->setLoop(true);
     
     // Place Possible Game States in States Vector
-    State* ptr = new MenuState{window, currentStatePtr, music};
+    State* ptr = new MenuState{window, currentStatePtr, music, frameDurationPtr};
     states.push_back(ptr);
     
-    ptr = new GameState{window, currentStatePtr, music};
+    ptr = new GameState{window, currentStatePtr, music, frameDurationPtr};
     states.push_back(ptr);
 
-    ptr = new PauseState{window, currentStatePtr, music};
+    ptr = new PauseState{window, currentStatePtr, music, frameDurationPtr};
     states.push_back(ptr);
 
 
@@ -40,9 +40,16 @@ Game::~Game()
     delete states.at(MENU_STATE);
     delete states.at(GAME_STATE);
     delete states.at(PAUSE_STATE);
+
+    states.at(MENU_STATE) = nullptr;
+    states.at(GAME_STATE) = nullptr;
+    states.at(PAUSE_STATE) = nullptr;
+    
     delete music;
-    delete currentStatePtr;
     delete window;
+    
+    currentStatePtr     = nullptr;
+    frameDurationPtr    = nullptr;
 }
 
 
@@ -52,18 +59,16 @@ Game::~Game()
 void Game::startGame ()
 {
 
-    sf::Clock clock;
-
     // Main Game Loop, One Iteration is a Frame
     while ( running )
     {
-        sf::Time frameDuration {clock.restart()};
+        frameDuration = clock.restart();
 
         // Handle Events
         handleEvents();
 
         // Update Logic
-        updateLogic(frameDuration);
+        updateLogic();
 
         // Render Frame
         renderFrame();
@@ -102,9 +107,9 @@ void Game::handleEvents()
 }
 
 // Update Game Logic
-void Game::updateLogic(sf::Time const & frameDuration)
+void Game::updateLogic()
 {
-    states.at(currentState)->updateLogic(frameDuration);
+    states.at(currentState)->updateLogic();
 }
 
 
@@ -117,10 +122,10 @@ void Game::renderFrame()
 void Game::getNextState()
 {
     currentState = states.at(currentState)->getNextState();
-    if (currentState == MENU_STATE)
+    /*if (currentState == MENU_STATE)
     {
         delete states.at(GAME_STATE);
-        State* ptr = new GameState{window, currentStatePtr, music};
+        State* ptr = new GameState{window, currentStatePtr, music, frameDurationPtr};
         states.at(GAME_STATE) = ptr;
-    }
+    }*/
 }

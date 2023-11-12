@@ -15,21 +15,21 @@ class GameState : public State
 {
 public:
     // CONSTRUCTORS
-    GameState  (sf::RenderWindow*, int*, sf::Music*);
-    ~GameState ();
+    GameState  (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
+    ~GameState () override;
     GameState (const GameState&) = delete;
 
     GameState& operator= (const GameState&) = delete;
  
  
     // FUNCTIONS
-    void handleEvent      (sf::Event)           override;
-    void updateLogic      (sf::Time const &)    override;
-    void renderFrame      ()                    override;
-    int getNextState      ()                    override;
+    void handleEvent      (sf::Event) override;
+    void updateLogic      ()          override;
+    void renderFrame      ()          override;
+    int getNextState      ()          override;
     void spawnFriendly    ();
     void spawnEnemy       ();
-    void handleCollisions (sf::Time const &);
+    void handleCollisions ();
 
     // VARIABLES
     std::deque<Entity*> friendlyQueue {};
@@ -47,7 +47,6 @@ public:
 
 
     int* currentState;
-    sf::Music* music;
 };
 
 #endif

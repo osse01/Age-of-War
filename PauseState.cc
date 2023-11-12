@@ -3,10 +3,10 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound)
-:   currentState { curr }, fontFile { "assets/coolFont.ttf" }, window { screen },
+PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
+:   State(sound, frameDuration), currentState { curr }, fontFile { "assets/coolFont.ttf" }, window { screen },
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
-    greyOut      { new sf::RectangleShape{} }, music { sound }
+    greyOut      { new sf::RectangleShape{} }
   
 //  -------------------------------------------------------
 //  PauseState constructor. Loads in the Font Used for Text and Backround Image, the Name of the Files
@@ -30,6 +30,16 @@ PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound)
     }
     greyOut->setSize(static_cast<sf::Vector2f>(window->getSize()));
     greyOut->setFillColor(sf::Color(115, 90, 100, 2));
+}
+
+PauseState::~PauseState()
+{
+    delete textFont;
+    delete pausedText;
+    delete greyOut;
+    currentState = nullptr;
+    window = nullptr;
+    frameDuration = nullptr;
 }
 
 void PauseState::handleEvent(sf::Event event)
@@ -57,7 +67,7 @@ int PauseState::getNextState()
     return  *currentState;
 }
 
-void PauseState::updateLogic(sf::Time const & frameDuration)
+void PauseState::updateLogic()
 //  ---------------------------------------------
 //  Function to Handle User Input. User Input Triggers
 //  an Event.

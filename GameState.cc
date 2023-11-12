@@ -2,11 +2,10 @@
 
 #include <iostream> 
 
-GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound)
-:   friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
+GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
+:   State(sound, frameDuration), friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
     window { screen }, backgroundTexture {}, backgroundSprite {},
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr },
-    music { sound } 
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -22,11 +21,15 @@ GameState::~GameState()
     for(auto &it: friendlyQueue)
         {
             delete it;
+            it = nullptr;
         }
     for(auto &it: enemyQueue)
         {
             delete it;
+            it = nullptr;
         }
+    currentState = nullptr;
+    frameDuration = nullptr;
 }
 
 void GameState::handleEvent(sf::Event event)
@@ -59,29 +62,29 @@ void GameState::handleEvent(sf::Event event)
     }
 }
 
-void GameState::updateLogic(sf::Time const & frameDuration)         
+void GameState::updateLogic()         
 {
     for(auto &it: friendlyQueue)
         {
-            it->updatePos(frameDuration);
+            it->updatePos(*frameDuration);
         }
     for(auto &it: enemyQueue)
         {
-            it->updatePos(frameDuration);
+            it->updatePos(*frameDuration);
         }
 
-    handleCollisions(frameDuration);
+    handleCollisions();
 }
 
-void GameState::handleCollisions(sf::Time const & frameDuration)
+void GameState::handleCollisions()
 {
     // Handle Collision between Friendly and Enemy
     if (friendlyQueue.size() > 0 && enemyQueue.size() > 0)
     {
         if (friendlyQueue.at(0)->collides(enemyQueue.at(0)))
         {
-            friendlyQueue.at(0) ->handleCollison(frameDuration);
-            enemyQueue.at(0)    ->handleCollison(frameDuration);
+            friendlyQueue.at(0) ->handleCollison(*frameDuration);
+            enemyQueue.at(0)    ->handleCollison(*frameDuration);
 
         }
     }
@@ -93,7 +96,7 @@ void GameState::handleCollisions(sf::Time const & frameDuration)
             if(enemyQueue.at(behind)->collides(enemyQueue.at(inFront)))
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyQueue.at(behind)->handleCollison(frameDuration);
+                enemyQueue.at(behind)->handleCollison(*frameDuration);
             }
         }
     
@@ -104,7 +107,7 @@ void GameState::handleCollisions(sf::Time const & frameDuration)
             if(friendlyQueue.at(behind)->collides(friendlyQueue.at(inFront)))
             {
                 // Friend Behind waits for Friend in Front
-                friendlyQueue.at(behind)->handleCollison(frameDuration);
+                friendlyQueue.at(behind)->handleCollison(*frameDuration);
             }
         }
 

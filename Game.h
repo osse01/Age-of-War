@@ -26,7 +26,7 @@ class Game
     //  FUNCTIONS //
     void startGame    ();
     void handleEvents ();
-    void updateLogic  (sf::Time const &);
+    void updateLogic  ();
     void renderFrame  ();
     void getNextState ();
     
@@ -36,15 +36,19 @@ class Game
     sf::RenderWindow* window; // Possibly Use RenderWindow* Instead
     sf::Event event;
     bool running;
+    sf::Clock clock;
+    sf::Time frameDuration;
+    sf::Time* frameDurationPtr;
     
     // States
     std::vector<State*> states;
     int     currentState;
     int*    currentStatePtr;
     sf::Music* music;
+    
 
     protected:
-        int    nextState;
+    int    nextState;
 
 
 
