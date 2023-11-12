@@ -1,6 +1,6 @@
-#include <SFML/Graphics.hpp>
 #include "Entity.h"
 
+#include <iostream>
 
 unsigned    const GAME_WIDTH  { 640 };
 unsigned    const GAME_HEIGHT { 320 };
@@ -9,16 +9,26 @@ unsigned    const GAME_HEIGHT { 320 };
 Entity::Entity(bool FRIENDLY)
     :xpos{0}, ypos{GAME_HEIGHT/2}, 
     movementSpeed{20}, IS_FRIENDLY{FRIENDLY}, 
-    hasCollided{false},
-    rekt{sf::Vector2f{10.f, 40.f}}
+    hasCollided{false}, texture{}, sprite{}, boundingbox{sf::Vector2f(40.f,50.f)}
 {
-    rekt.setFillColor( sf::Color::Blue );
-    rekt.setPosition( xpos, ypos );
+    if(!texture.loadFromFile("assets/0001.png"))
+    {
+        std::cout << "Could not load entity from texture" << std::endl;
+    }
+
+    sprite.setTexture(texture);
+    sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
+    boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
+
+    sprite.setPosition( xpos, ypos );
+    boundingbox.setPosition( xpos, ypos );
+    sprite.setScale(sf::Vector2f(-0.1f,0.1f));
     if ( !IS_FRIENDLY )
     {
         movementSpeed *= -1;
         xpos = GAME_WIDTH - 10;
-        rekt.setFillColor( sf::Color::Red );
+        sprite.setScale(sf::Vector2f(0.1f,0.1f));
+        //rekt.setFillColor( sf::Color::Red );
     }
 }
 
@@ -27,21 +37,22 @@ void Entity::handleCollison(sf::Time const & frameDuration)
     xpos -= movementSpeed * frameDuration.asSeconds();
 }
 
-sf::RectangleShape Entity::render()
+sf::Sprite Entity::render() const &
 {
-    return rekt;
+    return sprite;
 }
 
 bool Entity::collides( Entity* const other )
 {
     // Check whether this collides with other
-    return rekt.getGlobalBounds().intersects(
-            ( other->render() ).getGlobalBounds() );
+    return boundingbox.getGlobalBounds().intersects(
+            ( other->boundingbox.getGlobalBounds() ) );
 }
 
 
 void Entity::updatePos(sf::Time const & frameDuration)
 {
     xpos += movementSpeed * frameDuration.asSeconds();
-    rekt.setPosition(xpos, ypos);
+    sprite.setPosition(xpos, ypos);
+    boundingbox.setPosition(xpos, ypos);
 }
