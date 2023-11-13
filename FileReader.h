@@ -14,9 +14,17 @@ class FileReader
 //  from .txt files and can return that data in vector
 //  format for easy acces to the data.
 //
-//  Data will be acceseble through vector with string 
-//  elements, format for current project in the srings are
-//  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED-/-BOX_SIZE-/-TEXTUREFILE
+//  Data will be acceseble through struct called Data.
+//  FileReader funtion returnData(const std::string) Assumes
+//  the Data Read From StageX.txt File is in Format:
+//  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
+//  -/-BOX_SIZE-/-TEXTUREFILE
+//
+//  Intended Use, to Create a FileReader Object Giving 
+//  it the Correct File Path To Stage Data File and Also
+//  Wich Type of Object we are Supposed To fetch Data for.
+//  Then Call getData() to get a Struct Containing the 
+//  Desired Data.
 //  -------------------------------------------------------
 
 {

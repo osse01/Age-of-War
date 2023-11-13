@@ -1,0 +1,10 @@
+Melee   50  200   15    0.1     1     100     /assets/melee.png
+Range   0  100   15    2    1     100     /assets/range.png
+Tank   50  400   15    0.1   1  100     /assets/tank.png
+Background  0   0   0   0   0   0   /assets/background.jpeg
+Base    0   2000    0   0   300     0   /assets/base.png
+GameFont    0   0   0   0   0   0   /assets/coolFont.ttf
+Tree    0   0   0   0   0   0   /assets/tree.png
+GameMusic   0   0   0   0   0   0    /assets/Age-of-War-Theme-Song.ogg
+Projectile 25  1   30  0.1    1    20  /assets/projectile.png   
+Turret  0   1   0   4   1   100     /assets/turrets.png 
