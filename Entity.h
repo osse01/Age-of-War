@@ -7,8 +7,8 @@
 class Entity
 {
     public:
-        Entity(bool, double, double, int, sf::Sprite &,
-               sf::RectangleShape &, std::string &);
+         Entity(bool, double, double, int, sf::Sprite &,
+                sf::RectangleShape &, std::string &);
         virtual ~Entity() = default;
         
         virtual void handleCollison() = 0;

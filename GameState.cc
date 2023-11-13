@@ -125,12 +125,12 @@ void GameState::renderFrame()
     //  Render units
     for(auto &it: friendlyQueue)
         {
-            window->draw(it->render());
+            window->draw(it->getSprite());
         }
 
     for(auto &it: enemyQueue)
         {
-            window->draw(it->render());
+            window->draw(it->getSprite());
         }
 }
 
@@ -147,6 +147,6 @@ void GameState::spawnFriendly()
 
 void GameState::spawnEnemy()
 {
-    Entity* enemy = new Entity{false};
+    Entity* enemy = new Entiry{false};
     enemyQueue.push_back(enemy);
 }

@@ -1,9 +1,10 @@
 #include "Entity.h"
 
 Entity::Entity(bool FRIENDLY, double xpos, double ypos, int hp, sf::Sprite & sprite,
-               sf::RectangleShape boundingbox, std::string texturePath)
+               sf::RectangleShape & boundingbox, std::string & texturePath)
+    
     : xpos{ xpos }, ypos{ ypos }, hp{ hp }, IS_FRIENDLY{ FRIENDLY }, 
-      hasCollided{ false }, TEXTURE{ sf::Texture::loadFromFile( texturePath ) },
+      TEXTURE{ sf::Texture::loadFromFile( texturePath ) },
       sprite{ sprite }, boundingbox{ boundingbox }
 {
     sprite.setTexture(TEXTURE);
@@ -15,7 +16,7 @@ Entity::Entity(bool FRIENDLY, double xpos, double ypos, int hp, sf::Sprite & spr
     sprite.setScale(sf::Vector2f(-0.1f,0.1f)); // scale needs to be fixed somehow
 }
 
-sf::Sprite Entity::render() const &
+sf::Sprite Entity::getSprite() const &
 {
     return sprite;
 }

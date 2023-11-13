@@ -32,18 +32,19 @@ public:
     void handleCollisions ();
 
     // VARIABLES
+    struct stats;
+
     std::deque<Entity*> friendlyQueue {};
     std::deque<Entity*> enemyQueue    {};
 
-    std::string     backgroundFile;
+    std::string         backgroundFile;
 
     sf::RenderWindow*   window;
 
-    sf::Texture        backgroundTexture;
-    sf::Sprite         backgroundSprite;
+    sf::Texture         backgroundTexture;
+    sf::Sprite          backgroundSprite;
     
     sf::Vector2f        zoomFactor;
-
 
 
     int* currentState;
