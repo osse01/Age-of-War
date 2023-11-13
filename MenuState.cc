@@ -48,9 +48,9 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
 
 MenuState::~MenuState()
 {
-    currentState = nullptr;
-    window = nullptr;
-    frameDuration = nullptr;
+    currentState    = nullptr;
+    window          = nullptr;
+    frameDuration   = nullptr;
 }
 
 void MenuState::handleEvent(sf::Event event)
