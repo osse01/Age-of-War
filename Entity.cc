@@ -1,40 +1,18 @@
 #include "Entity.h"
 
-#include <iostream>
-
-unsigned    const GAME_WIDTH  { 640 };
-unsigned    const GAME_HEIGHT { 320 };
-
-
-Entity::Entity(bool FRIENDLY)
-    :xpos{0}, ypos{GAME_HEIGHT - 50}, 
-    movementSpeed{20}, IS_FRIENDLY{FRIENDLY}, 
-    hasCollided{false}, texture{}, sprite{}, boundingbox{sf::Vector2f(40.f,50.f)}
+Entity::Entity(bool FRIENDLY, double xpos, double ypos, int hp, sf::Sprite & sprite,
+               sf::RectangleShape boundingbox, std::string texturePath)
+    : xpos{ xpos }, ypos{ ypos }, hp{ hp }, IS_FRIENDLY{ FRIENDLY }, 
+      hasCollided{ false }, TEXTURE{ sf::Texture::loadFromFile( texturePath ) },
+      sprite{ sprite }, boundingbox{ boundingbox }
 {
-    if(!texture.loadFromFile("assets/0001.png"))
-    {
-        std::cout << "Could not load entity from texture" << std::endl;
-    }
-
-    sprite.setTexture(texture);
+    sprite.setTexture(TEXTURE);
     sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
     boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
 
     sprite.setPosition( xpos, ypos );
     boundingbox.setPosition( xpos, ypos );
-    sprite.setScale(sf::Vector2f(-0.1f,0.1f));
-    if ( !IS_FRIENDLY )
-    {
-        movementSpeed *= -1;
-        xpos = GAME_WIDTH - 10;
-        sprite.setScale(sf::Vector2f(0.1f,0.1f));
-        //rekt.setFillColor( sf::Color::Red );
-    }
-}
-
-void Entity::handleCollison(sf::Time const & frameDuration)
-{
-    xpos -= movementSpeed * frameDuration.asSeconds();
+    sprite.setScale(sf::Vector2f(-0.1f,0.1f)); // scale needs to be fixed somehow
 }
 
 sf::Sprite Entity::render() const &
@@ -42,17 +20,9 @@ sf::Sprite Entity::render() const &
     return sprite;
 }
 
-bool Entity::collides( Entity* const other )
+bool Entity::collides( Entity* const other ) const
 {
     // Check whether this collides with other
     return boundingbox.getGlobalBounds().intersects(
             ( other->boundingbox.getGlobalBounds() ) );
-}
-
-
-void Entity::updatePos(sf::Time const & frameDuration)
-{
-    xpos += movementSpeed * frameDuration.asSeconds();
-    sprite.setPosition(xpos, ypos);
-    boundingbox.setPosition(xpos, ypos);
 }

@@ -2,27 +2,29 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
 class Entity
 {
     public:
-        Entity(bool FRIENDLY);
+        Entity(bool, double, double, int, sf::Sprite &,
+               sf::RectangleShape &, std::string &);
         virtual ~Entity() = default;
-        void handleCollison(sf::Time const & frameDuration);
-        sf::Sprite render() const &;
-        void updatePos(sf::Time const &);
-        bool collides( Entity* const );
+        
+        virtual void handleCollison() = 0;
+        virtual void updatePos()      = 0;
 
-    private:
-        void detectCollision();
-        double xpos;
-        double ypos;
-        double movementSpeed;
-        bool IS_FRIENDLY;
-        bool hasCollided;
-        sf::Texture texture;
-        sf::Sprite sprite;
-        sf::RectangleShape boundingbox;
+        sf::Sprite getSprite()         const &;
+        bool collides( Entity* const ) const;
+
+    protected:
+        double              xpos;
+        double              ypos;
+        int                 hp;
+        bool                IS_FRIENDLY;
+        const sf::Texture   TEXTURE;
+        sf::Sprite          sprite;
+        sf::RectangleShape  boundingbox;
 };
 
 #endif
