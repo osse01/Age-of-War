@@ -5,7 +5,7 @@
 GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
 :   State(sound, frameDuration), friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
     window { screen }, backgroundTexture {}, backgroundSprite {},
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }, stage {1}
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -149,4 +149,9 @@ void GameState::spawnEnemy()
 {
     Entity* enemy = new Entity{false};
     enemyQueue.push_back(enemy);
+}
+
+void GameState::updateStage()
+{
+    stage++;
 }

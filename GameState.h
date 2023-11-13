@@ -30,6 +30,7 @@ public:
     void spawnFriendly    ();
     void spawnEnemy       ();
     void handleCollisions ();
+    void updateStage      ();
 
     // VARIABLES
     std::deque<Entity*> friendlyQueue {};
@@ -47,6 +48,8 @@ public:
 
 
     int* currentState;
+    private:
+    int stage;
 };
 
 #endif
