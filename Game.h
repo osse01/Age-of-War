@@ -39,6 +39,7 @@ class Game
     sf::Clock clock;
     sf::Time frameDuration;
     sf::Time* frameDurationPtr;
+    int currentStage;
     
     // States
     std::vector<State*> states;

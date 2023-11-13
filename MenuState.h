@@ -18,18 +18,18 @@
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;
 
-    private:
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
     void    renderFrame     ()                                  override;
     int     getNextState    ()                                  override;
     void    updateLogic     ()          override;
     void    startAnimation  ();
-
+    private:
     // VARIABLES
     float   scale;
     float   t;
     int*    currentState;
+    int     nextState;
 
     std::string     fontFile;
     std::string     backgroundFile;

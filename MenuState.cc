@@ -4,7 +4,7 @@
 #include <cmath>
 
 MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, currentState{curr}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
+:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, currentState{curr}, nextState{MENU_STATE}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
     window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
 //  -------------------------------------------------------
@@ -62,7 +62,7 @@ void MenuState::handleEvent(sf::Event event)
     {
     case sf::Event::KeyPressed:
         startAnimation();
-        *currentState = GAME_STATE;  
+        nextState = GAME_STATE;  
         music->play();      
         break;
     
@@ -76,7 +76,8 @@ int MenuState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    return  *currentState;
+    //std::cout << nextState << std::endl;
+    return  nextState;
 }
 
 void MenuState::updateLogic()

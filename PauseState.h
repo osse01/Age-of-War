@@ -28,6 +28,7 @@ private:
 
     // VARIABLES
     int*    currentState;
+    int     nextState;
 
     std::string fontFile;
 

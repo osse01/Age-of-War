@@ -5,7 +5,7 @@
 GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
 :   State(sound, frameDuration), friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
     window { screen }, backgroundTexture {}, backgroundSprite {},
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }, nextState{GAME_STATE}
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -37,25 +37,29 @@ void GameState::handleEvent(sf::Event event)
     switch (event.type)
     {
     case sf::Event::KeyPressed:
-        if (event.key.code == sf::Keyboard::Num1)
+        switch (event.key.code)
         {
+        case sf::Keyboard::Num1:
             spawnFriendly();
-        }
-        if (event.key.code == sf::Keyboard::Num2)
-        {
+            break;
+
+        case sf::Keyboard::Num2:
             spawnEnemy();
-        }
-        if (event.key.code == sf::Keyboard::M)
-        {
-            *currentState = MENU_STATE;
+            break;
+
+        case sf::Keyboard::M:
+            nextState = MENU_STATE;
             music->stop();
-        }
-        if (event.key.code == sf::Keyboard::P)
-        {
+            break;
+
+        case sf::Keyboard::P:
             *currentState = PAUSE_STATE;
             music->pause();
+            break;
+        
+        default:
+            break;
         }
-        break;
     default:
         break;
 
@@ -136,7 +140,8 @@ void GameState::renderFrame()
 
 int GameState::getNextState()       
 {
-    return *currentState;
+    //std::cout << *currentState << std::endl; 
+    return nextState;
 }
 
 void GameState::spawnFriendly()

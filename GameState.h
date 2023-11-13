@@ -47,6 +47,8 @@ public:
 
 
     int* currentState;
+    private:
+    int nextState;
 };
 
 #endif

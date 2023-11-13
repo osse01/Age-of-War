@@ -4,7 +4,7 @@
 #include <cmath>
 
 PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), currentState { curr }, fontFile { "assets/coolFont.ttf" }, window { screen },
+:   State(sound, frameDuration), currentState { curr }, nextState {PAUSE_STATE}, fontFile { "assets/coolFont.ttf" }, window { screen },
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
   
@@ -52,7 +52,7 @@ void PauseState::handleEvent(sf::Event event)
     case sf::Event::KeyPressed:
         music->play();
         startAnimation();
-        *currentState = GAME_STATE;      
+        nextState = GAME_STATE;      
         break;
     default:
         break;
@@ -64,6 +64,7 @@ int PauseState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
+    *currentState = nextState;
     return  *currentState;
 }
 

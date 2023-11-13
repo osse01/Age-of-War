@@ -9,10 +9,9 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE } },
-    event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE }, 
-    currentStatePtr { &currentState }, music { new sf::Music }, nextState {}
+    event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, currentStage {}, states {}, currentState { MENU_STATE }, 
+    currentStatePtr { &currentState }, music {new sf::Music }, nextState {}
 {
-
     // Open Audio File
     std::string file{"assets/Age-of-War-Theme-Song.ogg"};
     if (!music->openFromFile(file))
@@ -21,8 +20,8 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     }
     music->setVolume(50);
     music->setLoop(true);
-    
-    // Place Possible Game States in States Vector
+
+    //Place Possible Game States in States Vector
     State* ptr = new MenuState{window, currentStatePtr, music, frameDurationPtr};
     states.push_back(ptr);
     
@@ -31,7 +30,6 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 
     ptr = new PauseState{window, currentStatePtr, music, frameDurationPtr};
     states.push_back(ptr);
-
 
 }
 
@@ -44,10 +42,12 @@ Game::~Game()
     states.at(MENU_STATE) = nullptr;
     states.at(GAME_STATE) = nullptr;
     states.at(PAUSE_STATE) = nullptr;
-    
+   
     delete music;
+    //music = nullptr;
+    //window->close();
     delete window;
-    
+    //window = nullptr;
     currentStatePtr     = nullptr;
     frameDurationPtr    = nullptr;
 }
@@ -121,11 +121,52 @@ void Game::renderFrame()
 
 void Game::getNextState()
 {
-    currentState = states.at(currentState)->getNextState();
+    
     /*if (currentState == MENU_STATE)
     {
         delete states.at(GAME_STATE);
         State* ptr = new GameState{window, currentStatePtr, music, frameDurationPtr};
         states.at(GAME_STATE) = ptr;
     }*/
+    if (currentState == MENU_STATE)
+    {
+        std::cout << "w" << std::endl;
+        currentState = states.at(currentState)->getNextState();
+        std::cout << currentState << std::endl;
+        if (*currentStatePtr == GAME_STATE)
+        {
+            std::cout << "inne" << std::endl;
+            delete states.at(GAME_STATE);
+            State* ptr = new GameState{window, currentStatePtr, music, frameDurationPtr};
+            states.at(GAME_STATE) = ptr;
+        }
+        return;
+    }
+    else if (currentState == GAME_STATE)
+    {
+        currentState = states.at(currentState)->getNextState();
+        //std::cout << currentState << std::endl;
+        if (*currentStatePtr == MENU_STATE)
+        {
+            std::cout << "inne nu" << std::endl;
+            delete states.at(MENU_STATE);
+            State* ptr = new MenuState{window, currentStatePtr, music, frameDurationPtr};
+            states.at(MENU_STATE) = ptr;
+        }
+        return;
+    }
+    else if (currentState == PAUSE_STATE)
+    {
+        currentState = states.at(currentState)->getNextState();
+        std::cout << currentState << std::endl;
+        if (*currentStatePtr == GAME_STATE)
+        {
+            std::cout << "inne tre" << std::endl;
+            delete states.at(PAUSE_STATE);
+            State* ptr = new PauseState{window, currentStatePtr, music, frameDurationPtr};
+            states.at(PAUSE_STATE) = ptr;
+        }
+        return;
+    }
+
 }
