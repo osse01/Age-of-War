@@ -2,16 +2,16 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
-#include <string>
+
+#include "FileReader.h"
 
 class Entity
 {
     public:
-         Entity(bool, double, double, int, sf::Sprite &,
-                sf::RectangleShape &, std::string &);
+         Entity(const FileReader::Data&, bool, sf::Vector2f);
         virtual ~Entity() = default;
         
-        virtual void handleCollison() = 0;
+        virtual void handleCollision(int) = 0;
         virtual void updatePos()      = 0;
 
         sf::Sprite getSprite()         const &;
@@ -21,8 +21,9 @@ class Entity
         double              xpos;
         double              ypos;
         int                 hp;
-        bool                IS_FRIENDLY;
-        const sf::Texture   TEXTURE;
+        bool                isFriendly;
+        sf::Texture         texture;
+        sf::IntRect         rectSourceSprite;
         sf::Sprite          sprite;
         sf::RectangleShape  boundingbox;
 };

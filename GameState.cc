@@ -3,9 +3,9 @@
 #include <iostream> 
 
 GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
-    window { screen }, backgroundTexture {}, backgroundSprite {},
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }
+:   melee {}, ranged {}, tank {}, State(sound, frameDuration), friendlyQueue {}, enemyQueue {},
+    backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -14,6 +14,9 @@ GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf:
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
     backgroundSprite.setTexture(backgroundTexture);
+
+    FileReader reader {};
+    melee = reader.returnData("melee", "assets/stage1.txt");
 }
 
 GameState::~GameState()
@@ -66,11 +69,11 @@ void GameState::updateLogic()
 {
     for(auto &it: friendlyQueue)
         {
-            it->updatePos(*frameDuration);
+            it->updatePos();
         }
     for(auto &it: enemyQueue)
         {
-            it->updatePos(*frameDuration);
+            it->updatePos();
         }
 
     handleCollisions();
@@ -83,8 +86,8 @@ void GameState::handleCollisions()
     {
         if (friendlyQueue.at(0)->collides(enemyQueue.at(0)))
         {
-            friendlyQueue.at(0) ->handleCollison(*frameDuration);
-            enemyQueue.at(0)    ->handleCollison(*frameDuration);
+            friendlyQueue.at(0) ->handleCollision(1);
+            enemyQueue.at(0)    ->handleCollision(1);
 
         }
     }
@@ -96,7 +99,7 @@ void GameState::handleCollisions()
             if(enemyQueue.at(behind)->collides(enemyQueue.at(inFront)))
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyQueue.at(behind)->handleCollison(*frameDuration);
+                enemyQueue.at(behind)->handleCollision(0);
             }
         }
     
@@ -107,7 +110,7 @@ void GameState::handleCollisions()
             if(friendlyQueue.at(behind)->collides(friendlyQueue.at(inFront)))
             {
                 // Friend Behind waits for Friend in Front
-                friendlyQueue.at(behind)->handleCollison(*frameDuration);
+                friendlyQueue.at(behind)->handleCollision(0);
             }
         }
 
@@ -141,12 +144,12 @@ int GameState::getNextState()
 
 void GameState::spawnFriendly()
 {
-    Entity* friendly = new Entity{true};
+    Entity* friendly = new Melee(melee, true, sf::Vector2f( 0.f, window->getSize().y-200.f ));
     friendlyQueue.push_back(friendly);
 }
 
 void GameState::spawnEnemy()
 {
-    Entity* enemy = new Entiry{false};
+    Entity* enemy = new Melee(melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-200.f ));
     enemyQueue.push_back(enemy);
 }

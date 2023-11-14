@@ -8,18 +8,18 @@
 class Dynamic : public Entity
 {
     public:
-        Dynamic(stats&);
+        Dynamic(const FileReader::Data&, bool, sf::Vector2f);
         virtual ~Dynamic() = default;
 
-        virtual void handleCollison()   = 0;
-        virtual void updatePos()        = 0;
+        virtual void handleCollision(int)   = 0;
+        virtual void updatePos()           = 0;
 
     protected:
         const int MOVEMENTSPEED;
         const int DAMAGE;
         const int DEATH_VALUE;
         const int BUY_VALUE;
-        const int RANGE
+        const int RANGE;
 
 };
 

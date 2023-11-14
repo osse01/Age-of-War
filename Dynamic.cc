@@ -1,9 +1,8 @@
 #include "Dynamic.h"
 
 
-Dynamic::Dynamic(Melee::Stats stats)
-    : Entity(stats.isFriendly, stats.xpos, stats.ypos, stats.hp, stats.sprite
-             stats.boundingbox, stats.texturePath),
-      MOVEMENTSPEED { stats.movementspeed }, DAMAGE { stats.damage }, DEATH_VALUE { stats.deathValue },
-      BUY_VALUE { stats.buyValue }, RANGE { stats.range }
+Dynamic::Dynamic(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
+    : Entity::Entity(stats, friendly, pos),
+      MOVEMENTSPEED { stats.movementSpeed }, DAMAGE { stats.damage }, DEATH_VALUE {/* fix later*/},
+      BUY_VALUE {/*fix later*/}, RANGE { /*fix later*/ }
 {}

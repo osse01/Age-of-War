@@ -1,21 +1,5 @@
 #include "Melee.h"
 
-Melee::Melee(stats stats)
- : Troop(stats), 
-   walkSprite{"assets/walkingSprite.png"}
+Melee::Melee(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
+ : Troop::Troop(stats, friendly, pos)
 {}
-void Melee::changeWalkSprite()
-{
-    // Change sprite position on the image
-
-}
-
-void Melee::changeIdleSprite()
-{
-    // Change sprite position on the image
-}
-
-void Melee::changeAttackSprite()
-{
-    // Change sprite position on the image
-}

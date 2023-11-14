@@ -1,19 +1,27 @@
 #include "Entity.h"
 
-Entity::Entity(bool FRIENDLY, double xpos, double ypos, int hp, sf::Sprite & sprite,
-               sf::RectangleShape & boundingbox, std::string & texturePath)
+#include <iostream>
+
+Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
     
-    : xpos{ xpos }, ypos{ ypos }, hp{ hp }, IS_FRIENDLY{ FRIENDLY }, 
-      TEXTURE{ sf::Texture::loadFromFile( texturePath ) },
-      sprite{ sprite }, boundingbox{ boundingbox }
+    : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, 
+      texture{}, rectSourceSprite { 0,128,128,128 }, sprite {texture, rectSourceSprite},
+      boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }
 {
-    sprite.setTexture(TEXTURE);
+    if(!texture.loadFromFile("assets/friendly_melee_sprite_sheet.png"))
+    {
+        throw std::logic_error(
+        "    >> Error: Could Not Find background image. Error in Entity::Entity().");
+    }
     sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
     boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
 
     sprite.setPosition( xpos, ypos );
     boundingbox.setPosition( xpos, ypos );
-    sprite.setScale(sf::Vector2f(-0.1f,0.1f)); // scale needs to be fixed somehow
+    if(isFriendly)
+    {
+        sprite.setScale(sf::Vector2f(-1.f,1.f));
+    }
 }
 
 sf::Sprite Entity::getSprite() const &

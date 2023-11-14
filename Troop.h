@@ -7,19 +7,17 @@
 class Troop : public Dynamic
 {
     public:
-        Troop(stats&);
+        Troop(const FileReader::Data&, bool, sf::Vector2f);
         virtual ~Troop() = default;
 
-        void handleCollison(int);
-        void updatePos();
-        virtual void changeWalkSprite();
-        virtual void changeIdleSprite();
-        virtual void changeaAttackSprite();
+        void handleCollision(int) override;
+        void updatePos()          override;
 
     private:
-        int walk   { 0 };
-        int idle   { 1 };
-        int attack { 2 };
+        void changeSprite();
+        void walk();
+        void idle();
+        void attack();
 };
 
 #endif
