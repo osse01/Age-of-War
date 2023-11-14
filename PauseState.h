@@ -21,7 +21,7 @@ public:
 private:
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     ()                                  override;
+    bool    renderFrame     ()                                  override;
     int     getNextState    ()                                  override;
     void    updateLogic     ()    override;
     void    startAnimation  ();

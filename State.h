@@ -23,7 +23,7 @@ public:
     // FUNCTIONS
     virtual void handleEvent (sf::Event) = 0;
     virtual void updateLogic ()          = 0;
-    virtual void renderFrame ()          = 0;
+    virtual bool renderFrame ()          = 0;
     virtual int getNextState ()          = 0;
 
 protected:

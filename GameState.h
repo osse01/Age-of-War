@@ -25,7 +25,7 @@ public:
     // FUNCTIONS
     void handleEvent      (sf::Event) override;
     void updateLogic      ()          override;
-    void renderFrame      ()          override;
+    bool renderFrame      ()          override;
     int getNextState      ()          override;
     void spawnFriendly    ();
     void spawnEnemy       ();

@@ -117,7 +117,7 @@ void GameState::handleCollisions()
 
 }
 
-void GameState::renderFrame()  
+bool GameState::renderFrame()  
 {
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
@@ -128,14 +128,15 @@ void GameState::renderFrame()
     
     //  Render units
     for(auto &it: friendlyQueue)
-        {
-            window->draw(it->render());
-        }
+    {
+        window->draw(it->render());
+    }
 
     for(auto &it: enemyQueue)
-        {
-            window->draw(it->render());
-        }
+    {
+        window->draw(it->render());
+    }
+    return false;
 }
 
 int GameState::getNextState()       

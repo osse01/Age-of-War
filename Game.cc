@@ -86,7 +86,7 @@ void Game::startGame ()
 void Game::handleEvents()
 {
     while (window->pollEvent(event))
-    {
+    {        
         switch (event.type)
         /*  Game Only Handles Events That Result in The Game Terminating
             as These Events are Independent of State
@@ -103,6 +103,7 @@ void Game::handleEvents()
             states.at(currentState)->handleEvent(event);
             break;
         }
+        
     }
 }
 
@@ -116,7 +117,12 @@ void Game::updateLogic()
 // Render Frame
 void Game::renderFrame()
 {
-    states.at(currentState)->renderFrame();
+    bool tmp = states.at(currentState)->renderFrame();
+    if(tmp == true)
+    {
+        window->close();
+        running = false; 
+    }
 }
 
 void Game::getNextState()

@@ -20,10 +20,10 @@
 
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     ()                                  override;
+    bool    renderFrame     ()                                  override;
     int     getNextState    ()                                  override;
     void    updateLogic     ()          override;
-    void    startAnimation  ();
+    bool    startAnimation  ();
     private:
     // VARIABLES
     float   scale;
@@ -41,6 +41,8 @@
     sf::Text           instructionText;
     sf::RenderWindow*   window;
     sf::Vector2f        zoomFactor;
+
+    sf::Event event;
     };
 
     #endif

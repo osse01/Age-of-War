@@ -82,7 +82,7 @@ void PauseState::startAnimation()
 //  ---------------------------------------------
 {}
 
-void PauseState::renderFrame()
+bool PauseState::renderFrame()
 //  ---------------------------------------------
 //  Funcion Explaination
 //  ---------------------------------------------
@@ -90,5 +90,6 @@ void PauseState::renderFrame()
     window->draw(*greyOut);
 
     window->draw(*pausedText);
+    return false;
 }
 
