@@ -2,11 +2,13 @@
 
 #include <iostream> 
 
-GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), friendlyQueue {}, enemyQueue {}, backgroundFile { "assets/background.jpeg" },
-    window { screen }, backgroundTexture {}, backgroundSprite {},
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }, nextState{GAME_STATE}
+GameState::GameState(sf::RenderWindow * screen,  sf::Music* sound, sf::Time* frameDuration)
+:   melee {}, ranged {}, tank {}, State(sound, frameDuration), friendlyQueue {}, enemyQueue {},
+    backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate{GAME_STATE}
 {
+    window->setFramerateLimit(18);
+
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
     {
@@ -14,6 +16,9 @@ GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf:
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
     backgroundSprite.setTexture(backgroundTexture);
+
+    FileReader reader {};
+    melee = reader.returnData("Melee", "assets/stage1.txt");
 }
 
 GameState::~GameState()
@@ -28,7 +33,6 @@ GameState::~GameState()
             delete it;
             it = nullptr;
         }
-    currentState = nullptr;
     frameDuration = nullptr;
 }
 
@@ -37,29 +41,25 @@ void GameState::handleEvent(sf::Event event)
     switch (event.type)
     {
     case sf::Event::KeyPressed:
-        switch (event.key.code)
+        if (event.key.code == sf::Keyboard::Num1)
         {
-        case sf::Keyboard::Num1:
             spawnFriendly();
-            break;
-
-        case sf::Keyboard::Num2:
-            spawnEnemy();
-            break;
-
-        case sf::Keyboard::M:
-            nextState = MENU_STATE;
-            music->stop();
-            break;
-
-        case sf::Keyboard::P:
-            *currentState = PAUSE_STATE;
-            music->pause();
-            break;
-        
-        default:
-            break;
         }
+        if (event.key.code == sf::Keyboard::Num2)
+        {
+            spawnEnemy();
+        }
+        if (event.key.code == sf::Keyboard::M)
+        {
+            nextstate = MENU_STATE;
+            music->stop();
+        }
+        if (event.key.code == sf::Keyboard::P)
+        {
+            nextstate = PAUSE_STATE;
+            music->pause();
+        }
+        break;
     default:
         break;
 
@@ -70,11 +70,11 @@ void GameState::updateLogic()
 {
     for(auto &it: friendlyQueue)
         {
-            it->updatePos(*frameDuration);
+            it->updatePos();
         }
     for(auto &it: enemyQueue)
         {
-            it->updatePos(*frameDuration);
+            it->updatePos();
         }
 
     handleCollisions();
@@ -87,9 +87,8 @@ void GameState::handleCollisions()
     {
         if (friendlyQueue.at(0)->collides(enemyQueue.at(0)))
         {
-            friendlyQueue.at(0) ->handleCollison(*frameDuration);
-            enemyQueue.at(0)    ->handleCollison(*frameDuration);
-
+            friendlyQueue.at(0) ->handleCollision(1);
+            enemyQueue.at(0)    ->handleCollision(1);
         }
     }
     
@@ -100,7 +99,7 @@ void GameState::handleCollisions()
             if(enemyQueue.at(behind)->collides(enemyQueue.at(inFront)))
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyQueue.at(behind)->handleCollison(*frameDuration);
+                enemyQueue.at(behind)->handleCollision(0);
             }
         }
     
@@ -111,13 +110,13 @@ void GameState::handleCollisions()
             if(friendlyQueue.at(behind)->collides(friendlyQueue.at(inFront)))
             {
                 // Friend Behind waits for Friend in Front
-                friendlyQueue.at(behind)->handleCollison(*frameDuration);
+                friendlyQueue.at(behind)->handleCollision(0);
             }
         }
 
 }
 
-bool GameState::renderFrame()  
+void GameState::renderFrame()  
 {
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
@@ -128,31 +127,34 @@ bool GameState::renderFrame()
     
     //  Render units
     for(auto &it: friendlyQueue)
-    {
-        window->draw(it->render());
-    }
+        {
+            window->draw(it->getSprite());
+        }
 
     for(auto &it: enemyQueue)
-    {
-        window->draw(it->render());
-    }
-    return false;
+        {
+            window->draw(it->getSprite());
+        }
+}
+
+void GameState::resetState()
+{
+    nextstate = GAME_STATE;
 }
 
 int GameState::getNextState()       
 {
-    //std::cout << *currentState << std::endl; 
-    return nextState;
+    return nextstate;
 }
 
 void GameState::spawnFriendly()
 {
-    Entity* friendly = new Entity{true};
+    Entity* friendly = new Melee(melee, true, sf::Vector2f( 0.f, window->getSize().y-50.f ));
     friendlyQueue.push_back(friendly);
 }
 
 void GameState::spawnEnemy()
 {
-    Entity* enemy = new Entity{false};
+    Entity* enemy = new Melee(melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-50.f ));
     enemyQueue.push_back(enemy);
 }

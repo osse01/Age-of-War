@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), currentState { curr }, nextState {PAUSE_STATE}, fontFile { "assets/coolFont.ttf" }, window { screen },
+PauseState::PauseState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frameDuration)
+:   State(sound, frameDuration), nextstate{PAUSE_STATE}, fontFile { "assets/coolFont.ttf" }, window { screen },
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
   
@@ -37,7 +37,6 @@ PauseState::~PauseState()
     delete textFont;
     delete pausedText;
     delete greyOut;
-    currentState = nullptr;
     window = nullptr;
     frameDuration = nullptr;
 }
@@ -52,7 +51,7 @@ void PauseState::handleEvent(sf::Event event)
     case sf::Event::KeyPressed:
         music->play();
         startAnimation();
-        nextState = GAME_STATE;      
+        nextstate = GAME_STATE;      
         break;
     default:
         break;
@@ -64,8 +63,7 @@ int PauseState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    *currentState = nextState;
-    return  *currentState;
+    return  nextstate;
 }
 
 void PauseState::updateLogic()
@@ -82,7 +80,7 @@ void PauseState::startAnimation()
 //  ---------------------------------------------
 {}
 
-bool PauseState::renderFrame()
+void PauseState::renderFrame()
 //  ---------------------------------------------
 //  Funcion Explaination
 //  ---------------------------------------------
@@ -90,6 +88,5 @@ bool PauseState::renderFrame()
     window->draw(*greyOut);
 
     window->draw(*pausedText);
-    return false;
 }
 

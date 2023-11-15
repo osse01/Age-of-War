@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "matrixd": "cpp",
+        "matrixf": "cpp",
+        "program": "cpp",
+        "shader": "cpp",
+        "ostream": "cpp"
+    }
+}

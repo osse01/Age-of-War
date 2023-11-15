@@ -6,7 +6,6 @@ State::State(sf::Music* music, sf::Time* frameDuration)
 
 State::~State()
 {
-    currentState = nullptr;
     music = nullptr;
     frameDuration = nullptr;
 }

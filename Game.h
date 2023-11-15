@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <stack>
 
 
 
@@ -39,12 +40,11 @@ class Game
     sf::Clock clock;
     sf::Time frameDuration;
     sf::Time* frameDurationPtr;
-    int currentStage;
     
     // States
-    std::vector<State*> states;
+    std::stack<std::unique_ptr<State>> states;
     int     currentState;
-    int*    currentStatePtr;
+    //int*    currentStatePtr;
     sf::Music* music;
     
 

@@ -13,23 +13,25 @@
     {
     public:
     // CONSTRUCTORS
-    MenuState   (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
+    MenuState   (sf::RenderWindow*, sf::Music*, sf::Time*);
     ~MenuState  () override;
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;
 
+    private:
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
-    bool    renderFrame     ()                                  override;
+    void    renderFrame     ()                                  override;
     int     getNextState    ()                                  override;
     void    updateLogic     ()          override;
-    bool    startAnimation  ();
-    private:
+    void    startAnimation  ();
+    void    resetState()        override;
+
     // VARIABLES
     float   scale;
     float   t;
-    int*    currentState;
-    int     nextState;
+    //int*    currentState;
+    int     nextstate;
 
     std::string     fontFile;
     std::string     backgroundFile;
@@ -41,8 +43,6 @@
     sf::Text           instructionText;
     sf::RenderWindow*   window;
     sf::Vector2f        zoomFactor;
-
-    sf::Event event;
     };
 
     #endif

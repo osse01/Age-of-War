@@ -3,10 +3,10 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, currentState{curr}, nextState{MENU_STATE}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
+MenuState::MenuState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frameDuration)
+:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, nextstate{MENU_STATE}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}, event {}
+    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -48,7 +48,6 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
 
 MenuState::~MenuState()
 {
-    currentState = nullptr;
     window = nullptr;
     frameDuration = nullptr;
 }
@@ -61,8 +60,7 @@ void MenuState::handleEvent(sf::Event event)
     switch (event.type)
     {
     case sf::Event::KeyPressed:
-        //startAnimation();
-        nextState = GAME_STATE;  
+        nextstate = GAME_STATE;  
         music->play();      
         break;
     
@@ -76,8 +74,13 @@ int MenuState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    //std::cout << nextState << std::endl;
-    return  nextState;
+    return  nextstate;
+}
+
+
+void MenuState::resetState()
+{
+    nextstate = MENU_STATE;
 }
 
 void MenuState::updateLogic()
@@ -87,7 +90,7 @@ void MenuState::updateLogic()
 //  ---------------------------------------------
 {}
 
-bool MenuState::startAnimation()
+void MenuState::startAnimation()
 //  ---------------------------------------------
 //  This Fuction Rescales the background Such That it
 //  Looks like an animation.
@@ -97,13 +100,14 @@ bool MenuState::startAnimation()
     double  delay{0.5};
     double  stepBackground{1};
     float   backgroundScale{1};
+    sf::Event event{};
     
     while (step > 0 && stepBackground >0)
     {
         window->clear(sf::Color(255, 255, 255));
 
-        step -= 0.0003;
-        stepBackground -= 0.00006;
+        step -= 0.01;
+        stepBackground -= 0.002;
 
         scale = std::pow(step, 2);
         backgroundScale = std::pow(stepBackground, 2);
@@ -118,37 +122,35 @@ bool MenuState::startAnimation()
         {
             sprite.setScale(zoomFactor*backgroundScale);    
         }
-
+        while(window->pollEvent(event))
+        {
+            if(event.type == sf::Event::KeyPressed)
+            {
+                return;
+            }
+        }
         window->draw(sprite);
         window->draw(gameTitle);
         window->draw(instructionText);
         window->display();
 
-        while(window->pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                return true;
-            }
-        
-        }
 
-        sf::sleep(sf::milliseconds(delay)); 
+        //sf::sleep(sf::milliseconds(delay)); 
     }
 
     //window->clear(sf::Color(255, 255, 255));
 
     //window->draw(*sprite);
     window->display();
-    return false;
 }
 
 
-bool MenuState::renderFrame()
+void MenuState::renderFrame()
 //  ---------------------------------------------
 //  Funcion Explaination
 //  ---------------------------------------------
 {
+    
     window->clear(sf::Color(255, 255, 255));
 
     t = t + 0.0003;
@@ -164,11 +166,5 @@ bool MenuState::renderFrame()
     window->draw(sprite);
     window->draw(gameTitle);
     window->draw(instructionText);
-    
-    if(nextState == GAME_STATE)
-    {
-        return startAnimation();
-    }
-    return false;
 }
 
