@@ -2,7 +2,11 @@
 #define GAMESTATE_H
 
 #include "State.h"
+#include "Melee.h"
+#include "Troop.h"
+#include "Dynamic.h"
 #include "Entity.h"
+#include "FileReader.h"
 
 #include <SFML/Audio.hpp>
 
@@ -13,43 +17,47 @@
 class GameState : public State
 //  =============   GameState CLASS    ===============
 {
-public:
-    // CONSTRUCTORS
-    GameState  (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
-    ~GameState () override;
-    GameState (const GameState&) = delete;
+    public:
+        // CONSTRUCTORS
+        GameState  (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
+        ~GameState () override;
+        GameState (const GameState&) = delete;
 
-    GameState& operator= (const GameState&) = delete;
- 
- 
-    // FUNCTIONS
-    void handleEvent      (sf::Event) override;
-    void updateLogic      ()          override;
-    void renderFrame      ()          override;
-    int getNextState      ()          override;
-    void spawnFriendly    ();
-    void spawnEnemy       ();
-    void handleCollisions ();
-    void updateStage      ();
-
-    // VARIABLES
-    std::deque<Entity*> friendlyQueue {};
-    std::deque<Entity*> enemyQueue    {};
-
-    std::string     backgroundFile;
-
-    sf::RenderWindow*   window;
-
-    sf::Texture        backgroundTexture;
-    sf::Sprite         backgroundSprite;
+        GameState& operator= (const GameState&) = delete;
     
-    sf::Vector2f        zoomFactor;
+    
+        // FUNCTIONS
+        void handleEvent      (sf::Event) override;
+        void updateLogic      ()          override;
+        void renderFrame      ()          override;
+        int getNextState      ()          override;
+        void spawnFriendly    ();
+        void spawnEnemy       ();
+        void handleCollisions ();
+        void updateStage      ();
 
-
-
-    int* currentState;
     private:
-    int stage;
+        // VARIABLES
+        FileReader::Data melee;
+        FileReader::Data ranged;
+        FileReader::Data tank;
+
+        std::deque<Entity*> friendlyQueue {};
+        std::deque<Entity*> enemyQueue    {};
+
+        std::string         backgroundFile;
+
+        sf::RenderWindow*   window;
+
+        sf::Texture         backgroundTexture;
+        sf::Sprite          backgroundSprite;
+        
+        sf::Vector2f        zoomFactor;
+
+
+
+        int* currentState;
+        int stage;
 };
 
 #endif

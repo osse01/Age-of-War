@@ -30,7 +30,7 @@ class FileReader
 {
 public:
 //  CONSTRUCTORS
-    FileReader  (const std::string&, const std::string&);
+    FileReader  ();
     ~FileReader ()              = default;
     FileReader  (FileReader&)   = delete;
     FileReader  (FileReader&&)  = delete; 
@@ -44,8 +44,9 @@ public:
     {
         int damage;
         int hp;
+        float movementSpeed;
+        float range;
         int attackSpeed;
-        int movementSpeed;
         int boxSize;
 
         std::string type;
@@ -53,16 +54,13 @@ public:
     };
 
 //  FUNCTIONS
-    Data    getData();
+    Data    returnData(const std::string&, const std::string&);
 
 private:
 //  FUNCTIONS
-    bool    readFile();
-    Data    returnData(const std::string&);
+    void    readFile(const std::string&);
 
 //  VARIABLES
-    std::string     filename;
-    std::string     objectName;
 
     Data    data;
     

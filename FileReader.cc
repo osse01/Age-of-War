@@ -1,15 +1,12 @@
 #include "FileReader.h"
 
 
-FileReader::FileReader(const std::string& file, const std::string& type)
-:   filename{file}, objectName{type}, data{}, fileContents{}
+FileReader::FileReader()
+    : data{}, fileContents{}
 //  -------------------------------------------------------
-{
-    readFile();
-    data = returnData(objectName);
-}
+{}
 
-bool FileReader::readFile()
+void FileReader::readFile(const std::string& filename)
 //  -------------------------------------------------------
 //  Reads .txt Contents Into Strings and Adds them to 
 //  fileContents Vector and returns true if successful.
@@ -22,7 +19,6 @@ bool FileReader::readFile()
     if (!file.is_open()) {
         throw std::logic_error("\n  >> Error: Failed to open the file <" 
         + filename +  "> in FileReader::readFile()");
-        return false;
     }
 
     else
@@ -31,16 +27,16 @@ bool FileReader::readFile()
             fileContents.push_back(line);
         }
         file.close();
-        return true;
     }
 }
 
-FileReader::Data FileReader::returnData(const std::string& name)
+FileReader::Data FileReader::returnData(const std::string& name, const std::string& filename)
 //  -------------------------------------------------------
 //  Returns Data Struct Containing all Info from the String
 //  Starting with Argument Name. 
 //  -------------------------------------------------------
 {
+    readFile(filename);
     Data data{};
     std::string tmp{};
 
@@ -51,19 +47,12 @@ FileReader::Data FileReader::returnData(const std::string& name)
 
         if (tmp == name)
         {
-            dataline >> data.damage >> data.hp >> data.movementSpeed
+            dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
                       >> data.attackSpeed >> data.boxSize >> data.filename;
+
             break;
         }
     }
 
-    return data;
-}
-
-FileReader::Data FileReader::getData()
-//  -------------------------------------------------------
-//  Getter for data Variable.
-//  -------------------------------------------------------
-{
     return data;
 }

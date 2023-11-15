@@ -3,26 +3,29 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "FileReader.h"
+
 class Entity
 {
     public:
-        Entity(bool FRIENDLY);
+         Entity(const FileReader::Data&, bool, sf::Vector2f);
         virtual ~Entity() = default;
-        void handleCollison(sf::Time const & frameDuration);
-        sf::Sprite render() const &;
-        void updatePos(sf::Time const &);
+        
+        virtual void handleCollision(int) = 0;
+        virtual void updatePos()      = 0;
+
+        sf::Sprite getSprite()         const &;
         bool collides( Entity* const );
 
-    private:
-        void detectCollision();
-        double xpos;
-        double ypos;
-        double movementSpeed;
-        bool IS_FRIENDLY;
-        bool hasCollided;
-        sf::Texture texture;
-        sf::Sprite sprite;
-        sf::RectangleShape boundingbox;
+    protected:
+        double              xpos;
+        double              ypos;
+        int                 hp;
+        bool                isFriendly;
+        sf::Texture         texture;
+        sf::IntRect         rectSourceSprite;
+        sf::Sprite          sprite;
+        sf::RectangleShape  boundingbox;
 };
 
 #endif
