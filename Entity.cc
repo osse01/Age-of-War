@@ -8,7 +8,7 @@ Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
       texture{}, rectSourceSprite { 0,128,128,128 }, sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }
 {
-    if(!texture.loadFromFile("assets/friendly_melee_sprite_sheet.png"))
+    if(!texture.loadFromFile(stats.filename))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in Entity::Entity().");
@@ -29,7 +29,7 @@ sf::Sprite Entity::getSprite() const &
     return sprite;
 }
 
-bool Entity::collides( Entity* const other ) const
+bool Entity::collides( Entity* const other )
 {
     // Check whether this collides with other
     return boundingbox.getGlobalBounds().intersects(

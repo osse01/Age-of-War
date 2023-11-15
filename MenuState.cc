@@ -101,8 +101,8 @@ void MenuState::startAnimation()
     {
         window->clear(sf::Color(255, 255, 255));
 
-        step -= 0.0003;
-        stepBackground -= 0.00006;
+        step -= 0.01;
+        stepBackground -= 0.002;
 
         scale = std::pow(step, 2);
         backgroundScale = std::pow(stepBackground, 2);
@@ -124,7 +124,7 @@ void MenuState::startAnimation()
         window->display();
 
 
-        sf::sleep(sf::milliseconds(delay)); 
+        //sf::sleep(sf::milliseconds(delay)); 
     }
 
     window->clear(sf::Color(255, 255, 255));

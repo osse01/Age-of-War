@@ -15,7 +15,7 @@ class Entity
         virtual void updatePos()      = 0;
 
         sf::Sprite getSprite()         const &;
-        bool collides( Entity* const ) const;
+        bool collides( Entity* const );
 
     protected:
         double              xpos;

@@ -7,6 +7,8 @@ GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf:
     backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
     backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }
 {
+    window->setFramerateLimit(18);
+
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
     {
@@ -16,7 +18,7 @@ GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf:
     backgroundSprite.setTexture(backgroundTexture);
 
     FileReader reader {};
-    melee = reader.returnData("melee", "assets/stage1.txt");
+    melee = reader.returnData("Melee", "assets/stage1.txt");
 }
 
 GameState::~GameState()
@@ -88,7 +90,6 @@ void GameState::handleCollisions()
         {
             friendlyQueue.at(0) ->handleCollision(1);
             enemyQueue.at(0)    ->handleCollision(1);
-
         }
     }
     
@@ -144,12 +145,12 @@ int GameState::getNextState()
 
 void GameState::spawnFriendly()
 {
-    Entity* friendly = new Melee(melee, true, sf::Vector2f( 0.f, window->getSize().y-200.f ));
+    Entity* friendly = new Melee(melee, true, sf::Vector2f( 0.f, window->getSize().y-50.f ));
     friendlyQueue.push_back(friendly);
 }
 
 void GameState::spawnEnemy()
 {
-    Entity* enemy = new Melee(melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-200.f ));
+    Entity* enemy = new Melee(melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-50.f ));
     enemyQueue.push_back(enemy);
 }

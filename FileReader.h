@@ -44,8 +44,9 @@ public:
     {
         int damage;
         int hp;
+        float movementSpeed;
+        float range;
         int attackSpeed;
-        int movementSpeed;
         int boxSize;
 
         std::string type;

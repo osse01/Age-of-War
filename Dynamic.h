@@ -15,7 +15,7 @@ class Dynamic : public Entity
         virtual void updatePos()           = 0;
 
     protected:
-        const int MOVEMENTSPEED;
+        const float MOVEMENTSPEED;
         const int DAMAGE;
         const int DEATH_VALUE;
         const int BUY_VALUE;

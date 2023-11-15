@@ -1,11 +1,25 @@
 #include "Troop.h"
 
+#include <iostream>
+
 Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
 : Dynamic::Dynamic(stats, friendly, pos)
 {}
 
 void Troop::handleCollision(int troopState)
-{
+{   
+    if (Entity::isFriendly)    
+    {
+        Entity::xpos -= Dynamic::MOVEMENTSPEED;
+    }
+    else
+    {
+        Entity::xpos += Dynamic::MOVEMENTSPEED;
+    }
+    
+    Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
+    Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
+
     switch ( troopState ) {
         case 0:
             idle();
