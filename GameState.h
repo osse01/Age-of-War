@@ -7,6 +7,7 @@
 #include "Dynamic.h"
 #include "Entity.h"
 #include "FileReader.h"
+#include "GUI.h"
 
 #include <SFML/Audio.hpp>
 
@@ -52,6 +53,8 @@ class GameState : public State
         sf::Sprite          backgroundSprite;
         
         sf::Vector2f        zoomFactor;
+
+        GUI                 gui;
 
         int* currentState;
 };

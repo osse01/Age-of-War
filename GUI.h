@@ -1,0 +1,32 @@
+#ifndef GUI_H
+#define GUI_H
+
+#include <SFML/Graphics.hpp>
+#include <vector>
+
+class GUI
+{
+    // -----------------------------------------------------------------
+    // A class that handles buttons and graphics for the user interface.
+    // -----------------------------------------------------------------
+
+    public:
+    //  CONSTRUCTORS
+        GUI(int, sf::RenderWindow*);
+        ~GUI() = default;
+        GUI(const GUI&) = delete;
+        GUI& operator=(GUI&) = delete;
+
+    //  FUNCTIONS
+        void handleEvent();
+        void draw(sf::RenderWindow*);
+        int buttonClicked(float, float);
+
+
+    private:
+    //  VARIABLES
+        sf::RectangleShape interface;
+        std::vector<sf::RectangleShape> buttons;
+};
+
+#endif

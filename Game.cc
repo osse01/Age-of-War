@@ -8,7 +8,7 @@
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-:   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE } },
+:   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE, sf::Style::Fullscreen} },
     event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE }, 
     currentStatePtr { &currentState }, music { new sf::Music }, nextState {}
 {
@@ -60,7 +60,7 @@ void Game::startGame ()
 {
 
     // Main Game Loop, One Iteration is a Frame
-    while ( running )
+    while ( window->isOpen() )
     {
         frameDuration = clock.restart();
 
@@ -93,11 +93,14 @@ void Game::handleEvents()
             Other Events Are Handled bt the Current Game State
         */
         {
-        case sf::Event::Closed:
-            window->close();
-            running = false;
-            break;
-
+        case sf::Event::KeyPressed:
+            if (event.key.code == sf::Keyboard::Escape)
+            {
+                window->close();    
+                //running = false;
+                break;
+            }
+            
         default:
             // Let Current Game State Handle Event
             states.at(currentState)->handleEvent(event);
