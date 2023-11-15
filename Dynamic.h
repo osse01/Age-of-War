@@ -15,11 +15,12 @@ class Dynamic : public Entity
         virtual void updatePos()           = 0;
 
     protected:
-        const float MOVEMENTSPEED;
         const int DAMAGE;
+        const float MOVEMENTSPEED;
+        const int RANGE;
+        const int ATTACK_SPEED;
         const int DEATH_VALUE;
         const int BUY_VALUE;
-        const int RANGE;
 
 };
 
