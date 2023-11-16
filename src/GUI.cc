@@ -4,7 +4,7 @@
 
 
 GUI::GUI(int currentState, sf::RenderWindow* window)
-    : buttonSize {window->getSize().x/20.f}, interface {sf::Vector2f(19*buttonSize/2.f, 2*buttonSize)}, menuButtons {}, gameButtons {}
+    : buttonSize {window->getSize().x/20}, interface {sf::Vector2f(19*buttonSize/2.f, 2*buttonSize)}, menuButtons {}, gameButtons {}
 {
     switch (currentState)
     {
@@ -96,5 +96,5 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         default:
             break;
     }
-    
+    return 0;
 }

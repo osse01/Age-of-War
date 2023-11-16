@@ -4,7 +4,7 @@
 #include "utility"
 
 GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* frameDuration)
-:   melee {}, ranged {}, tank {}, State(sound, frameDuration), friendlyQueue {}, enemyQueue {},
+:   State(sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
     backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
     backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {

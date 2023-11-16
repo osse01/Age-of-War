@@ -26,7 +26,7 @@ class GUI
 
     private:
     //  VARIABLES
-        int buttonSize;
+        unsigned int buttonSize;
         sf::RectangleShape interface;
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;

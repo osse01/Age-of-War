@@ -122,9 +122,9 @@ void MenuState::startAnimation()
 //  ---------------------------------------------
 {
     double  step{1};
-    double  delay{0.5};
+    //double  delay{0.5};
     double  stepBackground{1};
-    float   backgroundScale{1};
+    //float   backgroundScale{1};
     sf::Event event{};
     
     while (step > 0 && stepBackground >0)
@@ -135,7 +135,7 @@ void MenuState::startAnimation()
         stepBackground -= 0.002;
 
         scale = std::pow(step, 2);
-        backgroundScale = std::pow(stepBackground, 2);
+        //backgroundScale = std::pow(stepBackground, 2);
 
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setScale(zoomFactor*scale);

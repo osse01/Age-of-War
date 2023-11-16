@@ -9,11 +9,11 @@
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-:   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE, sf::Style::Fullscreen} },
+:   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE/*, sf::Style::Fullscreen*/} },
     event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE },
     music { new sf::Music }, nextState {MENU_STATE}
 {
-
+    window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
     // Open Audio File
     std::string file{"assets/Age-of-War-Theme-Song.ogg"};
     if (!music->openFromFile(file))
@@ -88,6 +88,7 @@ void Game::handleEvents()
                 //running = false;
                 break;
             }
+            break;
             
         default:
             // Let Current Game State Handle Event
