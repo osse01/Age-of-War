@@ -11,13 +11,14 @@ class Dynamic : public Entity
         Dynamic(const FileReader::Data&, bool, sf::Vector2f);
         virtual ~Dynamic() = default;
 
-        virtual void handleCollision(int)   = 0;
+        virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()           = 0;
+        int getDamage() override;
 
     protected:
         const int DAMAGE;
         const float MOVEMENTSPEED;
-        const int RANGE;
+        const float RANGE;
         const int ATTACK_SPEED;
         const int DEATH_VALUE;
         const int BUY_VALUE;

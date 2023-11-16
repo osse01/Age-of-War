@@ -80,6 +80,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                         return i+1;
                     }
                 }
+            break;
         }
         case GAME_STATE:
         {
@@ -90,7 +91,10 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                         return i+1;
                     }
                 }
+            break;
         }
+        default:
+            break;
     }
     
 }

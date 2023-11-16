@@ -4,13 +4,14 @@
 #include "PauseState.h"
 
 #include <memory>
+#include <utility>
 #include <iostream>
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE, sf::Style::Fullscreen} },
-    event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE }, 
-    currentStatePtr { &currentState }, music { new sf::Music }, nextState {}
+    event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE },
+    music { new sf::Music }, nextState {MENU_STATE}
 {
 
     // Open Audio File
@@ -23,32 +24,19 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     music->setLoop(true);
     
     // Place Possible Game States in States Vector
-    State* ptr = new MenuState{window, currentStatePtr, music, frameDurationPtr};
-    states.push_back(ptr);
-    
-    ptr = new GameState{window, currentStatePtr, music, frameDurationPtr};
-    states.push_back(ptr);
-
-    ptr = new PauseState{window, currentStatePtr, music, frameDurationPtr};
-    states.push_back(ptr);
+    std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, music, frameDurationPtr);
+    states.push(std::move(ptr));
 
 
 }
 
 Game::~Game()
 {
-    delete states.at(MENU_STATE);
-    delete states.at(GAME_STATE);
-    delete states.at(PAUSE_STATE);
 
-    states.at(MENU_STATE) = nullptr;
-    states.at(GAME_STATE) = nullptr;
-    states.at(PAUSE_STATE) = nullptr;
     
     delete music;
     delete window;
     
-    currentStatePtr     = nullptr;
     frameDurationPtr    = nullptr;
 }
 
@@ -103,7 +91,7 @@ void Game::handleEvents()
             
         default:
             // Let Current Game State Handle Event
-            states.at(currentState)->handleEvent(event);
+            states.top()->handleEvent(event);
             break;
         }
     }
@@ -112,23 +100,52 @@ void Game::handleEvents()
 // Update Game Logic
 void Game::updateLogic()
 {
-    states.at(currentState)->updateLogic();
+    states.top()->updateLogic();
 }
 
 
 // Render Frame
 void Game::renderFrame()
 {
-    states.at(currentState)->renderFrame();
+    states.top()->renderFrame();
 }
 
 void Game::getNextState()
 {
-    currentState = states.at(currentState)->getNextState();
-    /*if (currentState == MENU_STATE)
+    
+    nextState = states.top()->getNextState();
+
+    if ( currentState != nextState)
     {
-        delete states.at(GAME_STATE);
-        State* ptr = new GameState{window, currentStatePtr, music, frameDurationPtr};
-        states.at(GAME_STATE) = ptr;
-    }*/
+        std::unique_ptr<State> ptr {};
+        switch (nextState)
+        {
+            case MENU_STATE:
+                states.pop();
+
+                break;
+            case PAUSE_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<PauseState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case GAME_STATE:
+                if(currentState == PAUSE_STATE)
+                {
+                    states.pop();
+                    
+                }
+                else if(currentState == MENU_STATE) 
+                {
+                    states.top()->resetState();
+                    ptr = std::make_unique<GameState>(window, music, frameDurationPtr);
+                    states.push(std::move(ptr));
+                }
+
+                break;
+        }
+        currentState = nextState;
+
+    }
+
 }
