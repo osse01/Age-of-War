@@ -59,15 +59,36 @@ void GameState::handleEvent(sf::Event event)
 
 void GameState::updateLogic()         
 {
+    std::vector<int> deadEntitiesFriendly{};
+    std::vector<int> deadEntitiesEnemy{};
+    int i {};
     for(auto &it: friendlyQueue)
         {
+            if ( it->isDead() )
+            {
+                deadEntitiesFriendly.push_back(i);
+            }
             it->updatePos();
+            i++;
         }
+    i = 0;
     for(auto &it: enemyQueue)
         {
+            if ( it->isDead() )
+            {
+                deadEntitiesEnemy.push_back(i);
+            }
             it->updatePos();
+            i++;
         }
-
+    for (int j: deadEntitiesFriendly)
+    {
+        friendlyQueue.erase( friendlyQueue.begin() + j );
+    }
+    for (int j: deadEntitiesEnemy)
+    {
+        enemyQueue.erase( enemyQueue.begin() + j );
+    }
     handleCollisions();
 }
 
@@ -78,8 +99,8 @@ void GameState::handleCollisions()
     {
         if ( friendlyQueue.at(0)->collides(  enemyQueue.at(0) ) )
         {
-            friendlyQueue.at(0) ->handleCollision(1);
-            enemyQueue.at(0)    ->handleCollision(1);
+            friendlyQueue.at(0) ->handleCollision(1, enemyQueue.at(0)->getDamage());
+            enemyQueue.at(0)    ->handleCollision(1, friendlyQueue.at(0)->getDamage());
         }
     }
     
@@ -90,7 +111,7 @@ void GameState::handleCollisions()
             if( enemyQueue.at(behind)->collides( enemyQueue.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyQueue.at(behind)->handleCollision(0);
+                enemyQueue.at(behind)->handleCollision(0, 0);
             }
         }
     
@@ -101,7 +122,7 @@ void GameState::handleCollisions()
             if( friendlyQueue.at(behind)->collides( friendlyQueue.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyQueue.at(behind)->handleCollision(0);
+                friendlyQueue.at(behind)->handleCollision(0, 0);
             }
         }
 
