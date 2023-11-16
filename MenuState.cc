@@ -138,7 +138,7 @@ void MenuState::startAnimation()
         window->display();
 
 
-        sf::sleep(sf::milliseconds(delay)); 
+        //sf::sleep(sf::milliseconds(delay)); 
     }
 
     //window->clear(sf::Color(255, 255, 255));

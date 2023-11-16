@@ -23,18 +23,19 @@ class GameState : public State
         ~GameState () override;
         GameState (const GameState&) = delete;
 
-        GameState& operator= (const GameState&) = delete;
-    
-    
-        // FUNCTIONS
-        void handleEvent      (sf::Event) override;
-        void updateLogic      ()          override;
-        void renderFrame      ()          override;
-        int getNextState      ()          override;
-        void spawnFriendly    ();
-        void spawnEnemy       ();
-        void handleCollisions ();
-        void    resetState()        override;
+            GameState& operator= (const GameState&) = delete;
+       
+       
+            // FUNCTIONS
+            void handleEvent      (sf::Event) override;
+            void updateLogic      ()          override;
+            void renderFrame      ()          override;
+            int  getNextState      ()          override;
+            void spawnFriendly    ();
+            void spawnEnemy       ();
+            void handleCollisions ();
+            void resetState       ()          override;
+            void updateStage      ();
 
     private:
         // VARIABLES
@@ -55,6 +56,7 @@ class GameState : public State
         sf::Vector2f        zoomFactor;
 
         int nextstate;
+        int stage;
 };
 
 #endif

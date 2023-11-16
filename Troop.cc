@@ -3,10 +3,10 @@
 #include <iostream>
 
 Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
-: Dynamic::Dynamic(stats, friendly, pos)
+: Dynamic::Dynamic(stats, friendly, pos), damageCounter { 1 }
 {}
 
-void Troop::handleCollision(int troopState)
+void Troop::handleCollision(int troopState, int otherDamage)
 {   
     if (Entity::isFriendly)    
     {
@@ -25,7 +25,7 @@ void Troop::handleCollision(int troopState)
             idle();
             break;
         case 1:
-            attack();
+            attack(otherDamage);
             break;
         default:
             throw std::logic_error("    >>Error: The troopState does not exist!");
@@ -73,8 +73,15 @@ void Troop::idle()
     changeSprite();
 }
 
-void Troop::attack()
+void Troop::attack(int otherDamage)
 {
     Entity::rectSourceSprite.top = 256;
     changeSprite();
+    if ( damageCounter == 25 )
+    {
+        Entity::hp -= otherDamage;
+        damageCounter = 0;
+    }
+    damageCounter ++;
+
 }

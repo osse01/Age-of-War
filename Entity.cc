@@ -35,3 +35,7 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     return boundingbox.getGlobalBounds().intersects(
             ( other->boundingbox.getGlobalBounds() ) );
 }
+bool Entity::isDead()
+{
+    return hp <= 0;
+}
