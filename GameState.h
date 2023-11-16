@@ -1,12 +1,12 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include "FileReader.h"
 #include "State.h"
 #include "Melee.h"
 #include "Troop.h"
 #include "Dynamic.h"
 #include "Entity.h"
-#include "FileReader.h"
 
 #include <SFML/Audio.hpp>
 
@@ -42,8 +42,8 @@ class GameState : public State
         FileReader::Data ranged;
         FileReader::Data tank;
 
-        std::deque<Entity*> friendlyQueue {};
-        std::deque<Entity*> enemyQueue    {};
+        std::deque<std::shared_ptr<Entity>> friendlyQueue;
+        std::deque<std::shared_ptr<Entity>> enemyQueue;
 
         std::string         backgroundFile;
 

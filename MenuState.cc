@@ -61,6 +61,7 @@ void MenuState::handleEvent(sf::Event event)
     {
     case sf::Event::KeyPressed:
         nextstate = GAME_STATE;  
+        startAnimation();
         music->play();      
         break;
     
@@ -122,12 +123,14 @@ void MenuState::startAnimation()
         {
             sprite.setScale(zoomFactor*backgroundScale);    
         }
+        window->pollEvent(event);
+        if(event.type == sf::Event::KeyPressed)
+        {
+            return;
+        }
         while(window->pollEvent(event))
         {
-            if(event.type == sf::Event::KeyPressed)
-            {
-                return;
-            }
+
         }
         window->draw(sprite);
         window->draw(gameTitle);
@@ -135,7 +138,7 @@ void MenuState::startAnimation()
         window->display();
 
 
-        //sf::sleep(sf::milliseconds(delay)); 
+        sf::sleep(sf::milliseconds(delay)); 
     }
 
     //window->clear(sf::Color(255, 255, 255));

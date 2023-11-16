@@ -66,6 +66,8 @@ int PauseState::getNextState()
     return  nextstate;
 }
 
+
+
 void PauseState::updateLogic()
 //  ---------------------------------------------
 //  Function to Handle User Input. User Input Triggers
@@ -90,3 +92,7 @@ void PauseState::renderFrame()
     window->draw(*pausedText);
 }
 
+void PauseState::resetState()
+{
+    nextstate = PAUSE_STATE;
+}
