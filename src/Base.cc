@@ -1,4 +1,4 @@
-#include "Base.h"
+#include "../include/Base.h"
 
 Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos)
     : Entity::Entity(stats, friendly, pos), base {  }
