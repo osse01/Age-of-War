@@ -6,7 +6,7 @@
 GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* frameDuration)
 :   melee {}, ranged {}, tank {}, State(sound, frameDuration), friendlyQueue {}, enemyQueue {},
     backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {
     window->setFramerateLimit(18);
 
@@ -17,6 +17,7 @@ GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* fram
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
     backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setScale(window->getSize().x / backgroundSprite.getGlobalBounds().width, window->getSize().y / backgroundSprite.getGlobalBounds().height);
 
     FileReader reader {};
     melee = reader.returnData("Melee", "assets/stage1.txt");
@@ -51,6 +52,29 @@ void GameState::handleEvent(sf::Event event)
             music->pause();
         }
         break;
+
+    case sf::Event::MouseButtonPressed:
+    {
+        sf::Event::MouseButtonEvent mouse { event.mouseButton };
+        if (mouse.button == sf::Mouse::Button::Left)
+        {
+            switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
+            {
+                case 6:
+                    spawnFriendly();
+                    break;
+                case 5:
+                    spawnEnemy();
+                    break;
+                case 1:
+                    window->close();
+                    break;
+                default:
+                    break;
+            }
+        }
+        break;
+    }
     default:
         break;
 
@@ -134,7 +158,7 @@ void GameState::renderFrame()
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
 
-    backgroundSprite.setScale(zoomFactor*0.694422f);
+    //backgroundSprite.setScale(zoomFactor*0.694422f);
     
     window->draw(backgroundSprite);
     
@@ -147,6 +171,7 @@ void GameState::renderFrame()
         {
             window->draw(it->getSprite());
         }
+    gui.draw(GAME_STATE, window);
 }
 
 void GameState::resetState()
@@ -162,14 +187,14 @@ int GameState::getNextState()
 void GameState::spawnFriendly()
 {
     friendlyQueue.push_back(std::make_shared<Melee> 
-        ( melee, true, sf::Vector2f( 0.f, window->getSize().y-50.f ) ) );
+        ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
     
 }
 
 void GameState::spawnEnemy()
 {
     enemyQueue.push_back(std::make_shared<Melee> 
-        ( melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-50.f ) ) );
+        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ) ) );
 }
 
 void GameState::updateStage()

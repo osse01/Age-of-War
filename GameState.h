@@ -7,6 +7,7 @@
 #include "Troop.h"
 #include "Dynamic.h"
 #include "Entity.h"
+#include "GUI.h"
 
 #include <SFML/Audio.hpp>
 
@@ -57,6 +58,7 @@ class GameState : public State
 
         int nextstate;
         int stage;
+        GUI                 gui;
 };
 
 #endif
