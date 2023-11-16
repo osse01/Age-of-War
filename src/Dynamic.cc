@@ -1,4 +1,4 @@
-#include "Dynamic.h"
+#include "../include/Dynamic.h"
 
 
 Dynamic::Dynamic(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)

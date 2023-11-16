@@ -1,7 +1,7 @@
-#include "Game.h"
-#include "MenuState.h"
-#include "GameState.h"
-#include "PauseState.h"
+#include "../include/Game.h"
+#include "../include/MenuState.h"
+#include "../include/GameState.h"
+#include "../include/PauseState.h"
 
 #include <memory>
 #include <utility>

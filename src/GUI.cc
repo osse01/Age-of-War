@@ -1,4 +1,4 @@
-#include "GUI.h"
+#include "../include/GUI.h"
 
 #include <iostream>
 

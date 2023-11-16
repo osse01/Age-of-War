@@ -1,4 +1,4 @@
-#include "Troop.h"
+#include "../include/Troop.h"
 
 #include <iostream>
 

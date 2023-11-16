@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../include/Game.h"
 
 // Global Constants
 std::string const GAME_TITLE  { "Game Test" };

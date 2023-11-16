@@ -1,4 +1,4 @@
-#include "PauseState.h"
+#include "../include/PauseState.h"
 
 #include <iostream>
 #include <cmath>
