@@ -6,7 +6,7 @@
 MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
 :   State(sound, frameDuration), scale{1.0f}, t{0.0f}, currentState{curr}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
+    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen }
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -17,7 +17,8 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
     if(texture.loadFromFile(backgroundFile))
     {
         sprite.setTexture(texture);
-        sprite.setScale(zoomFactor);
+        //sprite.setScale(zoomFactor);
+        sprite.setScale(window->getSize().x /sprite.getGlobalBounds().width, window->getSize().y /sprite.getGlobalBounds().height);
     }
     else
     {
@@ -60,11 +61,34 @@ void MenuState::handleEvent(sf::Event event)
 {
     switch (event.type)
     {
-    case sf::Event::KeyPressed:
-        startAnimation();
-        *currentState = GAME_STATE;  
-        music->play();      
+    //case sf::Event::KeyPressed:
+    //    startAnimation();
+    //    *currentState = GAME_STATE;  
+    //    music->play();      
+    //    break;
+    case sf::Event::MouseButtonPressed:
+    {
+        sf::Event::MouseButtonEvent mouse { event.mouseButton };
+        if (mouse.button == sf::Mouse::Button::Left)
+        {
+            switch (gui.buttonClicked(*currentState, mouse.x, mouse.y))
+            {
+                case 1:
+                    startAnimation();
+                    *currentState = GAME_STATE;  
+                    music->play();      
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    window->close();
+                    break;
+                default:
+                    break;
+            }
+        }
         break;
+    }
     
     default:
         break;
@@ -113,10 +137,10 @@ void MenuState::startAnimation()
         instructionText.setOrigin(instructionText.getLocalBounds().width / 2, instructionText.getLocalBounds().height / 2);
         instructionText.setScale(zoomFactor*scale);
 
-        if(sprite.getGlobalBounds().width >= window->getSize().x)
+        /*if(sprite.getGlobalBounds().width >= window->getSize().x)
         {
             sprite.setScale(zoomFactor*backgroundScale);    
-        }
+        }*/
 
         window->draw(sprite);
         window->draw(gameTitle);
@@ -144,7 +168,7 @@ void MenuState::renderFrame()
     t = t + 0.0003;
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
-    sprite.setScale(zoomFactor);
+    //sprite.setScale(zoomFactor);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
     gameTitle.setScale(zoomFactor*scale);
@@ -154,5 +178,7 @@ void MenuState::renderFrame()
     window->draw(sprite);
     window->draw(gameTitle);
     window->draw(instructionText);
+
+    gui.draw(*currentState, window);
 }
 

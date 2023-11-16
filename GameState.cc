@@ -68,9 +68,7 @@ void GameState::handleEvent(sf::Event event)
         sf::Event::MouseButtonEvent mouse { event.mouseButton };
         if (mouse.button == sf::Mouse::Button::Left)
         {
-            int clickedButton { 0 };
-            clickedButton = gui.buttonClicked(mouse.x, mouse.y);
-            switch (clickedButton)
+            switch (gui.buttonClicked(*currentState, mouse.x, mouse.y))
             {
                 case 6:
                     spawnFriendly();
@@ -162,7 +160,7 @@ void GameState::renderFrame()
         {
             window->draw(it->getSprite());
         }
-    gui.draw(window);
+    gui.draw(*currentState, window);
 }
 
 int GameState::getNextState()       

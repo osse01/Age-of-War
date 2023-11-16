@@ -2,6 +2,7 @@
     #define MENUSTATE_H
 
     #include "State.h"
+    #include "GUI.h"
 
     #include <string>
 
@@ -41,6 +42,7 @@
     sf::Text           instructionText;
     sf::RenderWindow*   window;
     sf::Vector2f        zoomFactor;
+    GUI                 gui;
     };
 
     #endif

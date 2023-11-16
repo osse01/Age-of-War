@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "State.h"
 
 class GUI
 {
@@ -19,14 +20,17 @@ class GUI
 
     //  FUNCTIONS
         void handleEvent();
-        void draw(sf::RenderWindow*);
-        int buttonClicked(float, float);
+        void draw(int, sf::RenderWindow*);
+        int buttonClicked(int, float, float);
 
 
     private:
     //  VARIABLES
+        int buttonSize;
         sf::RectangleShape interface;
-        std::vector<sf::RectangleShape> buttons;
+        std::vector<sf::RectangleShape> menuButtons;
+        std::vector<sf::RectangleShape> gameButtons;
+        
 };
 
 #endif

@@ -54,9 +54,8 @@ class GameState : public State
         
         sf::Vector2f        zoomFactor;
 
+        int* currentState; 
         GUI                 gui;
-
-        int* currentState;
 };
 
 #endif
