@@ -25,9 +25,9 @@ public:
     virtual void updateLogic ()          = 0;
     virtual void renderFrame ()          = 0;
     virtual int getNextState ()          = 0;
+    virtual void resetState ()           = 0;
 
 protected:
-    int*    currentState{};
     sf::Music* music{};
     sf::Time* frameDuration{};
 };

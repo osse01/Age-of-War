@@ -13,7 +13,7 @@
     {
     public:
     // CONSTRUCTORS
-    MenuState   (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
+    MenuState   (sf::RenderWindow*, sf::Music*, sf::Time*);
     ~MenuState  () override;
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;
@@ -25,11 +25,13 @@
     int     getNextState    ()                                  override;
     void    updateLogic     ()          override;
     void    startAnimation  ();
+    void    resetState()        override;
 
     // VARIABLES
     float   scale;
     float   t;
-    int*    currentState;
+    //int*    currentState;
+    int     nextstate;
 
     std::string     fontFile;
     std::string     backgroundFile;

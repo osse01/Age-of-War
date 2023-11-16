@@ -1,11 +1,12 @@
 #include "GameState.h"
 
-#include <iostream> 
+#include <iostream>
+#include "utility"
 
-GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
+GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* frameDuration)
 :   melee {}, ranged {}, tank {}, State(sound, frameDuration), friendlyQueue {}, enemyQueue {},
     backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, currentState { curr }, stage {1}
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }
 {
     window->setFramerateLimit(18);
 
@@ -23,17 +24,6 @@ GameState::GameState(sf::RenderWindow * screen, int* curr, sf::Music* sound, sf:
 
 GameState::~GameState()
 {
-    for(auto &it: friendlyQueue)
-        {
-            delete it;
-            it = nullptr;
-        }
-    for(auto &it: enemyQueue)
-        {
-            delete it;
-            it = nullptr;
-        }
-    currentState = nullptr;
     frameDuration = nullptr;
 }
 
@@ -52,12 +42,12 @@ void GameState::handleEvent(sf::Event event)
         }
         if (event.key.code == sf::Keyboard::M)
         {
-            *currentState = MENU_STATE;
+            nextstate = MENU_STATE;
             music->stop();
         }
         if (event.key.code == sf::Keyboard::P)
         {
-            *currentState = PAUSE_STATE;
+            nextstate = PAUSE_STATE;
             music->pause();
         }
         break;
@@ -84,9 +74,9 @@ void GameState::updateLogic()
 void GameState::handleCollisions()
 {
     // Handle Collision between Friendly and Enemy
-    if (friendlyQueue.size() > 0 && enemyQueue.size() > 0)
+    if ( friendlyQueue.size() > 0 && enemyQueue.size() > 0 )
     {
-        if (friendlyQueue.at(0)->collides(enemyQueue.at(0)))
+        if ( friendlyQueue.at(0)->collides(  enemyQueue.at(0) ) )
         {
             friendlyQueue.at(0) ->handleCollision(1);
             enemyQueue.at(0)    ->handleCollision(1);
@@ -97,7 +87,7 @@ void GameState::handleCollisions()
     int behind{ 1 };
     for(int inFront{ 0 }; inFront < static_cast<int>(enemyQueue.size()) - 1; inFront++, behind++)
         { 
-            if(enemyQueue.at(behind)->collides(enemyQueue.at(inFront)))
+            if( enemyQueue.at(behind)->collides( enemyQueue.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
                 enemyQueue.at(behind)->handleCollision(0);
@@ -106,9 +96,9 @@ void GameState::handleCollisions()
     
     // Handle Collision between Friends
     behind = 1;
-    for(int inFront{ 0 }; inFront < static_cast<int>(friendlyQueue.size()) - 1; inFront++, behind++)
+    for( int inFront{ 0 }; inFront < static_cast<int>(friendlyQueue.size()) - 1; inFront++, behind++ )
         { 
-            if(friendlyQueue.at(behind)->collides(friendlyQueue.at(inFront)))
+            if( friendlyQueue.at(behind)->collides( friendlyQueue.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
                 friendlyQueue.at(behind)->handleCollision(0);
@@ -119,6 +109,7 @@ void GameState::handleCollisions()
 
 void GameState::renderFrame()  
 {
+
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
 
@@ -131,28 +122,33 @@ void GameState::renderFrame()
         {
             window->draw(it->getSprite());
         }
-
     for(auto &it: enemyQueue)
         {
             window->draw(it->getSprite());
         }
 }
 
+void GameState::resetState()
+{
+    nextstate = GAME_STATE;
+}
+
 int GameState::getNextState()       
 {
-    return *currentState;
+    return nextstate;
 }
 
 void GameState::spawnFriendly()
 {
-    Entity* friendly = new Melee(melee, true, sf::Vector2f( 0.f, window->getSize().y-50.f ));
-    friendlyQueue.push_back(friendly);
+    friendlyQueue.push_back(std::make_shared<Melee> 
+        ( melee, true, sf::Vector2f( 0.f, window->getSize().y-50.f ) ) );
+    
 }
 
 void GameState::spawnEnemy()
 {
-    Entity* enemy = new Melee(melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-50.f ));
-    enemyQueue.push_back(enemy);
+    enemyQueue.push_back(std::make_shared<Melee> 
+        ( melee, false, sf::Vector2f( window->getSize().x, window->getSize().y-50.f ) ) );
 }
 
 void GameState::updateStage()

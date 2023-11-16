@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "FileReader.h"
+#include "memory"
 
 class Entity
 {
@@ -15,7 +16,7 @@ class Entity
         virtual void updatePos()      = 0;
 
         sf::Sprite getSprite()         const &;
-        bool collides( Entity* const );
+        bool collides( std::shared_ptr<Entity> );
 
     protected:
         double              xpos;

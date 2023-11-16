@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, currentState{curr}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
+MenuState::MenuState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frameDuration)
+:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, nextstate{MENU_STATE}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
     window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
 //  -------------------------------------------------------
@@ -48,9 +48,8 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
 
 MenuState::~MenuState()
 {
-    currentState    = nullptr;
-    window          = nullptr;
-    frameDuration   = nullptr;
+    window = nullptr;
+    frameDuration = nullptr;
 }
 
 void MenuState::handleEvent(sf::Event event)
@@ -61,8 +60,8 @@ void MenuState::handleEvent(sf::Event event)
     switch (event.type)
     {
     case sf::Event::KeyPressed:
+        nextstate = GAME_STATE;  
         startAnimation();
-        *currentState = GAME_STATE;  
         music->play();      
         break;
     
@@ -76,7 +75,13 @@ int MenuState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    return  *currentState;
+    return  nextstate;
+}
+
+
+void MenuState::resetState()
+{
+    nextstate = MENU_STATE;
 }
 
 void MenuState::updateLogic()
@@ -96,6 +101,7 @@ void MenuState::startAnimation()
     double  delay{0.5};
     double  stepBackground{1};
     float   backgroundScale{1};
+    sf::Event event{};
     
     while (step > 0 && stepBackground >0)
     {
@@ -117,7 +123,15 @@ void MenuState::startAnimation()
         {
             sprite.setScale(zoomFactor*backgroundScale);    
         }
+        window->pollEvent(event);
+        if(event.type == sf::Event::KeyPressed)
+        {
+            return;
+        }
+        while(window->pollEvent(event))
+        {
 
+        }
         window->draw(sprite);
         window->draw(gameTitle);
         window->draw(instructionText);
@@ -127,7 +141,7 @@ void MenuState::startAnimation()
         //sf::sleep(sf::milliseconds(delay)); 
     }
 
-    window->clear(sf::Color(255, 255, 255));
+    //window->clear(sf::Color(255, 255, 255));
 
     //window->draw(*sprite);
     window->display();
@@ -139,6 +153,7 @@ void MenuState::renderFrame()
 //  Funcion Explaination
 //  ---------------------------------------------
 {
+    
     window->clear(sf::Color(255, 255, 255));
 
     t = t + 0.0003;

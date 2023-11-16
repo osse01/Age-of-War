@@ -29,7 +29,7 @@ sf::Sprite Entity::getSprite() const &
     return sprite;
 }
 
-bool Entity::collides( Entity* const other )
+bool Entity::collides( std::shared_ptr<Entity> other )
 {
     // Check whether this collides with other
     return boundingbox.getGlobalBounds().intersects(

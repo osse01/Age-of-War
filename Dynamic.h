@@ -17,7 +17,7 @@ class Dynamic : public Entity
     protected:
         const int DAMAGE;
         const float MOVEMENTSPEED;
-        const int RANGE;
+        const float RANGE;
         const int ATTACK_SPEED;
         const int DEATH_VALUE;
         const int BUY_VALUE;
