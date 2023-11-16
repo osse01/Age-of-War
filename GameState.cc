@@ -24,17 +24,6 @@ GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* fram
 
 GameState::~GameState()
 {
-    /*for(auto &it: friendlyQueue)
-        {
-            delete it;
-            it = nullptr;
-        }
-    for(auto &it: enemyQueue)
-        {
-            delete it;
-            it = nullptr;
-        }
-        */
     frameDuration = nullptr;
 }
 

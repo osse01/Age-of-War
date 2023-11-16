@@ -44,12 +44,10 @@ class Game
     // States
     std::stack<std::unique_ptr<State>> states;
     int     currentState;
-    //int*    currentStatePtr;
     sf::Music* music;
-    
+    int    nextState;
 
     protected:
-    int    nextState;
 
 
 
