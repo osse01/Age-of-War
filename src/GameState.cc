@@ -53,21 +53,6 @@ void GameState::handleEvent(sf::Event event)
 
                 default:
                     break;
-                    
-                // if (event.key.code == sf::Keyboard::Num2)
-                // {
-                //     spawnEnemy();
-                // }
-                // if (event.key.code == sf::Keyboard::M)
-                // {
-                //     nextstate = MENU_STATE;
-                //     music->stop();
-                // }
-                // if (event.key.code == sf::Keyboard::Escape)
-                // {
-                //     nextstate = PAUSE_STATE;
-                //     music->pause();
-                // }
             }
             break;
 

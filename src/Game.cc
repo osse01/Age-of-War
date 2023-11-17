@@ -8,7 +8,7 @@
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-:   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE/*, sf::Style::Fullscreen*/) },
+:   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
     event {}, clock {}, frameDuration {}, frameDurationPtr { std::make_shared<sf::Time> ( frameDuration )}, states {}, currentState { MENU_STATE },
     music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}
 {

@@ -147,13 +147,7 @@ void MenuState::startAnimation()
         window->draw(instructionText);
         window->display();
 
-
-        //sf::sleep(sf::milliseconds(delay)); 
     }
-
-    //window->clear(sf::Color(255, 255, 255));
-
-    //window->draw(*sprite);
 }
 
 

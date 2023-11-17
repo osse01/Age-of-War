@@ -5,16 +5,18 @@
     #include "GUI.h"
 
     #include <string>
+    #include <memory>
+
 
 
 
     class MenuState : public State
     //  =============   MenuState CLASS    ===============
-    //  This Class Handles ...
+    //  This Class Handles the Main Menu.
     {
     public:
     // CONSTRUCTORS
-    MenuState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, sf::Time*);
+    MenuState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~MenuState  () override;
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;

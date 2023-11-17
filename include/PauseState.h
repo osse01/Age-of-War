@@ -4,6 +4,8 @@
 #include "State.h"
 
 #include <string>
+#include <memory>
+
 
 
 
@@ -13,7 +15,7 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (std::shared_ptr<sf::RenderWindow>, sf::Music*, sf::Time*);
+    PauseState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~PauseState  () override;
     PauseState   (const PauseState&) = delete;
     PauseState& operator= ( const PauseState& ) = delete;

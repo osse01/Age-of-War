@@ -34,7 +34,7 @@ class Game
 
     private:
     // Variables //
-    std::shared_ptr<sf::RenderWindow> window; // Possibly Use RenderWindow* Instead
+    std::shared_ptr<sf::RenderWindow> window;
     sf::Event event;
     sf::Clock clock;
     sf::Time frameDuration;

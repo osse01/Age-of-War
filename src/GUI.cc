@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-GUI::GUI(int currentState, sf::RenderWindow* window)
+GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     : buttonSize {window->getSize().x/20}, interface {sf::Vector2f(19*buttonSize/2.f, 2*buttonSize)}, menuButtons {}, gameButtons {}
 {
     switch (currentState)
@@ -42,7 +42,7 @@ GUI::GUI(int currentState, sf::RenderWindow* window)
     
 }
 
-void GUI::draw(int currentState, sf::RenderWindow* window)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window)
 {
     switch (currentState)
     {

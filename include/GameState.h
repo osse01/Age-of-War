@@ -12,6 +12,8 @@
 #include <SFML/Audio.hpp>
 
 #include <queue>
+#include <memory>
+
 
 
 
@@ -20,7 +22,7 @@ class GameState : public State
 {
     public:
         // CONSTRUCTORS
-        GameState  (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, sf::Time*);
+        GameState  (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
         ~GameState () override;
         GameState (const GameState&) = delete;
 
