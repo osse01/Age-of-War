@@ -32,28 +32,37 @@ void GameState::handleEvent(sf::Event event)
 {
     switch (event.type)
     {
-    case sf::Event::KeyPressed:
-    {
-        if (event.key.code == sf::Keyboard::Num1)
+        case sf::Event::KeyPressed:
         {
-            spawnFriendly();
+            switch (event.key.code)
+            {
+                case sf::Keyboard::Num1:
+                {
+                    spawnFriendly();
+                    break;
+                }
+                case sf::Keyboard::Num2:
+                {
+                    spawnEnemy();
+                    break;
+                }
+                case sf::Keyboard::M:
+                {
+                    nextstate = MENU_STATE;
+                    music->stop();
+                    break;
+                }
+                case sf::Keyboard::P:
+                {
+                    nextstate = PAUSE_STATE;
+                    music->pause();
+                    break;
+                }
+                default:
+                    break;
+            }
+            break;
         }
-        if (event.key.code == sf::Keyboard::Num2)
-        {
-            spawnEnemy();
-        }
-        if (event.key.code == sf::Keyboard::M)
-        {
-            nextstate = MENU_STATE;
-            music->stop();
-        }
-        if (event.key.code == sf::Keyboard::P)
-        {
-            nextstate = PAUSE_STATE;
-            music->pause();
-        }
-        break;
-    }
 
     case sf::Event::MouseButtonPressed:
     {
