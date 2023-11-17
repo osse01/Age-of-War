@@ -14,7 +14,7 @@
     {
     public:
     // CONSTRUCTORS
-    MenuState   (sf::RenderWindow*, sf::Music*, sf::Time*);
+    MenuState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, sf::Time*);
     ~MenuState  () override;
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;
@@ -41,7 +41,6 @@
     sf::Font           textFont;
     sf::Text           gameTitle;
     sf::Text           instructionText;
-    sf::RenderWindow*   window;
     sf::Vector2f        zoomFactor;
     GUI                 gui;
     

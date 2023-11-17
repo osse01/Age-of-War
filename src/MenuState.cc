@@ -3,10 +3,11 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
+MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
+    fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen }
+    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen }
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -33,13 +34,6 @@ MenuState::MenuState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frame
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setPosition(window->getSize().x / 2, window->getSize().y / 3);
         gameTitle.setFillColor(sf::Color::Black); 
-
-        instructionText.setFont(textFont);
-        instructionText.setString("PRESS ANY KEY TO START");
-        instructionText.setCharacterSize(20);
-        instructionText.setOrigin(instructionText.getLocalBounds().width / 2, instructionText.getLocalBounds().height / 2);
-        instructionText.setPosition(window->getSize().x / 2, window->getSize().y / 1.8);
-        instructionText.setFillColor(sf::Color::Black); 
     }
     else
     {
@@ -48,10 +42,7 @@ MenuState::MenuState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frame
 }
 
 MenuState::~MenuState()
-{
-    window = nullptr;
-    frameDuration = nullptr;
-}
+{}
 
 void MenuState::handleEvent(sf::Event event)
 //  ---------------------------------------------
@@ -60,37 +51,32 @@ void MenuState::handleEvent(sf::Event event)
 {
     switch (event.type)
     {
-    //case sf::Event::KeyPressed:
-    //    startAnimation();
-    //    *currentState = GAME_STATE;  
-    //    music->play();      
-    //    break;
-    case sf::Event::MouseButtonPressed:
-    {
-        sf::Event::MouseButtonEvent mouse { event.mouseButton };
-        if (mouse.button == sf::Mouse::Button::Left)
+        case sf::Event::MouseButtonPressed:
         {
-            switch (gui.buttonClicked(MENU_STATE, mouse.x, mouse.y))
+            sf::Event::MouseButtonEvent mouse { event.mouseButton };
+            if (mouse.button == sf::Mouse::Button::Left)
             {
-                case 1:
-                    startAnimation();
-                    nextState = GAME_STATE;  
-                    music->play();      
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    window->close();
-                    break;
-                default:
-                    break;
+                switch (gui.buttonClicked(MENU_STATE, mouse.x, mouse.y))
+                {
+                    case 1:
+                        nextState = GAME_STATE;
+                        startAnimation();
+                        music->play();      
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        window->close();
+                        break;
+                    default:
+                        break;
+                }
             }
+            break;
         }
-        break;
-    }
     
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -122,9 +108,9 @@ void MenuState::startAnimation()
 //  ---------------------------------------------
 {
     double  step{1};
-    //double  delay{0.5};
+    //// double  delay{0.5};
     double  stepBackground{1};
-    //float   backgroundScale{1};
+    //// float   backgroundScale{1};
     sf::Event event{};
     
     while (step > 0 && stepBackground >0)
@@ -135,7 +121,7 @@ void MenuState::startAnimation()
         stepBackground -= 0.002;
 
         scale = std::pow(step, 2);
-        //backgroundScale = std::pow(stepBackground, 2);
+        // backgroundScale = std::pow(stepBackground, 2);
 
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setScale(zoomFactor*scale);
@@ -150,7 +136,7 @@ void MenuState::startAnimation()
         window->pollEvent(event);
         if(event.type == sf::Event::KeyPressed)
         {
-            return;
+            break;
         }
         while(window->pollEvent(event))
         {
@@ -168,7 +154,6 @@ void MenuState::startAnimation()
     //window->clear(sf::Color(255, 255, 255));
 
     //window->draw(*sprite);
-    window->display();
 }
 
 

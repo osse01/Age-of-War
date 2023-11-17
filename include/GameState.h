@@ -20,7 +20,7 @@ class GameState : public State
 {
     public:
         // CONSTRUCTORS
-        GameState  (sf::RenderWindow*, sf::Music*, sf::Time*);
+        GameState  (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, sf::Time*);
         ~GameState () override;
         GameState (const GameState&) = delete;
 
@@ -48,8 +48,6 @@ class GameState : public State
         std::deque<std::shared_ptr<Entity>> enemyQueue;
 
         std::string         backgroundFile;
-
-        sf::RenderWindow*   window;
 
         sf::Texture         backgroundTexture;
         sf::Sprite          backgroundSprite;

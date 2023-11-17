@@ -3,9 +3,9 @@
 #include <iostream>
 #include "utility"
 
-GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
-    backgroundFile { "assets/background.jpeg" }, window { screen }, backgroundTexture {},
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
+    backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
     backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {
     window->setFramerateLimit(18);
@@ -24,70 +24,77 @@ GameState::GameState(sf::RenderWindow* screen,  sf::Music* sound, sf::Time* fram
 }
 
 GameState::~GameState()
-{
-    frameDuration = nullptr;
-}
+{}
 
 void GameState::handleEvent(sf::Event event)
 {
     switch (event.type)
     {
         case sf::Event::KeyPressed:
-        {
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                {
                     spawnFriendly();
                     break;
-                }
+
                 case sf::Keyboard::Num2:
-                {
                     spawnEnemy();
                     break;
-                }
+
                 case sf::Keyboard::M:
-                {
                     nextstate = MENU_STATE;
                     music->stop();
                     break;
-                }
-                case sf::Keyboard::P:
-                {
+
+                case sf::Keyboard::Escape:
                     nextstate = PAUSE_STATE;
                     music->pause();
                     break;
-                }
+
                 default:
                     break;
+                    
+                // if (event.key.code == sf::Keyboard::Num2)
+                // {
+                //     spawnEnemy();
+                // }
+                // if (event.key.code == sf::Keyboard::M)
+                // {
+                //     nextstate = MENU_STATE;
+                //     music->stop();
+                // }
+                // if (event.key.code == sf::Keyboard::Escape)
+                // {
+                //     nextstate = PAUSE_STATE;
+                //     music->pause();
+                // }
+            }
+            break;
+
+        case sf::Event::MouseButtonPressed:
+        {
+            sf::Event::MouseButtonEvent mouse { event.mouseButton };
+            if (mouse.button == sf::Mouse::Button::Left)
+            {
+                switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
+                {
+                    case 6:
+                        spawnFriendly();
+                        break;
+                    case 5:
+                        spawnEnemy();
+                        break;
+                    case 1:
+                        window->close();
+                        break;
+                    default:
+                        break;
+                }
             }
             break;
         }
-
-    case sf::Event::MouseButtonPressed:
-    {
-        sf::Event::MouseButtonEvent mouse { event.mouseButton };
-        if (mouse.button == sf::Mouse::Button::Left)
-        {
-            switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
-            {
-                case 6:
-                    spawnFriendly();
-                    break;
-                case 5:
-                    spawnEnemy();
-                    break;
-                case 1:
-                    window->close();
-                    break;
-                default:
-                    break;
-            }
-        }
-        break;
-    }
-    default:
-        break;
+        default:
+            break;
 
     }
 }

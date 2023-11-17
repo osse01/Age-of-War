@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(sf::RenderWindow* screen, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), nextstate{PAUSE_STATE}, fontFile { "assets/coolFont.ttf" }, window { screen },
+PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, sf::Music* sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, sound, frameDuration), nextstate{PAUSE_STATE}, fontFile { "assets/coolFont.ttf" },
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
   

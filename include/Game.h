@@ -34,17 +34,16 @@ class Game
 
     private:
     // Variables //
-    sf::RenderWindow* window; // Possibly Use RenderWindow* Instead
+    std::shared_ptr<sf::RenderWindow> window; // Possibly Use RenderWindow* Instead
     sf::Event event;
-    bool running;
     sf::Clock clock;
     sf::Time frameDuration;
-    sf::Time* frameDurationPtr;
+    std::shared_ptr<sf::Time> frameDurationPtr;
     
     // States
     std::stack<std::unique_ptr<State>> states;
     int     currentState;
-    sf::Music* music;
+    std::shared_ptr<sf::Music> music;
     int    nextState;
 
     protected:

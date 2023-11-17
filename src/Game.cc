@@ -3,15 +3,14 @@
 #include "../include/GameState.h"
 #include "../include/PauseState.h"
 
-#include <memory>
 #include <utility>
 #include <iostream>
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
-:   window { new sf::RenderWindow { sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE/*, sf::Style::Fullscreen*/} },
-    event {}, running { true }, clock {}, frameDuration {}, frameDurationPtr { &frameDuration }, states {}, currentState { MENU_STATE },
-    music { new sf::Music }, nextState {MENU_STATE}
+:   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE/*, sf::Style::Fullscreen*/) },
+    event {}, clock {}, frameDuration {}, frameDurationPtr { std::make_shared<sf::Time> ( frameDuration )}, states {}, currentState { MENU_STATE },
+    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}
 {
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
     // Open Audio File
@@ -31,14 +30,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 }
 
 Game::~Game()
-{
-
-    
-    delete music;
-    delete window;
-    
-    frameDurationPtr    = nullptr;
-}
+{}
 
 
 // Functions //
@@ -58,14 +50,14 @@ void Game::startGame ()
         // Update Logic
         updateLogic();
 
+        // Update Current State
+        getNextState();
+
         // Render Frame
         renderFrame();
 
         // Display Frame
         window->display();
-
-        // Update Current State
-        getNextState();
 
     }
 }
@@ -78,14 +70,13 @@ void Game::handleEvents()
         switch (event.type)
         /*  Game Only Handles Events That Result in The Game Terminating
             as These Events are Independent of State
-            Other Events Are Handled bt the Current Game State
+            Other Events Are Handled by the Current Game State
         */
         {
         case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Escape)
+            if (event.key.code == sf::Keyboard::Backspace)
             {
                 window->close();    
-                //running = false;
                 break;
             }
             // Let Current Game State Handle Event

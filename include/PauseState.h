@@ -13,7 +13,7 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (sf::RenderWindow*, sf::Music*, sf::Time*);
+    PauseState   (std::shared_ptr<sf::RenderWindow>, sf::Music*, sf::Time*);
     ~PauseState  () override;
     PauseState   (const PauseState&) = delete;
     PauseState& operator= ( const PauseState& ) = delete;
@@ -31,7 +31,6 @@ private:
     int nextstate;
     std::string fontFile;
 
-    sf::RenderWindow*   window;
     sf::Font*           textFont;
     sf::Text*           pausedText;
     sf::RectangleShape* greyOut;

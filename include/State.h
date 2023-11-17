@@ -15,7 +15,7 @@ class State
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State(sf::Music*, sf::Time*);
+    State(std::shared_ptr<sf::RenderWindow>, sf::Music*, sf::Time*);
     virtual ~State();
     State(const State&) = delete;
     State& operator= (const State&) = delete;
@@ -28,8 +28,9 @@ public:
     virtual void resetState ()           = 0;
 
 protected:
-    sf::Music* music{};
-    sf::Time* frameDuration{};
+    std::shared_ptr<sf::RenderWindow>   window;
+    std::shared_ptr<sf::Music> music{};
+    std::shared_ptr<sf::Time> frameDuration{};
 };
 
 #endif
