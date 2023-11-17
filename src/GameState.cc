@@ -33,6 +33,7 @@ void GameState::handleEvent(sf::Event event)
     switch (event.type)
     {
     case sf::Event::KeyPressed:
+    {
         if (event.key.code == sf::Keyboard::Num1)
         {
             spawnFriendly();
@@ -52,6 +53,7 @@ void GameState::handleEvent(sf::Event event)
             music->pause();
         }
         break;
+    }
 
     case sf::Event::MouseButtonPressed:
     {

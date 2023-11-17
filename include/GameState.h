@@ -31,7 +31,7 @@ class GameState : public State
             void handleEvent      (sf::Event) override;
             void updateLogic      ()          override;
             void renderFrame      ()          override;
-            int  getNextState      ()          override;
+            int  getNextState     ()          override;
             void spawnFriendly    ();
             void spawnEnemy       ();
             void handleCollisions ();

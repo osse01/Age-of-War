@@ -88,6 +88,8 @@ void Game::handleEvents()
                 //running = false;
                 break;
             }
+            // Let Current Game State Handle Event
+            states.top()->handleEvent(event);
             break;
             
         default:
