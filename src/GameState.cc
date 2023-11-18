@@ -1,12 +1,13 @@
 #include "../include/GameState.h"
 
 #include <iostream>
-#include "utility"
+#include <utility>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
-    backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
+    backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
+    view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {
     window->setFramerateLimit(18);
 
@@ -21,6 +22,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 
     FileReader reader {};
     melee = reader.returnData("Melee", "assets/stage1.txt");
+    window->setView(view);
 }
 
 GameState::~GameState()
@@ -28,11 +30,42 @@ GameState::~GameState()
 
 void GameState::handleEvent(sf::Event event)
 {
+    {
+        sf::Mouse mouse {};
+        int margin {static_cast<int>(window->getSize().x/20)};
+        if (mouse.getPosition().x < margin)
+        {
+            view.move(-5, 0);
+            window->setView(view);
+        }
+        else if (mouse.getPosition().x > 19*margin)
+        {
+            view.move(5, 0);
+            window->setView(view);
+        }
+    }
+
     switch (event.type)
     {
         case sf::Event::KeyPressed:
             switch (event.key.code)
             {
+                case sf::Keyboard::Left:
+                    view.move(-5, 0);
+                    window->setView(view);
+                    break;
+                case sf::Keyboard::Right:
+                    view.move(5, 0);
+                    window->setView(view);
+                    break;
+                case sf::Keyboard::Up:
+                    view.move(0, -5);
+                    window->setView(view);
+                    break;
+                case sf::Keyboard::Down:
+                    view.move(0, 5);
+                    window->setView(view);
+                    break;
                 case sf::Keyboard::Num1:
                     spawnFriendly();
                     break;
@@ -157,7 +190,8 @@ void GameState::handleCollisions()
 
 void GameState::renderFrame()  
 {
-
+    window->setView(view);
+    
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
 
@@ -174,6 +208,7 @@ void GameState::renderFrame()
         {
             window->draw(it->getSprite());
         }
+    window->setView(window->getDefaultView());
     gui.draw(GAME_STATE, window);
 }
 
