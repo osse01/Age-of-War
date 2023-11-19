@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
+#include <memory>
+
 
 
 int const MENU_STATE    { 0 };
@@ -15,7 +17,7 @@ class State
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State(sf::Music*, sf::Time*);
+    State(std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     virtual ~State();
     State(const State&) = delete;
     State& operator= (const State&) = delete;
@@ -25,11 +27,12 @@ public:
     virtual void updateLogic ()          = 0;
     virtual void renderFrame ()          = 0;
     virtual int getNextState ()          = 0;
+    virtual void resetState ()           = 0;
 
 protected:
-    int*    currentState{};
-    sf::Music* music{};
-    sf::Time* frameDuration{};
+    std::shared_ptr<sf::RenderWindow>   window;
+    std::shared_ptr<sf::Music> music{};
+    std::shared_ptr<sf::Time> frameDuration{};
 };
 
 #endif

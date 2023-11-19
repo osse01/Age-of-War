@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <stack>
 
 
 
@@ -33,22 +34,19 @@ class Game
 
     private:
     // Variables //
-    sf::RenderWindow* window; // Possibly Use RenderWindow* Instead
+    std::shared_ptr<sf::RenderWindow> window;
     sf::Event event;
-    bool running;
     sf::Clock clock;
     sf::Time frameDuration;
-    sf::Time* frameDurationPtr;
+    std::shared_ptr<sf::Time> frameDurationPtr;
     
     // States
-    std::vector<State*> states;
+    std::stack<std::unique_ptr<State>> states;
     int     currentState;
-    int*    currentStatePtr;
-    sf::Music* music;
-    
+    std::shared_ptr<sf::Music> music;
+    int    nextState;
 
     protected:
-    int    nextState;
 
 
 

@@ -1,10 +1,10 @@
-#include "PauseState.h"
+#include "../include/PauseState.h"
 
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), currentState { curr }, fontFile { "assets/coolFont.ttf" }, window { screen },
+PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, sound, frameDuration), nextstate{PAUSE_STATE}, fontFile { "assets/coolFont.ttf" },
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
   
@@ -37,7 +37,6 @@ PauseState::~PauseState()
     delete textFont;
     delete pausedText;
     delete greyOut;
-    currentState = nullptr;
     window = nullptr;
     frameDuration = nullptr;
 }
@@ -52,7 +51,7 @@ void PauseState::handleEvent(sf::Event event)
     case sf::Event::KeyPressed:
         music->play();
         startAnimation();
-        *currentState = GAME_STATE;      
+        nextstate = GAME_STATE;      
         break;
     default:
         break;
@@ -64,8 +63,10 @@ int PauseState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    return  *currentState;
+    return  nextstate;
 }
+
+
 
 void PauseState::updateLogic()
 //  ---------------------------------------------
@@ -91,3 +92,7 @@ void PauseState::renderFrame()
     window->draw(*pausedText);
 }
 
+void PauseState::resetState()
+{
+    nextstate = PAUSE_STATE;
+}

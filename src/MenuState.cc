@@ -1,12 +1,13 @@
-#include "MenuState.h"
+#include "../include/MenuState.h"
 
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::Time* frameDuration)
-:   State(sound, frameDuration), scale{1.0f}, t{0.0f}, currentState{curr}, fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
+MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
+    fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    window{screen}, zoomFactor{sf::Vector2f(0.9f, 0.6f)}
+    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen }
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -17,7 +18,8 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
     if(texture.loadFromFile(backgroundFile))
     {
         sprite.setTexture(texture);
-        sprite.setScale(zoomFactor);
+        //sprite.setScale(zoomFactor);
+        sprite.setScale(window->getSize().x /sprite.getGlobalBounds().width, window->getSize().y /sprite.getGlobalBounds().height);
     }
     else
     {
@@ -32,13 +34,6 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setPosition(window->getSize().x / 2, window->getSize().y / 3);
         gameTitle.setFillColor(sf::Color::Black); 
-
-        instructionText.setFont(textFont);
-        instructionText.setString("PRESS ANY KEY TO START");
-        instructionText.setCharacterSize(20);
-        instructionText.setOrigin(instructionText.getLocalBounds().width / 2, instructionText.getLocalBounds().height / 2);
-        instructionText.setPosition(window->getSize().x / 2, window->getSize().y / 1.8);
-        instructionText.setFillColor(sf::Color::Black); 
     }
     else
     {
@@ -47,11 +42,7 @@ MenuState::MenuState(sf::RenderWindow* screen, int* curr, sf::Music* sound, sf::
 }
 
 MenuState::~MenuState()
-{
-    currentState = nullptr;
-    window = nullptr;
-    frameDuration = nullptr;
-}
+{}
 
 void MenuState::handleEvent(sf::Event event)
 //  ---------------------------------------------
@@ -60,14 +51,32 @@ void MenuState::handleEvent(sf::Event event)
 {
     switch (event.type)
     {
-    case sf::Event::KeyPressed:
-        startAnimation();
-        *currentState = GAME_STATE;  
-        music->play();      
-        break;
+        case sf::Event::MouseButtonPressed:
+        {
+            sf::Event::MouseButtonEvent mouse { event.mouseButton };
+            if (mouse.button == sf::Mouse::Button::Left)
+            {
+                switch (gui.buttonClicked(MENU_STATE, mouse.x, mouse.y))
+                {
+                    case 1:
+                        nextState = GAME_STATE;
+                        startAnimation();
+                        music->play();      
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        window->close();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+        }
     
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -76,7 +85,13 @@ int MenuState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    return  *currentState;
+    return  nextState;
+}
+
+
+void MenuState::resetState()
+{
+    nextState = MENU_STATE;
 }
 
 void MenuState::updateLogic()
@@ -93,9 +108,10 @@ void MenuState::startAnimation()
 //  ---------------------------------------------
 {
     double  step{1};
-    double  delay{0.5};
+    //// double  delay{0.5};
     double  stepBackground{1};
-    float   backgroundScale{1};
+    //// float   backgroundScale{1};
+    sf::Event event{};
     
     while (step > 0 && stepBackground >0)
     {
@@ -105,7 +121,7 @@ void MenuState::startAnimation()
         stepBackground -= 0.002;
 
         scale = std::pow(step, 2);
-        backgroundScale = std::pow(stepBackground, 2);
+        // backgroundScale = std::pow(stepBackground, 2);
 
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setScale(zoomFactor*scale);
@@ -113,24 +129,25 @@ void MenuState::startAnimation()
         instructionText.setOrigin(instructionText.getLocalBounds().width / 2, instructionText.getLocalBounds().height / 2);
         instructionText.setScale(zoomFactor*scale);
 
-        if(sprite.getGlobalBounds().width >= window->getSize().x)
+        //if(sprite.getGlobalBounds().width >= window->getSize().x)
+        //{
+        //    sprite.setScale(zoomFactor*backgroundScale);    
+        //}
+        window->pollEvent(event);
+        if(event.type == sf::Event::KeyPressed)
         {
-            sprite.setScale(zoomFactor*backgroundScale);    
+            break;
         }
+        while(window->pollEvent(event))
+        {
 
+        }
         window->draw(sprite);
         window->draw(gameTitle);
         window->draw(instructionText);
         window->display();
 
-
-        //sf::sleep(sf::milliseconds(delay)); 
     }
-
-    window->clear(sf::Color(255, 255, 255));
-
-    //window->draw(*sprite);
-    window->display();
 }
 
 
@@ -139,12 +156,13 @@ void MenuState::renderFrame()
 //  Funcion Explaination
 //  ---------------------------------------------
 {
+    
     window->clear(sf::Color(255, 255, 255));
 
     t = t + 0.0003;
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
-    sprite.setScale(zoomFactor);
+    //sprite.setScale(zoomFactor);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
     gameTitle.setScale(zoomFactor*scale);
@@ -154,5 +172,7 @@ void MenuState::renderFrame()
     window->draw(sprite);
     window->draw(gameTitle);
     window->draw(instructionText);
+
+    gui.draw(MENU_STATE, window);
 }
 
