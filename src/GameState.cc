@@ -4,9 +4,9 @@
 #include "utility"
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
+:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tank {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }, enemy { frameDuration }
 {
     window->setFramerateLimit(18);
 
@@ -22,8 +22,10 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
         window->getSize().y / backgroundSprite.getGlobalBounds().height);
 
     FileReader reader {};
-    melee = reader.returnData("Melee", "assets/stage1.txt");
-    ranged = reader.returnData("Range", "assets/stage1.txt");
+    meleeF = reader.returnData("Melee_F", "assets/stage1.txt");
+    rangedF = reader.returnData("Range_F", "assets/stage1.txt");
+    meleeE = reader.returnData("Melee_E", "assets/stage1.txt");
+    rangedE = reader.returnData("Range_E", "assets/stage1.txt");
     
     projectile = reader.returnData("Projectile", "assets/stage1.txt");
 
@@ -45,7 +47,7 @@ void GameState::handleEvent(sf::Event event)
                     break;
 
                 case sf::Keyboard::Num2:
-                    spawnEnemy();
+                    spawnEnemy(1);
                     break;
 
                 case sf::Keyboard::M:
@@ -74,7 +76,7 @@ void GameState::handleEvent(sf::Event event)
                         spawnFriendly(0);
                         break;
                     case 5:
-                        spawnEnemy();
+                        spawnEnemy(0);
                         break;
                     case 4:
                         spawnFriendly(1);
@@ -131,6 +133,7 @@ void GameState::updateLogic()
         enemyQueue.erase( enemyQueue.begin() + j );
     }
     handleCollisions();
+    enemyPlay();
 }
 
 void GameState::handleCollisions()
@@ -211,11 +214,11 @@ void GameState::spawnFriendly(int type)
     {
     case 0:
         friendlyQueue.push_back(std::make_shared<Melee> 
-            ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+            ( meleeF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
         break;
     case 1:
         friendlyQueue.push_back(std::make_shared<Range> 
-            ( ranged, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+            ( rangedF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
         
         projectileQueue.push_back(std::make_shared<Projectile>
             (projectile, true, sf::Vector2f( 40.f, window->getSize().y-200.f )));
@@ -225,13 +228,46 @@ void GameState::spawnFriendly(int type)
     };
 }
 
-void GameState::spawnEnemy()
+void GameState::spawnEnemy(int type)
 {
-    enemyQueue.push_back(std::make_shared<Melee> 
-        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ) ) );
+    switch ( type )
+    {
+    case 0:
+        enemyQueue.push_back(std::make_shared<Melee> 
+            ( meleeE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ) ) );
+        break;
+    case 1:
+        enemyQueue.push_back(std::make_shared<Range> 
+            ( rangedE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ) ) );
+        
+        projectileQueue.push_back(std::make_shared<Projectile>
+            (projectile, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f )));
+        break;
+    default:
+        break;
+    };
 }
 
 void GameState::updateStage()
 {
     stage++;
+}
+
+void GameState::enemyPlay()
+{
+    int play = enemy.enemyPlay();
+    switch ( play )
+    {
+        case 1:
+            spawnEnemy(0);
+            break;
+        case 2:
+            spawnEnemy(1);
+            break;
+        case 3:
+            spawnEnemy(1);
+            break;
+        default:
+            break;
+    };
 }
