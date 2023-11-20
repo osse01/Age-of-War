@@ -29,3 +29,8 @@ void Projectile::updatePos()
     Entity::sprite.setTextureRect(Entity::rectSourceSprite);
 
 }
+
+void Projectile::kill()
+{
+    Entity::hp = 0;
+}

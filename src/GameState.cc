@@ -102,7 +102,7 @@ void GameState::updateLogic()
     int i {};
     for (auto &it: projectileQueue)
     {
-        if (it->getPos().y >= window->getSize().y)
+        if (it->getPos().y >= window->getSize().y || it->isDead())
         {
             i++;
             continue;
@@ -199,6 +199,7 @@ void GameState::handleCollisions()
             if ( itProjectile->collides(itEnemy) )
             {
                 itEnemy->handleCollision( 1, itProjectile->getDamage() );
+                itProjectile->changeHp(0);
             }
         }
     }

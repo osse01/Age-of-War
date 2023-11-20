@@ -18,6 +18,7 @@ class Entity
         virtual int getType()         = 0;
         virtual int getAttackSpeed()  = 0;
         sf::Vector2f getPos();
+        void changeHp(int);
         bool isDead();
 
         sf::Sprite getSprite()         const &;

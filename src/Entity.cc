@@ -46,3 +46,8 @@ sf::Vector2f Entity::getPos()
 {
     return sf::Vector2f{static_cast<float>(xpos), static_cast<float>(ypos)};
 }
+
+void Entity::changeHp(int newHP)
+{
+    hp = newHP;
+}

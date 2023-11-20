@@ -14,6 +14,7 @@ class Projectile : public Dynamic
     void handleCollision(int, int);
     int getAttackSpeed(){return 0;};
     int getType(){return 4;};
+    void kill();
     void updatePos() ;
 
     private:

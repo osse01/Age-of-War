@@ -12,7 +12,7 @@ class Dynamic : public Entity
         virtual ~Dynamic() = default;
 
         virtual void handleCollision(int, int)   = 0;
-        virtual void updatePos()           = 0;
+        virtual void updatePos()                 = 0;
         virtual int getType()                    = 0;
         int getAttackSpeed(){return ATTACK_SPEED;};
         int getDamage();
