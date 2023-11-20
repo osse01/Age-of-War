@@ -13,9 +13,8 @@ class Dynamic : public Entity
 
         virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()           = 0;
-        //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
-
         int getDamage();
+        //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
 
     protected:
         const int DAMAGE;
