@@ -26,7 +26,6 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, music, frameDurationPtr);
     states.push(std::move(ptr));
 
-
 }
 
 Game::~Game()
@@ -42,7 +41,7 @@ void Game::startGame ()
     // Main Game Loop, One Iteration is a Frame
     while ( window->isOpen() )
     {
-        frameDuration = clock.restart();
+        *frameDurationPtr = clock.restart();
 
         // Handle Events
         handleEvents();

@@ -9,7 +9,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {
-    window->setFramerateLimit(18);
+    //window->setFramerateLimit(18);
 
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -30,42 +30,11 @@ GameState::~GameState()
 
 void GameState::handleEvent(sf::Event event)
 {
-    {
-        sf::Mouse mouse {};
-        int margin {static_cast<int>(window->getSize().x/20)};
-        if (mouse.getPosition().x < margin)
-        {
-            view.move(-5, 0);
-            window->setView(view);
-        }
-        else if (mouse.getPosition().x > 19*margin)
-        {
-            view.move(5, 0);
-            window->setView(view);
-        }
-    }
-
     switch (event.type)
     {
         case sf::Event::KeyPressed:
             switch (event.key.code)
             {
-                case sf::Keyboard::Left:
-                    view.move(-5, 0);
-                    window->setView(view);
-                    break;
-                case sf::Keyboard::Right:
-                    view.move(5, 0);
-                    window->setView(view);
-                    break;
-                case sf::Keyboard::Up:
-                    view.move(0, -5);
-                    window->setView(view);
-                    break;
-                case sf::Keyboard::Down:
-                    view.move(0, 5);
-                    window->setView(view);
-                    break;
                 case sf::Keyboard::Num1:
                     spawnFriendly();
                     break;
@@ -119,6 +88,21 @@ void GameState::handleEvent(sf::Event event)
 
 void GameState::updateLogic()         
 {
+    {
+        sf::Mouse mouse {};
+        int margin {static_cast<int>(window->getSize().x/20)};
+        if (mouse.getPosition(*window).x < margin)
+        {
+            view.move(-200*(frameDuration->asSeconds()), 0);
+            window->setView(view);
+        }
+        else if (mouse.getPosition(*window).x > 19*margin)
+        {
+            view.move(200*(frameDuration->asSeconds()), 0);
+            window->setView(view);
+        }
+    }
+
     std::vector<int> deadEntitiesFriendly{};
     std::vector<int> deadEntitiesEnemy{};
     int i {};
@@ -225,14 +209,14 @@ int GameState::getNextState()
 void GameState::spawnFriendly()
 {
     friendlyQueue.push_back(std::make_shared<Melee> 
-        ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+        ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
     
 }
 
 void GameState::spawnEnemy()
 {
     enemyQueue.push_back(std::make_shared<Melee> 
-        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ) ) );
+        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, 8*window->getSize().y/13 ) ) );
 }
 
 void GameState::updateStage()
