@@ -10,6 +10,7 @@
         public:
             Melee(const FileReader::Data&, bool, sf::Vector2f);
             virtual ~Melee() = default;
+            int getType(){return 1;};
     };
 
 #endif

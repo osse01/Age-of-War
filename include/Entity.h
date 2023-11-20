@@ -15,6 +15,9 @@ class Entity
         virtual void handleCollision(int, int) = 0;
         virtual void updatePos()      = 0;
         virtual int getDamage()       = 0;
+        virtual int getType()         = 0;
+        virtual int getAttackSpeed()  = 0;
+        sf::Vector2f getPos();
         bool isDead();
 
         sf::Sprite getSprite()         const &;

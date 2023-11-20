@@ -10,6 +10,7 @@ class Range : public Troop
     public:
     Range(const FileReader::Data&, bool, sf::Vector2f);
     virtual ~Range() = default;
+    int getType(){return 2;};
 
     //Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) override;
 };

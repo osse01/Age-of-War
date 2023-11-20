@@ -10,11 +10,14 @@ class Projectile : public Dynamic
     public:
     Projectile(const FileReader::Data&, bool, sf::Vector2f);
     virtual ~Projectile() = default;
-    void handleCollision(int, int) ;
+
+    void handleCollision(int, int);
+    int getAttackSpeed(){return 0;};
+    int getType(){return 4;};
     void updatePos() ;
 
     private:
-    const int g;
+    const int g {10};
     float counter;
 };
 

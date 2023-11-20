@@ -41,3 +41,8 @@ bool Entity::isDead()
 {
     return hp <= 0;
 }
+
+sf::Vector2f Entity::getPos()
+{
+    return sf::Vector2f{static_cast<float>(xpos), static_cast<float>(ypos)};
+}

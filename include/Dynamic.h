@@ -13,6 +13,8 @@ class Dynamic : public Entity
 
         virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()           = 0;
+        virtual int getType()                    = 0;
+        int getAttackSpeed(){return ATTACK_SPEED;};
         int getDamage();
         //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
 
@@ -25,5 +27,4 @@ class Dynamic : public Entity
         const int BUY_VALUE;
 
 };
-
 #endif

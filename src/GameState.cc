@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include "utility"
+#include <cmath>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, counter {0}, gui { 1, screen }
 {
     window->setFramerateLimit(18);
 
@@ -96,40 +97,64 @@ void GameState::handleEvent(sf::Event event)
 
 void GameState::updateLogic()         
 {
+//----PROJECTILES----
+    std::vector<int> deleteEntities{};
+    int i {};
     for (auto &it: projectileQueue)
     {
+        if (it->getPos().y >= window->getSize().y)
+        {
+            i++;
+            continue;
+        }
         it->updatePos();
     }
-    std::vector<int> deadEntitiesFriendly{};
-    std::vector<int> deadEntitiesEnemy{};
-    int i {};
+    for (int j: deleteEntities)
+    {
+        projectileQueue.erase( projectileQueue.begin() + j );
+    }
+    deleteEntities.clear();
+    i = 0;
+
+//----FRIENDS----
     for(auto &it: friendlyQueue)
         {
             if ( it->isDead() )
             {
-                deadEntitiesFriendly.push_back(i);
+                deleteEntities.push_back(i);
             }
-            it->updatePos();
             i++;
+            it->updatePos();
+            if (it->getType() == 2 && ( it->getAttackSpeed() * counter ) >= 100 )
+            {
+                projectileQueue.push_back(std::make_shared<Projectile>
+                    (projectile, true, it->getPos()));
+                    counter = 0;
+            }
+            counter ++;
         }
+    for (int j: deleteEntities)
+    {
+        friendlyQueue.erase( friendlyQueue.begin() + j );
+    }
+
+//----ENEMIES----
+    deleteEntities.clear();
     i = 0;
     for(auto &it: enemyQueue)
         {
             if ( it->isDead() )
             {
-                deadEntitiesEnemy.push_back(i);
+                deleteEntities.push_back(i);
             }
             it->updatePos();
             i++;
         }
-    for (int j: deadEntitiesFriendly)
-    {
-        friendlyQueue.erase( friendlyQueue.begin() + j );
-    }
-    for (int j: deadEntitiesEnemy)
+    for (int j: deleteEntities)
     {
         enemyQueue.erase( enemyQueue.begin() + j );
     }
+
     handleCollisions();
 }
 
@@ -166,7 +191,17 @@ void GameState::handleCollisions()
                 friendlyQueue.at(behind)->handleCollision(0, 0);
             }
         }
-
+    // Collision between projectile and Enemies
+    for ( auto &itProjectile: projectileQueue )
+    {
+        for ( auto &itEnemy: enemyQueue)
+        {
+            if ( itProjectile->collides(itEnemy) )
+            {
+                itEnemy->handleCollision( 1, itProjectile->getDamage() );
+            }
+        }
+    }
 }
 
 void GameState::renderFrame()  
@@ -216,9 +251,6 @@ void GameState::spawnFriendly(int type)
     case 1:
         friendlyQueue.push_back(std::make_shared<Range> 
             ( ranged, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
-        
-        projectileQueue.push_back(std::make_shared<Projectile>
-            (projectile, true, sf::Vector2f( 40.f, window->getSize().y-200.f )));
         break;
     default:
         break;

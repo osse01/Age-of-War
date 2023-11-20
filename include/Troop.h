@@ -12,6 +12,7 @@ class Troop : public Dynamic
 
         void handleCollision(int, int) override;
         void updatePos()          override;
+        virtual int getType()           = 0;
 
     private:
         void changeSprite();
