@@ -181,13 +181,13 @@ void GameState::renderFrame()
     
     //  Render units
     for(auto &it: friendlyQueue)
-        {
-            window->draw(it->getSprite());
-        }
+    {
+        window->draw(it->getSprite());
+    }
     for(auto &it: enemyQueue)
-        {
-            window->draw(it->getSprite());
-        }
+    {
+        window->draw(it->getSprite());
+    }
     for(auto &it: projectileQueue)
     {
         window->draw(it->getSprite());
@@ -218,7 +218,7 @@ void GameState::spawnFriendly(int type)
             ( ranged, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
         
         projectileQueue.push_back(std::make_shared<Projectile>
-            (Projectile(projectile, true, sf::Vector2f( 40.f, window->getSize().y-200.f ))));
+            (projectile, true, sf::Vector2f( 40.f, window->getSize().y-200.f )));
         break;
     default:
         break;

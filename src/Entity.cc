@@ -5,7 +5,8 @@
 Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
     
     : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, 
-      texture{}, rectSourceSprite { 0,128,128,128 }, sprite {texture, rectSourceSprite},
+      texture{}, rectSourceSprite { 0,0, stats.spriteDim.at(0), stats.spriteDim.at(1)/*0,128,128,128*/ }, 
+      sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }
 {
     if(!texture.loadFromFile(stats.filename))
@@ -13,6 +14,7 @@ Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in Entity::Entity().");
     }
+    sprite.setTextureRect(Entity::rectSourceSprite);
     sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
     boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
 
