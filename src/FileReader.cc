@@ -39,6 +39,8 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
     readFile(filename);
     Data data{};
     std::string tmp{};
+    int spriteX{};
+    int spriteY{};
 
     for (const auto& element : fileContents)
     {
@@ -48,11 +50,13 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
         if (tmp == name)
         {
             dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
-                      >> data.attackSpeed >> data.boxSize >> data.filename;
+                      >> data.attackSpeed >> data.boxSize >> spriteX
+                      >> spriteY >> data.filename;
 
             break;
         }
     }
-
+    (data.spriteDim).push_back(spriteX);
+    (data.spriteDim).push_back(spriteY);
     return data;
 }
