@@ -34,7 +34,7 @@ class GameState : public State
         void updateLogic      ()          override;
         void renderFrame      ()          override;
         int  getNextState     ()          override;
-        void spawnFriendly    (std::string);
+        void spawnFriendly    ();
         void spawnEnemy       ();
         void handleCollisions ();
         void resetState       ()          override;
@@ -59,8 +59,6 @@ class GameState : public State
 
         int nextstate;
         int stage;
-        int gold;
-        
         GUI                 gui;
 };
 
