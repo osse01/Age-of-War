@@ -7,7 +7,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 :   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }
 {
     //window->setFramerateLimit(18);
 
@@ -36,7 +36,7 @@ void GameState::handleEvent(sf::Event event)
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                    spawnFriendly();
+                    spawnFriendly(melee.type);
                     break;
 
                 case sf::Keyboard::Num2:
@@ -66,7 +66,7 @@ void GameState::handleEvent(sf::Event event)
                 switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
                 {
                     case 6:
-                        spawnFriendly();
+                        spawnFriendly(melee.type);
                         break;
                     case 5:
                         spawnEnemy();
@@ -111,6 +111,7 @@ void GameState::updateLogic()
             if ( it->isDead() )
             {
                 deadEntitiesFriendly.push_back(i);
+                gold += it->getDeathValue();
             }
             it->updatePos(frameDuration);
             i++;
@@ -206,11 +207,40 @@ int GameState::getNextState()
     return nextstate;
 }
 
-void GameState::spawnFriendly()
+void GameState::spawnFriendly(std::string troop)
 {
-    friendlyQueue.push_back(std::make_shared<Melee> 
-        ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
-    
+    if (troop == melee.type)
+    {
+        if (gold >= melee.cost)
+        {
+            gold -= melee.cost;
+            friendlyQueue.push_back(std::make_shared<Melee> 
+            ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
+        }
+    }
+    else if (troop == ranged.type)
+    {
+        if (gold >= ranged.cost)
+        {
+            gold -= ranged.cost;
+            // friendlyQueue.push_back(std::make_shared<Ranged> 
+            //  ( ranged, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
+        }
+    }
+    else if (troop == tank.type)
+    {
+        if (gold >= tank.cost)
+        {
+            gold -= tank.cost;
+            //friendlyQueue.push_back(std::make_shared<Tank> 
+            //  ( tank, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
+        }
+    }
+    else
+    {
+        throw std::logic_error("\n  >> Error, Unidentified troop type. "
+        "Error in GameState::spawnFriendly(std::string). \n");
+    }
 }
 
 void GameState::spawnEnemy()

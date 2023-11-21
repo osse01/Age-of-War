@@ -43,12 +43,15 @@ public:
 //  STRUCTURES
     struct Data
     {
-        int damage;
-        int hp;
-        float movementSpeed;
-        float range;
-        int attackSpeed;
-        int boxSize;
+        int     damage;
+        int     hp;
+        float   movementSpeed;
+        float   range;
+        int     attackSpeed;
+        int     boxSize;
+        int     cost;
+        int     deathValue;
+
         std::vector<int> spriteDim;
 
         std::string type;
