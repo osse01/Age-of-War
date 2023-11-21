@@ -51,9 +51,8 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
         {
             data.type = name;
             dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
-                      >> data.attackSpeed >> data.boxSize >> data.cost >> spriteX
-                      >> spriteY >> data.filename;
-
+                      >> data.attackSpeed >> data.boxSize >> data.cost  >> data.deathValue
+                      >> spriteX >> spriteY >> data.filename;
             break;
         }
     }

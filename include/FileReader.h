@@ -50,7 +50,8 @@ public:
         int     attackSpeed;
         int     boxSize;
         int     cost;
-        
+        int     deathValue;
+
         std::vector<int> spriteDim;
 
         std::string type;

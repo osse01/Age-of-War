@@ -4,7 +4,7 @@
 
 Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
     
-    : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, 
+    : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, deathValue{ stats.deathValue }, isFriendly { friendly }, 
       texture{}, rectSourceSprite { 0,128,128,128 }, sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }
 {
@@ -38,4 +38,12 @@ bool Entity::collides( std::shared_ptr<Entity> other )
 bool Entity::isDead()
 {
     return hp <= 0;
+}
+
+int Entity::getDeathValue()
+//  ---------------------------------------------
+//  Returns the entity objects deathValue variable.
+//  ---------------------------------------------
+{
+    return deathValue;
 }
