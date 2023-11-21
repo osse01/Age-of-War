@@ -64,7 +64,6 @@ class GameState : public State
 
         int nextstate;
         int stage;
-        int counter;
         GUI                 gui;
 };
 

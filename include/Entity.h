@@ -13,10 +13,12 @@ class Entity
         virtual ~Entity() = default;
         
         virtual void handleCollision(int, int) = 0;
-        virtual void updatePos()      = 0;
-        virtual int getDamage()       = 0;
-        virtual int getType()         = 0;
-        virtual int getAttackSpeed()  = 0;
+        virtual void updatePos()       = 0;
+        virtual int getDamage()        = 0;
+        virtual int getType()          = 0;
+        virtual int getAttackSpeed()   = 0;
+        int incrAtkCounter();
+        void resetAtkCounter();
         sf::Vector2f getPos();
         void changeHp(int);
         bool isDead();
@@ -25,6 +27,7 @@ class Entity
         bool collides( std::shared_ptr<Entity> );
 
     protected:
+        int                 atkCounter {0};
         double              xpos;
         double              ypos;
         int                 hp;

@@ -7,7 +7,7 @@
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, counter {0}, gui { 1, screen }
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {
 
     //  Load in Background Image
@@ -126,16 +126,14 @@ void GameState::updateLogic()
             i++;
             std::cout << frameDuration->asSeconds() << std::endl;
             it->updatePos();
-
-            if (it->getType() == 2 && 
-               ( it->getAttackSpeed() * counter ) >= 100 && enemyQueue.size() > 0 &&
+            if (enemyQueue.size() > 0 && it->getType() == 2 && 
+               ( it->incrAtkCounter() ) >= ranged.attackSpeed &&
                (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= ranged.range * it->getSprite().getGlobalBounds().width))
             {
                 projectileQueue.push_back(std::make_shared<Projectile>
                     (projectile, true, it->getPos(), frameDuration));
-                    counter = 0;
+                    it->resetAtkCounter();
             }
-            counter ++;
         }
     for (int j: deleteEntities)
     {

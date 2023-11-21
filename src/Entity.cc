@@ -52,3 +52,14 @@ void Entity::changeHp(int newHP)
 {
     hp = newHP;
 }
+
+int Entity::incrAtkCounter()
+{
+    atkCounter ++;
+    return atkCounter;
+}
+
+void Entity::resetAtkCounter()
+{
+    atkCounter = 0;
+}

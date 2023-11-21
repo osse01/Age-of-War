@@ -15,12 +15,12 @@ void Projectile::handleCollision(__attribute__((unused)) int,
 
 void Projectile::updatePos()
 {
-    Entity::xpos += Dynamic::MOVEMENTSPEED * 3;
-    Entity::ypos -= Dynamic::MOVEMENTSPEED - 
-                        std::pow(counter,2)*g/2;
+    Entity::xpos += Dynamic::MOVEMENTSPEED * 2;
+    Entity::ypos -= (Dynamic::MOVEMENTSPEED - 
+                        std::pow(counter,2)*g/2)*0.2;
                         
-    Entity::sprite.setRotation( atan2(-Dynamic::MOVEMENTSPEED + std::pow(counter,2)*g/2,
-            Dynamic::MOVEMENTSPEED * 3 ) * 180/3.14);
+    Entity::sprite.setRotation( atan2( (-Dynamic::MOVEMENTSPEED + std::pow(counter,2)*g/2) * 0.2,
+            Dynamic::MOVEMENTSPEED * 2 ) * 180/3.14);
     counter += 0.1;
     
     
@@ -34,3 +34,4 @@ void Projectile::kill()
 {
     Entity::hp = 0;
 }
+

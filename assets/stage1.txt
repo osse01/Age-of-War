@@ -1,6 +1,6 @@
 Type        DAMAGE  HP      MVMSPD  RANGE   ATKSPD  BOX      SPRITE_DIM  FILE
 Melee       50      200     70       0.1     1       70       128 128     assets/friendly_melee_sprite_sheet.png
-Range       25      150     70       200     30      70      128 128     assets/friendly_ranged_sprite_sheet.png
+Range       25      150     70       5     50      70      128 128     assets/friendly_ranged_sprite_sheet.png
 Tank        50      400     15      0.1     1       100      128 128     assets/tank.png
 Background  0       0       0       0       0       0        128 128     assets/background.jpeg
 Base        0       2000    0       0       300     0        128 128     assets/base.png
