@@ -3,7 +3,7 @@
 #include <iostream>
 
 Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic::Dynamic(stats, friendly, pos, frameDuration), damageCounter { 1 }
+: Dynamic::Dynamic(stats, friendly, pos, frameDuration), damageCounter { 1 }, spriteCounter { 0 }
 {}
 
 void Troop::handleCollision(int troopState, int otherDamage)
@@ -51,15 +51,20 @@ void Troop::updatePos()
 
 void Troop::changeSprite()
 {
-    if(Entity::rectSourceSprite.left == 128*23)
-        {
-            Entity::rectSourceSprite.left = 0;
-        }
-        else
-        {
-            Entity::rectSourceSprite.left += 128;
-        }
-        Entity::sprite.setTextureRect(Entity::rectSourceSprite);
+    if (spriteCounter * frameDuration->asSeconds() >= 0.04)
+    {
+        if(Entity::rectSourceSprite.left == 128*23)
+            {
+                Entity::rectSourceSprite.left = 0;
+            }
+            else
+            {
+                Entity::rectSourceSprite.left += 128;
+            }
+            Entity::sprite.setTextureRect(Entity::rectSourceSprite);
+        spriteCounter = 0;
+    }
+    spriteCounter ++;
 }
 
 void Troop::walk()
