@@ -7,7 +7,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<s
 :   State(screen, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen }
+    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen , 0}
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.

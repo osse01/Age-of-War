@@ -13,7 +13,7 @@ class GUI
 
     public:
     //  CONSTRUCTORS
-        GUI(int, std::shared_ptr<sf::RenderWindow>);
+        GUI(int, std::shared_ptr<sf::RenderWindow>, int);
         ~GUI() = default;
         GUI(const GUI&) = delete;
         GUI& operator=(GUI&) = delete;
@@ -26,11 +26,15 @@ class GUI
 
     private:
     //  VARIABLES
-        unsigned int buttonSize;
-        sf::RectangleShape interface;
+        unsigned int    buttonSize;
+        std::string     fontFile;
+
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;
-        
+
+        sf::RectangleShape  interface;
+        sf::Font            font;
+        sf::Text            goldText;
 };
 
 #endif

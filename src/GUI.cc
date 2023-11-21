@@ -3,8 +3,10 @@
 #include <iostream>
 
 
-GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
-    : buttonSize {window->getSize().x/20}, interface {sf::Vector2f(19*buttonSize/2.f, 2*buttonSize)}, menuButtons {}, gameButtons {}
+GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold)
+    : buttonSize { window->getSize().x/20 }, fontFile{ "assets/newFont.ttf" }, 
+      menuButtons {}, gameButtons {}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
+      font{}, goldText{}
 {
     switch (currentState)
     {
@@ -26,6 +28,19 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
             interface.setPosition(window->getSize().x - interface.getSize().x, 0.f);
             interface.setOutlineThickness(5.f);
             interface.setOutlineColor(sf::Color(0, 0, 0));
+
+            if ( font.loadFromFile(fontFile) )
+            {
+                goldText.setFont(font);
+                goldText.setString("qwerty9999rty");//std::to_string(gold)
+                goldText.setCharacterSize(20);
+                goldText.setColor(sf::Color::Cyan);
+            }
+            else
+            {
+                throw std::logic_error("\n  >> Error. Could not load font file. "
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>, int)");
+            }
 
             for (int i{0} ; i < 6 ; i++)
             {
@@ -59,6 +74,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window)
             for (int i{0} ; i < 6 ; i++)
             {
                 window->draw(gameButtons.at(i));
+                window->draw(goldText);
             }
             break;
         default:
