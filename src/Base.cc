@@ -1,7 +1,7 @@
 #include "../include/Base.h"
 
-Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos)
-    : Entity::Entity(stats, friendly, pos), base {  }
+Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+    : Entity::Entity(stats, friendly, pos, frameDuration), base {  }
 {
     // if(!texture.loadFromFile(stats.filename))
     // {

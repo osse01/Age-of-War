@@ -2,12 +2,13 @@
 
 #include <iostream>
 
-Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
+
+Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
     : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, 
       texture{}, rectSourceSprite { 0,0, stats.spriteDim.at(0), stats.spriteDim.at(1)/*0,128,128,128*/ }, 
       sprite {texture, rectSourceSprite},
-      boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }
+      boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }, frameDuration {frameDuration}
 {
     if(!texture.loadFromFile(stats.filename))
     {

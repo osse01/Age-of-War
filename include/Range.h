@@ -8,7 +8,7 @@
 class Range : public Troop
 {
     public:
-    Range(const FileReader::Data&, bool, sf::Vector2f);
+    Range(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
     virtual ~Range() = default;
     int getType(){return 2;};
 

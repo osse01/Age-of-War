@@ -3,8 +3,8 @@
 #include "math.h"
 #include <iostream>
 
-Projectile::Projectile(const FileReader::Data& data, bool friendly, sf::Vector2f pos)
-: Dynamic::Dynamic(data, friendly, pos), counter {0}
+Projectile::Projectile(const FileReader::Data& data, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+: Dynamic::Dynamic(data, friendly, pos, frameDuration), counter {0}
 {
     Entity::sprite.setRotation( -45 );
 }

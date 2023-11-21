@@ -8,7 +8,7 @@
 class Projectile : public Dynamic
 {
     public:
-    Projectile(const FileReader::Data&, bool, sf::Vector2f);
+    Projectile(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
     virtual ~Projectile() = default;
 
     void handleCollision(int, int);

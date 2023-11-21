@@ -8,7 +8,7 @@
 class Dynamic : public Entity
 {
     public:
-        Dynamic(const FileReader::Data&, bool, sf::Vector2f);
+        Dynamic(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Dynamic() = default;
 
         virtual void handleCollision(int, int)   = 0;

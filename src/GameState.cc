@@ -9,7 +9,6 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
     backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, counter {0}, gui { 1, screen }
 {
-    window->setFramerateLimit(18);
 
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -125,6 +124,7 @@ void GameState::updateLogic()
                 deleteEntities.push_back(i);
             }
             i++;
+            std::cout << frameDuration->asSeconds() << std::endl;
             it->updatePos();
 
             if (it->getType() == 2 && 
@@ -132,7 +132,7 @@ void GameState::updateLogic()
                (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= ranged.range * it->getSprite().getGlobalBounds().width))
             {
                 projectileQueue.push_back(std::make_shared<Projectile>
-                    (projectile, true, it->getPos()));
+                    (projectile, true, it->getPos(), frameDuration));
                     counter = 0;
             }
             counter ++;
@@ -202,7 +202,7 @@ void GameState::handleCollisions()
         {
             if ( itProjectile->collides(itEnemy) )
             {
-                itEnemy->handleCollision( 1, itProjectile->getDamage() );
+                itEnemy->handleCollision( 1, itProjectile->getDamage());
                 itProjectile->changeHp(0);
             }
         }
@@ -251,11 +251,11 @@ void GameState::spawnFriendly(int type)
     {
     case 0:
         friendlyQueue.push_back(std::make_shared<Melee> 
-            ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+            ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
         break;
     case 1:
         friendlyQueue.push_back(std::make_shared<Range> 
-            ( ranged, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+            ( ranged, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
         break;
     default:
         break;
@@ -265,7 +265,7 @@ void GameState::spawnFriendly(int type)
 void GameState::spawnEnemy()
 {
     enemyQueue.push_back(std::make_shared<Melee> 
-        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ) ) );
+        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ), frameDuration ) );
 }
 
 void GameState::updateStage()
