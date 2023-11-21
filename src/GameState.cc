@@ -7,7 +7,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 :   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }
 {
     //window->setFramerateLimit(18);
 
@@ -36,7 +36,7 @@ void GameState::handleEvent(sf::Event event)
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                    spawnFriendly();
+                    spawnFriendly(melee.type);
                     break;
 
                 case sf::Keyboard::Num2:
@@ -66,7 +66,7 @@ void GameState::handleEvent(sf::Event event)
                 switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
                 {
                     case 6:
-                        spawnFriendly();
+                        spawnFriendly(melee.type);
                         break;
                     case 5:
                         spawnEnemy();
@@ -206,11 +206,23 @@ int GameState::getNextState()
     return nextstate;
 }
 
-void GameState::spawnFriendly()
+void GameState::spawnFriendly(std::string  troop)
 {
-    friendlyQueue.push_back(std::make_shared<Melee> 
-        ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
-    
+    std::cout << troop << std::endl;
+    if (troop == "Melee")
+    {
+        std::cout << gold << std::endl;
+
+        if (gold >= melee.cost)
+        {
+            gold -= melee.cost;
+            friendlyQueue.push_back(std::make_shared<Melee> 
+            ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+            std::cout << friendlyQueue.size() << std::endl;
+
+        }
+    }
+    //else if for restof troop types
 }
 
 void GameState::spawnEnemy()

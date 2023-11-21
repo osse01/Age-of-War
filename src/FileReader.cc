@@ -49,6 +49,8 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
 
         if (tmp == name)
         {
+            data.type = tmp;
+            
             dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
                       >> data.attackSpeed >> data.boxSize >> spriteX
                       >> spriteY >> data.filename;
