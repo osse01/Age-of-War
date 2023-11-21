@@ -1,7 +1,7 @@
 Type     Damage HP    MVMSPD Range ATKSPD BOX        SpriteDim       File
 Melee       50  200     2     0.1   1     70          128 128      assets/friendly_melee_sprite_sheet.png
-Range       200  200     2     2     3     70          128 128      assets/enemy_melee_sprite_sheet.png
-Tank        50  400     15    0.1   1     100         128 128      assets/tank.png
+Range       200  200     2     20     3     70          128 128      assets/enemy_melee_sprite_sheet.png
+Tank        50  400     10    0.1   1     100         128 128      assets/tank.png
 Background  0   0       0     0     0     0           128 128      assets/background.jpeg
 Base        0   2000    0     0     300   0           128 128      assets/base.png
 GameFont    0   0       0     0     0     0           128 128      assets/coolFont.ttf

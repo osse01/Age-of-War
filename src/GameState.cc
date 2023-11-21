@@ -104,6 +104,7 @@ void GameState::updateLogic()
     {
         if (it->getPos().y >= window->getSize().y || it->isDead())
         {
+            deleteEntities.push_back(i);
             i++;
             continue;
         }
@@ -125,7 +126,10 @@ void GameState::updateLogic()
             }
             i++;
             it->updatePos();
-            if (it->getType() == 2 && ( it->getAttackSpeed() * counter ) >= 100 )
+
+            if (it->getType() == 2 && 
+               ( it->getAttackSpeed() * counter ) >= 100 && enemyQueue.size() > 0 &&
+               (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= ranged.range * it->getSprite().getGlobalBounds().width))
             {
                 projectileQueue.push_back(std::make_shared<Projectile>
                     (projectile, true, it->getPos()));
