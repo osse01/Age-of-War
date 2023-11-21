@@ -211,7 +211,6 @@ void GameState::spawnFriendly(std::string troop)
 {
     if (troop == melee.type)
     {
-        std::cout << gold << std::endl;
         if (gold >= melee.cost)
         {
             gold -= melee.cost;
@@ -219,6 +218,7 @@ void GameState::spawnFriendly(std::string troop)
             ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
         }
     }
+    //  ranged
 }
 
 void GameState::spawnEnemy()
