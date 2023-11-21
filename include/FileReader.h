@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 
 class FileReader
 //  -------------------------------------------------------
@@ -18,7 +19,7 @@ class FileReader
 //  FileReader funtion returnData(const std::string) Assumes
 //  the Data Read From StageX.txt File is in Format:
 //  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
-//  -/-BOX_SIZE-/-TEXTUREFILE
+//  -/-BOX_SIZE-/SPRITE_DIM-/-TEXTUREFILE
 //
 //  Intended Use, to Create a FileReader Object Giving 
 //  it the Correct File Path To Stage Data File and Also
@@ -48,6 +49,7 @@ public:
         float range;
         int attackSpeed;
         int boxSize;
+        std::vector<int> spriteDim;
 
         std::string type;
         std::string filename;
