@@ -112,7 +112,7 @@ void GameState::updateLogic()
             {
                 deadEntitiesFriendly.push_back(i);
             }
-            it->updatePos();
+            it->updatePos(frameDuration);
             i++;
         }
     i = 0;
@@ -122,7 +122,7 @@ void GameState::updateLogic()
             {
                 deadEntitiesEnemy.push_back(i);
             }
-            it->updatePos();
+            it->updatePos(frameDuration);
             i++;
         }
     for (int j: deadEntitiesFriendly)
@@ -143,8 +143,8 @@ void GameState::handleCollisions()
     {
         if ( friendlyQueue.at(0)->collides(  enemyQueue.at(0) ) )
         {
-            friendlyQueue.at(0) ->handleCollision(1, enemyQueue.at(0)->getDamage());
-            enemyQueue.at(0)    ->handleCollision(1, friendlyQueue.at(0)->getDamage());
+            friendlyQueue.at(0) ->handleCollision(1, enemyQueue.at(0)->getDamage(), frameDuration);
+            enemyQueue.at(0)    ->handleCollision(1, friendlyQueue.at(0)->getDamage(), frameDuration);
         }
     }
     
@@ -155,7 +155,7 @@ void GameState::handleCollisions()
             if( enemyQueue.at(behind)->collides( enemyQueue.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyQueue.at(behind)->handleCollision(0, 0);
+                enemyQueue.at(behind)->handleCollision(0, 0, frameDuration);
             }
         }
     
@@ -166,7 +166,7 @@ void GameState::handleCollisions()
             if( friendlyQueue.at(behind)->collides( friendlyQueue.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyQueue.at(behind)->handleCollision(0, 0);
+                friendlyQueue.at(behind)->handleCollision(0, 0, frameDuration);
             }
         }
 

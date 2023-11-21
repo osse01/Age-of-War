@@ -11,8 +11,8 @@ class Dynamic : public Entity
         Dynamic(const FileReader::Data&, bool, sf::Vector2f);
         virtual ~Dynamic() = default;
 
-        virtual void handleCollision(int, int)   = 0;
-        virtual void updatePos()           = 0;
+        virtual void handleCollision(int, int, std::shared_ptr<sf::Time>)   = 0;
+        virtual void updatePos(std::shared_ptr<sf::Time> frameDuration)           = 0;
         int getDamage() override;
 
     protected:
