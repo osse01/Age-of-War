@@ -218,7 +218,29 @@ void GameState::spawnFriendly(std::string troop)
             ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
         }
     }
-    //  ranged
+    else if (troop == ranged.type)
+    {
+        if (gold >= ranged.cost)
+        {
+            gold -= ranged.cost;
+            // friendlyQueue.push_back(std::make_shared<Ranged> 
+            //  ( ranged, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
+        }
+    }
+    else if (troop == tank.type)
+    {
+        if (gold >= tank.cost)
+        {
+            gold -= tank.cost;
+            //friendlyQueue.push_back(std::make_shared<Tank> 
+            //  ( tank, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
+        }
+    }
+    else
+    {
+        throw std::logic_error("\n  >> Error, Unidentified troop type. "
+        "Error in GameState::spawnFriendly(std::string). \n");
+    }
 }
 
 void GameState::spawnEnemy()
