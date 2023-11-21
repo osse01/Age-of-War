@@ -6,15 +6,15 @@ Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
 : Dynamic::Dynamic(stats, friendly, pos), damageCounter { 1 }
 {}
 
-void Troop::handleCollision(int troopState, int otherDamage)
+void Troop::handleCollision(int troopState, int otherDamage, std::shared_ptr<sf::Time> frameDuration)
 {   
     if (Entity::isFriendly)    
     {
-        Entity::xpos -= Dynamic::MOVEMENTSPEED;
+        Entity::xpos -= Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     else
     {
-        Entity::xpos += Dynamic::MOVEMENTSPEED;
+        Entity::xpos += Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
@@ -25,22 +25,22 @@ void Troop::handleCollision(int troopState, int otherDamage)
             idle();
             break;
         case 1:
-            attack(otherDamage);
+            attack(otherDamage, frameDuration);
             break;
         default:
             throw std::logic_error("    >>Error: The troopState does not exist!");
     }
 }
 
-void Troop::updatePos()
+void Troop::updatePos(std::shared_ptr<sf::Time> frameDuration)
 {
     if (!Entity::isFriendly)    
     {
-        Entity::xpos -= Dynamic::MOVEMENTSPEED;
+        Entity::xpos -= Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     else
     {
-        Entity::xpos += Dynamic::MOVEMENTSPEED;
+        Entity::xpos += Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
     }
 
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
@@ -73,7 +73,7 @@ void Troop::idle()
     changeSprite();
 }
 
-void Troop::attack(int otherDamage)
+void Troop::attack(int otherDamage, std::shared_ptr<sf::Time> frameDuration)
 {
     Entity::rectSourceSprite.top = 256;
     changeSprite();

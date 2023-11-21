@@ -9,7 +9,7 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
-    event {}, clock {}, frameDuration {}, frameDurationPtr { std::make_shared<sf::Time> ( frameDuration )}, states {}, currentState { MENU_STATE },
+    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, states {}, currentState { MENU_STATE },
     music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}
 {
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -33,7 +33,8 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
         "    >> Error: Could Not Find cursor image. Error in GameState::GameState().");
     }
     cursorSprite.setTexture(cursor);
-    cursorSprite.setScale(0.15, 0.15);
+    cursorSprite.setScale(window->getSize().y / cursorSprite.getGlobalBounds().height / 10,
+                          window->getSize().y / cursorSprite.getGlobalBounds().height / 10);
 
 
 }
