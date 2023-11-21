@@ -19,7 +19,7 @@ class FileReader
 //  FileReader funtion returnData(const std::string) Assumes
 //  the Data Read From StageX.txt File is in Format:
 //  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
-//  -/-BOX_SIZE-/SPRITE_DIM-/-TEXTUREFILE
+//  -/-BOX_SIZE-/-COST-/-SPRITE_DIM-/-TEXTUREFILE
 //
 //  Intended Use, to Create a FileReader Object Giving 
 //  it the Correct File Path To Stage Data File and Also
@@ -43,12 +43,14 @@ public:
 //  STRUCTURES
     struct Data
     {
-        int damage;
-        int hp;
-        float movementSpeed;
-        float range;
-        int attackSpeed;
-        int boxSize;
+        int     damage;
+        int     hp;
+        float   movementSpeed;
+        float   range;
+        int     attackSpeed;
+        int     boxSize;
+        int     cost;
+
         std::vector<int> spriteDim;
 
         std::string type;
