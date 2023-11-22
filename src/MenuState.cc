@@ -99,7 +99,17 @@ void MenuState::updateLogic()
 //  Function to Handle User Input. User Input Triggers
 //  an Event.
 //  ---------------------------------------------
-{}
+{
+        sf::Mouse mouse {};
+        int margin {static_cast<int>(window->getSize().x/20)};
+        if (mouse.getPosition(*window).x < margin)
+        {
+        }
+        else if (mouse.getPosition(*window).x > 19*margin)
+        {
+        }
+        gui.updateLogic();
+}
 
 void MenuState::startAnimation()
 //  ---------------------------------------------
@@ -153,7 +163,7 @@ void MenuState::startAnimation()
 
 void MenuState::renderFrame()
 //  ---------------------------------------------
-//  Funcion Explaination
+//  Render The Frame to Display.
 //  ---------------------------------------------
 {
     
@@ -161,8 +171,6 @@ void MenuState::renderFrame()
 
     t = t + 0.0003;
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
-
-    //sprite.setScale(zoomFactor);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
     gameTitle.setScale(zoomFactor*scale);

@@ -19,7 +19,7 @@ class GUI
         GUI& operator=(GUI&) = delete;
 
     //  FUNCTIONS
-        void handleEvent();
+        void updateLogic();
         void draw(int, std::shared_ptr<sf::RenderWindow>, int);
         int buttonClicked(int, float, float);
 

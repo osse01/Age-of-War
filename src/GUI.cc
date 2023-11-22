@@ -41,7 +41,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 button.setOutlineColor(sf::Color::Black);
                 button.setOutlineThickness(2.0f);
                 button.setOrigin(button.getSize().x/2, button.getSize().y/2);
-                button.setPosition(window->getSize().x/2, window->getSize().y/2 + i * 1.1*buttonSize);
+                button.setPosition(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize);
                 menuButtons.push_back(button);
 
                 menuTexts.at(i).setFont(font);
@@ -121,7 +121,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold = 0)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold = 0 /*, int health*/)
+//  ---------------------------------------------
 {
     switch (currentState)
     {
@@ -160,7 +161,25 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
+void GUI::updateLogic()
+//  ---------------------------------------------
+{
+    sf::Mouse mouse{};
+    for (int i{0} ; i < 3 ; i++)
+    {
+        if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        {
+            menuButtons.at(i).setFillColor(sf::Color(204, 107, 16));
+        }
+        else
+        {
+            menuButtons.at(i).setFillColor(sf::Color(112, 58, 7)); //112, 58, 7 is the original color.
+        }
+    }
+}
+
 int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
+//  ---------------------------------------------
 {
     switch (currentState)
     {
