@@ -5,11 +5,13 @@
 #include "State.h"
 #include "Melee.h"
 #include "Range.h"
+#include "Tank.h"
 #include "Troop.h"
 #include "Dynamic.h"
 #include "Entity.h"
 #include "Projectile.h"
 #include "GUI.h"
+#include "Enemy.h"
 
 #include <SFML/Audio.hpp>
 
@@ -38,16 +40,20 @@ class GameState : public State
             void renderFrame      ()          override;
             int  getNextState     ()          override;
             void spawnFriendly    (int);
-            void spawnEnemy       ();
+            void spawnEnemy       (int);
             void handleCollisions ();
             void resetState       ()          override;
             void updateStage      ();
+            void enemyPlay        ();
 
     private:
         // VARIABLES
-        FileReader::Data melee;
-        FileReader::Data ranged;
-        FileReader::Data tank;
+        FileReader::Data meleeF;
+        FileReader::Data rangedF;
+        FileReader::Data meleeE;
+        FileReader::Data rangedE;
+        FileReader::Data tankF;
+        FileReader::Data tankE;
         FileReader::Data projectile;
 
 
@@ -65,6 +71,7 @@ class GameState : public State
         int nextstate;
         int stage;
         GUI                 gui;
+        Enemy               enemy;
         std::vector<int> deleteEntities{};
 };
 

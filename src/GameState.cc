@@ -5,9 +5,9 @@
 #include <cmath>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
+:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }, enemy{frameDuration}
 {
 
     //  Load in Background Image
@@ -22,8 +22,12 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
         window->getSize().y / backgroundSprite.getGlobalBounds().height);
 
     FileReader reader {};
-    melee = reader.returnData("Melee", "assets/stage1.txt");
-    ranged = reader.returnData("Range", "assets/stage1.txt");
+    meleeF = reader.returnData("Melee_F", "assets/stage1.txt");
+    meleeE = reader.returnData("Melee_E", "assets/stage1.txt");
+    rangedF = reader.returnData("Range_F", "assets/stage1.txt");
+    rangedE = reader.returnData("Range_E", "assets/stage1.txt");
+    tankF = reader.returnData("Tank_F", "assets/stage1.txt");
+    tankE = reader.returnData("Tank_E", "assets/stage1.txt");
     
     projectile = reader.returnData("Projectile", "assets/stage1.txt");
 
@@ -41,11 +45,15 @@ void GameState::handleEvent(sf::Event event)
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                    spawnFriendly(0);
+                    spawnFriendly(2);
                     break;
 
                 case sf::Keyboard::Num2:
-                    spawnEnemy();
+                    spawnEnemy(1);
+                    break;
+                
+                case sf::Keyboard::Num3:
+                    spawnEnemy(3);
                     break;
 
                 case sf::Keyboard::M:
@@ -74,7 +82,7 @@ void GameState::handleEvent(sf::Event event)
                         spawnFriendly(0);
                         break;
                     case 5:
-                        spawnEnemy();
+                        spawnEnemy(1);
                         break;
                     case 4:
                         spawnFriendly(1);
@@ -124,10 +132,10 @@ void GameState::updateLogic()
             i++;
             it->updatePos();
             if (enemyQueue.size() > 0 && it->getType() == 2 && 
-               ( it->incrAtkCounter() ) >= frameDuration->asMicroseconds() / ranged.attackSpeed &&
-               (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= ranged.range * it->getSprite().getGlobalBounds().width))
+               ( it->incrAtkCounter() ) >= frameDuration->asMicroseconds() / rangedF.attackSpeed &&
+               (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= rangedF.range * it->getSprite().getGlobalBounds().width))
             {
-                projectile.damage = ranged.damage;
+                projectile.damage = rangedF.damage;
                 projectileQueue.push_back(std::make_shared<Projectile>
                     (projectile, true, it->getPos(), frameDuration));
                     it->resetAtkCounter();
@@ -157,6 +165,7 @@ void GameState::updateLogic()
     deleteEntities.clear();
 
     handleCollisions();
+    enemyPlay();
 }
 
 void GameState::handleCollisions()
@@ -164,12 +173,14 @@ void GameState::handleCollisions()
     // Handle Collision between Friendly and Enemy
     if ( friendlyQueue.size() > 0 && enemyQueue.size() > 0 )
     {
+        enemyQueue.at(0)->collides( friendlyQueue.at(0));
         if ( friendlyQueue.at(0)->collides(  enemyQueue.at(0) ) )
         {
             friendlyQueue.at(0) ->handleCollision(1, enemyQueue.at(0)->getDamage());
             enemyQueue.at(0)    ->handleCollision(1, friendlyQueue.at(0)->getDamage());
         }
     }
+    
     
     // Handle Collision between Enemies
     int behind{ 1 };
@@ -249,26 +260,54 @@ void GameState::spawnFriendly(int type)
 {
     switch ( type )
     {
-    case 0:
-        friendlyQueue.push_back(std::make_shared<Melee> 
-            ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
-        break;
-    case 1:
-        friendlyQueue.push_back(std::make_shared<Range> 
-            ( ranged, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
-        break;
-    default:
-        break;
+        case 0:
+            friendlyQueue.push_back(std::make_shared<Melee> 
+                ( meleeF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 1:
+            friendlyQueue.push_back(std::make_shared<Range> 
+                ( rangedF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 2:
+            friendlyQueue.push_back(std::make_shared<Tank> 
+                ( tankF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        default:
+            break;
     };
 }
 
-void GameState::spawnEnemy()
+void GameState::spawnEnemy(int type)
 {
-    enemyQueue.push_back(std::make_shared<Melee> 
-        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ), frameDuration ) );
+    switch ( type )
+    {
+        case 1:
+            enemyQueue.push_back(std::make_shared<Melee> 
+                ( meleeE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 2:
+            enemyQueue.push_back(std::make_shared<Range> 
+                ( rangedE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 3:
+            enemyQueue.push_back(std::make_shared<Tank> 
+                ( tankE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        default:
+            break;
+    };
 }
 
 void GameState::updateStage()
 {
     stage++;
+}
+
+void GameState::enemyPlay()
+{
+    std::vector<int> play = enemy.enemyPlay();
+    for(int type : play)
+    {
+        spawnEnemy(type);
+    }
 }

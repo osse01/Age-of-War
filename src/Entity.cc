@@ -41,7 +41,7 @@ bool Entity::collides( std::shared_ptr<Entity> other )
 }
 bool Entity::isDead()
 {
-    return ( hp <= 0 );
+    return hp <= 0;
 }
 
 sf::Vector2f Entity::getPos()
@@ -49,12 +49,6 @@ sf::Vector2f Entity::getPos()
     return sf::Vector2f{static_cast<float>(xpos), static_cast<float>(ypos)};
 }
 
-/*
-void Entity::changeHp(int newHP)
-{
-    hp = newHP;
-}
-*/
 int Entity::incrAtkCounter()
 {
     atkCounter ++;

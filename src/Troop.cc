@@ -43,7 +43,6 @@ void Troop::updatePos()
     }
     else
     {
-        //std::cout << frameDuration->asSeconds() << std::endl;
         Entity::xpos += Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
     }
 
