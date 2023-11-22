@@ -35,6 +35,7 @@ class GUI
         std::vector<sf::RectangleShape> gameButtons;
 
         sf::RectangleShape  interface;
+        sf::RectangleShape  statsInterface;
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Sprite          coinSprite;

@@ -7,8 +7,9 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
       interfaceFile{ "assets/interfaceBackground.jpeg" },
       coinFile{ "assets/gameCoin.png" }, menuButtons {}, gameButtons {},
-      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, interfaceTexture{},
-      coinTexture{}, coinSprite{}, font{}, goldText{}
+      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
+      statsInterface { sf::Vector2f(7*buttonSize/2.f, 2*buttonSize) },
+      interfaceTexture{}, coinTexture{}, coinSprite{}, font{}, goldText{}
 {
     switch (currentState)
     {
@@ -32,7 +33,12 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 interface.setPosition(window->getSize().x - interface.getSize().x, 0.f);
                 interface.setOutlineThickness(2.f);
                 interface.setOutlineColor(sf::Color(0, 0, 0));
-                interface.setTexture(&interfaceTexture);  
+                interface.setTexture(&interfaceTexture);
+                
+                statsInterface.setPosition(0.f, 0.f);
+                statsInterface.setOutlineThickness(2.f);
+                statsInterface.setOutlineColor(sf::Color(0, 0, 0));
+                statsInterface.setTexture(&interfaceTexture);
             }
             else
             {
@@ -93,6 +99,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         }
         case GAME_STATE:
             window->draw(interface);
+            window->draw(statsInterface);
             for (int i{0} ; i < 6 ; i++)
             {
                 coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
