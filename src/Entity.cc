@@ -6,8 +6,7 @@
 Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
     : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, hasCollided { false },
-      texture{}, rectSourceSprite { 0,0, stats.spriteDim.at(0), stats.spriteDim.at(1)/*0,128,128,128*/ }, 
-      sprite {texture, rectSourceSprite},
+      texture{}, rectSourceSprite { 0,0,stats.spriteDim.x,stats.spriteDim.y }, sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }, frameDuration {frameDuration}
 {
     if(!texture.loadFromFile(stats.filename))
@@ -37,6 +36,7 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     // Check whether this collides with other
     hasCollided = boundingbox.getGlobalBounds().intersects(
             ( other->boundingbox.getGlobalBounds() ) );
+    other->hasCollided = hasCollided;
     return hasCollided;
 }
 bool Entity::isDead()
@@ -47,6 +47,11 @@ bool Entity::isDead()
 sf::Vector2f Entity::getPos()
 {
     return sf::Vector2f{static_cast<float>(xpos), static_cast<float>(ypos)};
+}
+
+bool Entity::getIsFriendly()
+{
+    return isFriendly;
 }
 
 int Entity::incrAtkCounter()

@@ -25,12 +25,12 @@ int Projectile::getType()
 
 void Projectile::updatePos()
 {
-    Entity::xpos += Dynamic::MOVEMENTSPEED * 2;
+    Entity::xpos += Dynamic::MOVEMENTSPEED * 3 * frameDuration->asSeconds();
     Entity::ypos -= (Dynamic::MOVEMENTSPEED - 
-                        std::pow(counter,2)*g/2)*0.2;
+                        std::pow(counter,2)*g/2)*0.2 * frameDuration->asSeconds();
                         
     Entity::sprite.setRotation( atan2( (-Dynamic::MOVEMENTSPEED + std::pow(counter,2)*g/2) * 0.2,
-            Dynamic::MOVEMENTSPEED * 2 ) * 180/3.14);
+            Dynamic::MOVEMENTSPEED * 3 ) * 180/3.14);
     counter += 0.1;
     
     

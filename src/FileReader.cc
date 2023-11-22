@@ -49,14 +49,15 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
 
         if (tmp == name)
         {
+            data.type = name;
             dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
-                      >> data.attackSpeed >> data.boxSize >> spriteX
-                      >> spriteY >> data.filename;
-
+                      >> data.attackSpeed >> data.boxSize >> data.cost  >> data.deathValue
+                      >> spriteX >> spriteY >> data.filename;
             break;
         }
     }
-    (data.spriteDim).push_back(spriteX);
-    (data.spriteDim).push_back(spriteY);
+    (data.spriteDim).x = spriteX;
+    (data.spriteDim).y = spriteY;
+
     return data;
 }

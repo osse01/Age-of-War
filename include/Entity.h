@@ -12,17 +12,20 @@ class Entity
          Entity(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Entity() = default;
         
-        virtual void handleCollision(int, int) = 0;
-        virtual void updatePos()       = 0;
-        virtual int getDamage()        = 0;
-        virtual int getType()          = 0;
-        int incrAtkCounter();
+        virtual void    handleCollision(int, int) = 0;
+        virtual void    updatePos()       = 0;
+        virtual int     getDamage()        = 0;
+        virtual int     getType()          = 0;
+        virtual int     getDeathValue()       = 0;
+        int  incrAtkCounter();
         void resetAtkCounter();
+
         sf::Vector2f getPos();
+        bool getIsFriendly();
         bool isDead();
 
-        sf::Sprite getSprite()         const &;
-        bool collides( std::shared_ptr<Entity> );
+        sf::Sprite  getSprite       ()         const &;
+        bool        collides( std::shared_ptr<Entity> );
 
     protected:
         int                 atkCounter {0};

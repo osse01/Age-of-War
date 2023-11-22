@@ -10,6 +10,7 @@ Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
     {
         spawnList.push_back(1);
     }
+    
 }
 
 std::vector<int> Enemy::enemyPlay()

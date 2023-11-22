@@ -26,12 +26,14 @@ void Troop::handleCollision(int troopState, int otherDamage)
             break;
         case 1:
             attack();
-            troopState = 2;
+            takeDamage(otherDamage);
+            break;
         case 2:
             takeDamage(otherDamage);
             break;
         default:
             throw std::logic_error("    >>Error: The troopState does not exist!");
+            break;
     }
 }
 

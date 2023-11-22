@@ -18,6 +18,7 @@ class Dynamic : public Entity
         void resetAtkCounter(){};
 
         int getDamage();
+        int     getDeathValue   () override;
 
     protected:
         const int DAMAGE;

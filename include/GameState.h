@@ -4,7 +4,7 @@
 #include "FileReader.h"
 #include "State.h"
 #include "Melee.h"
-#include "Range.h"
+#include "Ranged.h"
 #include "Tank.h"
 #include "Troop.h"
 #include "Dynamic.h"
@@ -12,8 +12,10 @@
 #include "Projectile.h"
 #include "GUI.h"
 #include "Enemy.h"
+#include "Base.h"
 
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <queue>
 #include <memory>
@@ -31,20 +33,20 @@ class GameState : public State
         ~GameState () override;
         GameState (const GameState&) = delete;
 
-            GameState& operator= (const GameState&) = delete;
-       
-       
-            // FUNCTIONS
-            void handleEvent      (sf::Event) override;
-            void updateLogic      ()          override;
-            void renderFrame      ()          override;
-            int  getNextState     ()          override;
-            void spawnFriendly    (int);
-            void spawnEnemy       (int);
-            void handleCollisions ();
-            void resetState       ()          override;
-            void updateStage      ();
-            void enemyPlay        ();
+        GameState& operator= (const GameState&) = delete;
+    
+    
+        // FUNCTIONS
+        void handleEvent      (sf::Event) override;
+        void updateLogic      ()          override;
+        void renderFrame      ()          override;
+        int  getNextState     ()          override;
+        void spawnFriendly    (std::string);
+        void spawnEnemy       (int);
+        void handleCollisions ();
+        void resetState       ()          override;
+        void updateStage      ();
+        void enemyPlay        ();
 
     private:
         // VARIABLES
@@ -56,20 +58,23 @@ class GameState : public State
         FileReader::Data tankE;
         FileReader::Data projectile;
 
+        FileReader::Data baseStats;
 
-        std::deque<std::shared_ptr<Entity>> friendlyQueue;
-        std::deque<std::shared_ptr<Entity>> enemyQueue;
+        std::vector<std::shared_ptr<Entity>> friendlyVector;
+        std::vector<std::shared_ptr<Entity>> enemyVector;
         std::deque<std::shared_ptr<Entity>> projectileQueue;
 
         std::string         backgroundFile;
 
         sf::Texture         backgroundTexture;
         sf::Sprite          backgroundSprite;
+        sf::View            view;
         
         sf::Vector2f        zoomFactor;
 
         int nextstate;
         int stage;
+        int gold;
         GUI                 gui;
         Enemy               enemy;
         std::vector<int> deleteEntities{};
