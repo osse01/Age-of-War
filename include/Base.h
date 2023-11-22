@@ -16,13 +16,11 @@ public:
     ~Base() = default;
 
 //FUNCTIONS
-void handleCollision(int, int) override;
-void updatePos()               override;
-int  getDamage()               override;
-//void updateHp();
-//void getBaseStats();
+void    updateHp();
+void    getBaseStats();
 
 private:
+sf::RectangleShape base;
 
 
 };

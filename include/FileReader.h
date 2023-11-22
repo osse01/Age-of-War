@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <SFML/Graphics.hpp>
 
 class FileReader
 //  -------------------------------------------------------
@@ -18,7 +19,7 @@ class FileReader
 //  FileReader funtion returnData(const std::string) Assumes
 //  the Data Read From StageX.txt File is in Format:
 //  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
-//  -/-BOX_SIZE-/-TEXTUREFILE
+//  -/-BOX_SIZE-/SPRITE_DIM-/-TEXTUREFILE
 //
 //  Intended Use, to Create a FileReader Object Giving 
 //  it the Correct File Path To Stage Data File and Also
@@ -42,12 +43,16 @@ public:
 //  STRUCTURES
     struct Data
     {
-        int damage;
-        int hp;
-        float movementSpeed;
-        float range;
-        int attackSpeed;
-        int boxSize;
+        int     damage;
+        int     hp;
+        float   movementSpeed;
+        float   range;
+        int     attackSpeed;
+        int     boxSize;
+        int     cost;
+        int     deathValue;
+
+        sf::Vector2f spriteDim;
 
         std::string type;
         std::string filename;
