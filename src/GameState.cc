@@ -7,7 +7,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 :   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen, gold}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{20000}, gui { 1, screen}
 {
     //window->setFramerateLimit(18);
 
@@ -194,7 +194,7 @@ void GameState::renderFrame()
             window->draw(it->getSprite());
         }
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window);
+    gui.draw(GAME_STATE, window, gold);
 }
 
 void GameState::resetState()

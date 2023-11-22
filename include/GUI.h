@@ -13,14 +13,14 @@ class GUI
 
     public:
     //  CONSTRUCTORS
-        GUI(int, std::shared_ptr<sf::RenderWindow>, int);
+        GUI(int, std::shared_ptr<sf::RenderWindow>);
         ~GUI() = default;
         GUI(const GUI&) = delete;
         GUI& operator=(GUI&) = delete;
 
     //  FUNCTIONS
         void handleEvent();
-        void draw(int, std::shared_ptr<sf::RenderWindow>);
+        void draw(int, std::shared_ptr<sf::RenderWindow>, int);
         int buttonClicked(int, float, float);
 
 
@@ -28,11 +28,13 @@ class GUI
     //  VARIABLES
         unsigned int    buttonSize;
         std::string     fontFile;
+        std::string     interfaceFile;
 
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;
 
         sf::RectangleShape  interface;
+        sf::Texture         interfaceTexture;
         sf::Font            font;
         sf::Text            goldText;
 };
