@@ -8,8 +8,9 @@
     class Melee : public Troop
     {
         public:
-            Melee(const FileReader::Data&, bool, sf::Vector2f);
+            Melee(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
             virtual ~Melee() = default;
+            int getType(){return 1;};
     };
 
 #endif

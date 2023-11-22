@@ -1,9 +1,10 @@
 #include "../include/Enemy.h"
+#include <iostream>
 
 
 
 Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
-:delayCounter{144}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
+:delayCounter{100}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
 {
     for(int i = 0; i < 10; i++)
     {
@@ -11,26 +12,33 @@ Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
     }
 }
 
-int Enemy::enemyPlay()
+std::vector<int> Enemy::enemyPlay()
 {
-    if(delayCounter >= 144)
+    std::vector<int> play{};
+    if(delayCounter >= 100)
     {
         delayCounter = 0;
         return spawnAlgo();
     }
-    delayCounter += std::experimental::randint(1,3);
-    return 0;
+    delayCounter += std::experimental::randint(1,10)*(frameDuration->asSeconds());
+    return play;
 }
 
-int Enemy::spawnAlgo()
+std::vector<int> Enemy::spawnAlgo()
 {
+    int tmp{std::experimental::randint(1,3)};
+    std::vector<int> spawn{};
     timeCounter++;
-    if(timeCounter == 3)
+    if(timeCounter == 5)
     {
         spawnList.erase(spawnList.begin());
         timeCounter = 0;
         spawnList.push_back(std::experimental::randint(1,3));
 
     }
-    return spawnList.at(std::experimental::randint(0, static_cast<int>(spawnList.size()-1)));
+    for(int i = 0; i <= tmp; i++)
+    {
+        spawn.push_back(spawnList.at(std::experimental::randint(0, static_cast<int>(spawnList.size()-1))));
+    }
+    return spawn;
 }

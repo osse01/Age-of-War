@@ -5,6 +5,7 @@
 #include "State.h"
 #include "Melee.h"
 #include "Range.h"
+#include "Tank.h"
 #include "Troop.h"
 #include "Dynamic.h"
 #include "Entity.h"
@@ -51,7 +52,8 @@ class GameState : public State
         FileReader::Data rangedF;
         FileReader::Data meleeE;
         FileReader::Data rangedE;
-        FileReader::Data tank;
+        FileReader::Data tankF;
+        FileReader::Data tankE;
         FileReader::Data projectile;
 
 

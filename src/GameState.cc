@@ -2,13 +2,13 @@
 
 #include <iostream>
 #include "utility"
+#include <cmath>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tank {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
+:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, friendlyQueue {}, enemyQueue {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
-    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }, enemy { frameDuration }
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }, enemy{frameDuration}
 {
-    window->setFramerateLimit(18);
 
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -23,9 +23,11 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 
     FileReader reader {};
     meleeF = reader.returnData("Melee_F", "assets/stage1.txt");
-    rangedF = reader.returnData("Range_F", "assets/stage1.txt");
     meleeE = reader.returnData("Melee_E", "assets/stage1.txt");
+    rangedF = reader.returnData("Range_F", "assets/stage1.txt");
     rangedE = reader.returnData("Range_E", "assets/stage1.txt");
+    tankF = reader.returnData("Tank_F", "assets/stage1.txt");
+    tankE = reader.returnData("Tank_E", "assets/stage1.txt");
     
     projectile = reader.returnData("Projectile", "assets/stage1.txt");
 
@@ -43,11 +45,15 @@ void GameState::handleEvent(sf::Event event)
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                    spawnFriendly(0);
+                    spawnFriendly(2);
                     break;
 
                 case sf::Keyboard::Num2:
                     spawnEnemy(1);
+                    break;
+                
+                case sf::Keyboard::Num3:
+                    spawnEnemy(3);
                     break;
 
                 case sf::Keyboard::M:
@@ -76,7 +82,7 @@ void GameState::handleEvent(sf::Event event)
                         spawnFriendly(0);
                         break;
                     case 5:
-                        spawnEnemy(0);
+                        spawnEnemy(1);
                         break;
                     case 4:
                         spawnFriendly(1);
@@ -98,40 +104,67 @@ void GameState::handleEvent(sf::Event event)
 
 void GameState::updateLogic()         
 {
+//----PROJECTILES----
+    std::vector<int> deleteEntities{};
+    int i {};
     for (auto &it: projectileQueue)
     {
+        if (it->getPos().y >= window->getSize().y || it->isDead())
+        {
+            deleteEntities.push_back(i);
+            i++;
+            continue;
+        }
         it->updatePos();
     }
-    std::vector<int> deadEntitiesFriendly{};
-    std::vector<int> deadEntitiesEnemy{};
-    int i {};
+    for (int j: deleteEntities)
+    {
+        projectileQueue.erase( projectileQueue.begin() + j );
+    }
+    deleteEntities.clear();
+    i = 0;
+
+//----FRIENDS----
     for(auto &it: friendlyQueue)
         {
             if ( it->isDead() )
             {
-                deadEntitiesFriendly.push_back(i);
+                deleteEntities.push_back(i);
             }
-            it->updatePos();
             i++;
+            //std::cout << frameDuration->asSeconds() << std::endl;
+            it->updatePos();
+            if (enemyQueue.size() > 0 && it->getType() == 2 && 
+               ( it->incrAtkCounter() ) >= rangedF.attackSpeed &&
+               (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= rangedF.range * it->getSprite().getGlobalBounds().width))
+            {
+                projectileQueue.push_back(std::make_shared<Projectile>
+                    (projectile, true, it->getPos(), frameDuration));
+                    it->resetAtkCounter();
+            }
         }
+    for (int j: deleteEntities)
+    {
+        friendlyQueue.erase( friendlyQueue.begin() + j );
+    }
+
+//----ENEMIES----
+    deleteEntities.clear();
     i = 0;
     for(auto &it: enemyQueue)
         {
             if ( it->isDead() )
             {
-                deadEntitiesEnemy.push_back(i);
+                deleteEntities.push_back(i);
             }
             it->updatePos();
             i++;
         }
-    for (int j: deadEntitiesFriendly)
-    {
-        friendlyQueue.erase( friendlyQueue.begin() + j );
-    }
-    for (int j: deadEntitiesEnemy)
+    for (int j: deleteEntities)
     {
         enemyQueue.erase( enemyQueue.begin() + j );
     }
+
     handleCollisions();
     enemyPlay();
 }
@@ -169,7 +202,18 @@ void GameState::handleCollisions()
                 friendlyQueue.at(behind)->handleCollision(0, 0);
             }
         }
-
+    // Collision between projectile and Enemies
+    for ( auto &itProjectile: projectileQueue )
+    {
+        for ( auto &itEnemy: enemyQueue)
+        {
+            if ( itProjectile->collides(itEnemy) )
+            {
+                itEnemy->handleCollision( 1, itProjectile->getDamage());
+                itProjectile->changeHp(0);
+            }
+        }
+    }
 }
 
 void GameState::renderFrame()  
@@ -212,19 +256,20 @@ void GameState::spawnFriendly(int type)
 {
     switch ( type )
     {
-    case 0:
-        friendlyQueue.push_back(std::make_shared<Melee> 
-            ( meleeF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
-        break;
-    case 1:
-        friendlyQueue.push_back(std::make_shared<Range> 
-            ( rangedF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
-        
-        projectileQueue.push_back(std::make_shared<Projectile>
-            (projectile, true, sf::Vector2f( 40.f, window->getSize().y-200.f )));
-        break;
-    default:
-        break;
+        case 0:
+            friendlyQueue.push_back(std::make_shared<Melee> 
+                ( meleeF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 1:
+            friendlyQueue.push_back(std::make_shared<Range> 
+                ( rangedF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 2:
+            friendlyQueue.push_back(std::make_shared<Tank> 
+                ( tankF, true, sf::Vector2f( 40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        default:
+            break;
     };
 }
 
@@ -232,19 +277,20 @@ void GameState::spawnEnemy(int type)
 {
     switch ( type )
     {
-    case 0:
-        enemyQueue.push_back(std::make_shared<Melee> 
-            ( meleeE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ) ) );
-        break;
-    case 1:
-        enemyQueue.push_back(std::make_shared<Range> 
-            ( rangedE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ) ) );
-        
-        projectileQueue.push_back(std::make_shared<Projectile>
-            (projectile, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f )));
-        break;
-    default:
-        break;
+        case 1:
+            enemyQueue.push_back(std::make_shared<Melee> 
+                ( meleeE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 2:
+            enemyQueue.push_back(std::make_shared<Range> 
+                ( rangedE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        case 3:
+            enemyQueue.push_back(std::make_shared<Tank> 
+                ( tankE, false, sf::Vector2f( window->getSize().x-40.f, window->getSize().y-200.f ), frameDuration ) );
+            break;
+        default:
+            break;
     };
 }
 
@@ -255,19 +301,9 @@ void GameState::updateStage()
 
 void GameState::enemyPlay()
 {
-    int play = enemy.enemyPlay();
-    switch ( play )
+    std::vector<int> play = enemy.enemyPlay();
+    for(int type : play)
     {
-        case 1:
-            spawnEnemy(0);
-            break;
-        case 2:
-            spawnEnemy(1);
-            break;
-        case 3:
-            spawnEnemy(1);
-            break;
-        default:
-            break;
-    };
+        spawnEnemy(type);
+    }
 }

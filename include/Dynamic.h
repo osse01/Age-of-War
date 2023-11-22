@@ -8,11 +8,16 @@
 class Dynamic : public Entity
 {
     public:
-        Dynamic(const FileReader::Data&, bool, sf::Vector2f);
+        Dynamic(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Dynamic() = default;
 
         virtual void handleCollision(int, int)   = 0;
-        virtual void updatePos()           = 0;
+        virtual void updatePos()                 = 0;
+        virtual int getType()                    = 0;
+        int incrAtkCounter(){return 0;};
+        void resetAtkCounter(){};
+
+        int getAttackSpeed(){return ATTACK_SPEED;};
         int getDamage();
         //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
 
@@ -25,5 +30,4 @@ class Dynamic : public Entity
         const int BUY_VALUE;
 
 };
-
 #endif

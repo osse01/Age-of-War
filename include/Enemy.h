@@ -11,13 +11,13 @@ class Enemy
         Enemy(std::shared_ptr<sf::Time>);
         ~Enemy() = default;
 
-        int enemyPlay();
+        std::vector<int> enemyPlay();
 
     private:
-        int spawnAlgo();
+        std::vector<int> spawnAlgo();
 
-        int delayCounter;
-        int timeCounter;
+        float delayCounter;
+        float timeCounter;
         std::vector<int> spawnList;
         std::shared_ptr<sf::Time> frameDuration;
 
