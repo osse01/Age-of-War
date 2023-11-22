@@ -29,12 +29,15 @@ class GUI
         unsigned int    buttonSize;
         std::string     fontFile;
         std::string     interfaceFile;
+        std::string     coinFile;
 
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;
 
         sf::RectangleShape  interface;
         sf::Texture         interfaceTexture;
+        sf::Texture         coinTexture;
+        sf::Sprite          coinSprite;
         sf::Font            font;
         sf::Text            goldText;
 };

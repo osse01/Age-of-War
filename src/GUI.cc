@@ -5,9 +5,10 @@
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
-      interfaceFile{ "assets/interfaceBackground.jpeg" }, menuButtons {}, gameButtons {},
+      interfaceFile{ "assets/interfaceBackground.jpeg" },
+      coinFile{ "assets/gameCoin.png" }, menuButtons {}, gameButtons {},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, interfaceTexture{},
-      font{}, goldText{}
+      coinTexture{}, coinSprite{}, font{}, goldText{}
 {
     switch (currentState)
     {
@@ -35,8 +36,18 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
             }
             else
             {
-                throw std::logic_error("\n  >> Error. Could not load font file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>, int)");
+                throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
+            }
+
+            if ( coinTexture.loadFromFile(coinFile) )
+            {
+                coinSprite.setTexture(coinTexture);
+            }
+            else
+            {
+                throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
             if ( font.loadFromFile(fontFile) )
@@ -50,7 +61,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
             else
             {
                 throw std::logic_error("\n  >> Error. Could not load font file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>, int)");
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
             for (int i{0} ; i < 6 ; i++)
@@ -84,11 +95,14 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             window->draw(interface);
             for (int i{0} ; i < 6 ; i++)
             {
+                coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
+                coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
+
                 goldText.setString(std::to_string(gold));
-                goldText.setPosition(window->getSize().x - interface.getSize().x - goldText.getGlobalBounds().width
-                 - 0.15*buttonSize, 0.f);
+                goldText.setPosition(coinSprite.getGlobalBounds().width + 0.8*goldText.getGlobalBounds().width, 0.5*buttonSize);
 
                 window->draw(goldText);
+                window->draw(coinSprite);
                 window->draw(gameButtons.at(i));
             }
             break;
