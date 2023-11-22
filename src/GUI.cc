@@ -67,8 +67,6 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 goldText.setFont(font);
                 goldText.setCharacterSize(buttonSize*0.4);
                 goldText.setColor(sf::Color::Yellow);
-                goldText.setPosition(window->getSize().x - interface.getSize().x - 3*goldText.getGlobalBounds().width, 0.f);
-
             }
             else
             {
@@ -113,7 +111,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
 
 
                 goldText.setString(std::to_string(gold));
-                goldText.setPosition(coinSprite.getGlobalBounds().width + 0.8*goldText.getGlobalBounds().width, 0.5*buttonSize);
+                goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, 0.5*buttonSize);
 
                 window->draw(goldText);
                 window->draw(coinSprite);
