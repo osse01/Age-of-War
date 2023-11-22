@@ -1,15 +1,26 @@
 #include "../include/Base.h"
 
 Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos)
-    : Entity::Entity(stats, friendly, pos), base {  }
+    : Entity::Entity(stats, friendly, pos)
 {
-    // if(!texture.loadFromFile(stats.filename))
-    // {
-    //     throw std::logic_error(
-    //     "    >> Error: Could Not Find background image. Error in Base::Base().");
-    // }
-    
-    
-
 
 } 
+
+void Base::handleCollision(__attribute__((unused)) int, __attribute__((unused)) int, __attribute__((unused)) std::shared_ptr<sf::Time>)
+{
+
+}
+void Base::updatePos(__attribute__((unused)) std::shared_ptr<sf::Time>)
+{
+
+}
+
+int Base::getDamage()
+{
+    return 0;
+}
+
+int Base::getDeathValue()
+{
+    return 0;
+}

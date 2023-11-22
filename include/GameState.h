@@ -63,7 +63,6 @@ class GameState : public State
         int stage;
         int gold;
         GUI                 gui;
-        
 };
 
 #endif

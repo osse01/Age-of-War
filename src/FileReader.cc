@@ -39,8 +39,8 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
     readFile(filename);
     Data data{};
     std::string tmp{};
-    float spriteX{};
-    float spriteY{};
+    int spriteX{};
+    int spriteY{};
 
     for (const auto& element : fileContents)
     {
@@ -58,5 +58,6 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
     }
     (data.spriteDim).x = spriteX;
     (data.spriteDim).y = spriteY;
+
     return data;
 }

@@ -16,11 +16,14 @@ public:
     ~Base() = default;
 
 //FUNCTIONS
-void    updateHp();
-void    getBaseStats();
+void handleCollision(int, int, std::shared_ptr<sf::Time>) override;
+void updatePos(std::shared_ptr<sf::Time>)               override;
+int  getDamage()               override;
+int     getDeathValue() override;
+//void updateHp();
+//void getBaseStats();
 
 private:
-sf::RectangleShape base;
 
 
 };

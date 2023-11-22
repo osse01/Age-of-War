@@ -26,7 +26,8 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     baseStats = reader.returnData("Base", "assets/stage1.txt");
 
     friendlyVector.push_back(std::make_shared<Base>(baseStats, true,
-    sf::Vector2f(baseStats.spriteDim.x/2, window->getSize().y-baseStats.spriteDim.y/2)));
+    sf::Vector2f(baseStats.spriteDim.x/2, window->getSize().y / 1.5 -baseStats.spriteDim.y/2)));
+
     window->setView(view);
 }
 
@@ -146,11 +147,11 @@ void GameState::handleCollisions()
 {
     // Handle Collision between Friendly and Enemy
     if ( friendlyVector.size() > 0 && enemyVector.size() > 0 )
-    {
+    {            
         if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
         {
-            friendlyVector.at(0) ->handleCollision(1, enemyVector.at(0)->getDamage());
-            enemyVector.at(0)    ->handleCollision(1, friendlyVector.at(0)->getDamage());
+            friendlyVector.at(0) ->handleCollision(1, enemyVector.at(0)->getDamage(), frameDuration);
+            enemyVector.at(0)    ->handleCollision(1, friendlyVector.at(0)->getDamage(), frameDuration);
         }
     }
     
@@ -161,7 +162,7 @@ void GameState::handleCollisions()
             if( enemyVector.at(behind)->collides( enemyVector.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyVector.at(behind)->handleCollision(0, 0);
+                enemyVector.at(behind)->handleCollision(0, 0, frameDuration);
             }
         }
     
@@ -172,7 +173,7 @@ void GameState::handleCollisions()
             if( friendlyVector.at(behind)->collides( friendlyVector.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyVector.at(behind)->handleCollision(0, 0);
+                friendlyVector.at(behind)->handleCollision(0, 0, frameDuration);
             }
         }
 
@@ -219,7 +220,9 @@ void GameState::spawnFriendly(std::string troop)
         if (gold >= melee.cost)
         {
             gold -= melee.cost;
-            friendlyVector.push_back(std::make_shared<Melee> 
+            // Läs på om emplace
+            // Lös kollision
+            friendlyVector.emplace_back(std::make_shared<Melee> 
             ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
         }
     }
@@ -228,7 +231,7 @@ void GameState::spawnFriendly(std::string troop)
         if (gold >= ranged.cost)
         {
             gold -= ranged.cost;
-            // friendlyQueue.push_back(std::make_shared<Ranged> 
+            // friendlyVector.push_back(std::make_shared<Ranged> 
             //  ( ranged, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
         }
     }
@@ -237,7 +240,7 @@ void GameState::spawnFriendly(std::string troop)
         if (gold >= tank.cost)
         {
             gold -= tank.cost;
-            //friendlyQueue.push_back(std::make_shared<Tank> 
+            //friendlyVector.push_back(std::make_shared<Tank> 
             //  ( tank, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
         }
     }
@@ -251,7 +254,7 @@ void GameState::spawnFriendly(std::string troop)
 void GameState::spawnEnemy()
 {
     enemyVector.push_back(std::make_shared<Melee> 
-        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ) ) );
+        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, 8*window->getSize().y/13 ) ) );
 }
 
 void GameState::updateStage()
