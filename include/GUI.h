@@ -30,6 +30,7 @@ class GUI
         std::string     fontFile;
         std::string     interfaceFile;
         std::string     coinFile;
+        std::string     heartFile;
 
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;
@@ -38,7 +39,9 @@ class GUI
         sf::RectangleShape  statsInterface;
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
+        sf::Texture         heartTexture;
         sf::Sprite          coinSprite;
+        sf::Sprite          heartSprite;
         sf::Font            font;
         sf::Text            goldText;
 };

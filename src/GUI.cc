@@ -6,10 +6,11 @@
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
       interfaceFile{ "assets/interfaceBackground.jpeg" },
-      coinFile{ "assets/gameCoin.png" }, menuButtons {}, gameButtons {},
-      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
+      coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
+      menuButtons {}, gameButtons {}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2.f, 2*buttonSize) },
-      interfaceTexture{}, coinTexture{}, coinSprite{}, font{}, goldText{}
+      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{},
+      heartSprite{}, font{}, goldText{}
 {
     switch (currentState)
     {
@@ -46,13 +47,18 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
-            if ( coinTexture.loadFromFile(coinFile) )
+            if ( coinTexture.loadFromFile(coinFile) && heartTexture.loadFromFile(heartFile))
             {
                 coinSprite.setTexture(coinTexture);
+                coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
+
+                heartSprite.setTexture(heartTexture);
+                heartSprite.setScale(0.00083*buttonSize, 0.000833*buttonSize);
+
             }
             else
             {
-                throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
+                throw std::logic_error("\n  >> Error. Could not load coin or heart icon file. "
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
@@ -102,14 +108,16 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             window->draw(statsInterface);
             for (int i{0} ; i < 6 ; i++)
             {
-                coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
                 coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
+                heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
+
 
                 goldText.setString(std::to_string(gold));
                 goldText.setPosition(coinSprite.getGlobalBounds().width + 0.8*goldText.getGlobalBounds().width, 0.5*buttonSize);
 
                 window->draw(goldText);
                 window->draw(coinSprite);
+                window->draw(heartSprite);
                 window->draw(gameButtons.at(i));
             }
             break;
