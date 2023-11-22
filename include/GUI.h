@@ -34,9 +34,12 @@ class GUI
 
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;
+        std::vector<sf::Text>           menuTexts;
+
 
         sf::RectangleShape  interface;
         sf::RectangleShape  statsInterface;
+        sf::RectangleShape  healthBar;
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;
@@ -44,6 +47,10 @@ class GUI
         sf::Sprite          heartSprite;
         sf::Font            font;
         sf::Text            goldText;
+        sf::Text            playText;
+        sf::Text            optionsText;
+        sf::Text            creditsText;
+
 };
 
 #endif
