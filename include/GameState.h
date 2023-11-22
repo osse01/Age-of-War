@@ -65,6 +65,7 @@ class GameState : public State
         int nextstate;
         int stage;
         GUI                 gui;
+        std::vector<int> deleteEntities{};
 };
 
 #endif

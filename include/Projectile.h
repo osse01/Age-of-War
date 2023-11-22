@@ -11,10 +11,8 @@ class Projectile : public Dynamic
     Projectile(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
     virtual ~Projectile() = default;
 
-    void handleCollision(int, int);
-    int getAttackSpeed(){return 0;};
+    void handleCollision(int, int) override;
     int getType(){return 4;};
-    void kill();
     void updatePos() ;
 
     private:

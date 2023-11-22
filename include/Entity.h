@@ -16,11 +16,9 @@ class Entity
         virtual void updatePos()       = 0;
         virtual int getDamage()        = 0;
         virtual int getType()          = 0;
-        virtual int getAttackSpeed()   = 0;
         int incrAtkCounter();
         void resetAtkCounter();
         sf::Vector2f getPos();
-        void changeHp(int);
         bool isDead();
 
         sf::Sprite getSprite()         const &;
@@ -32,6 +30,7 @@ class Entity
         double              ypos;
         int                 hp;
         bool                isFriendly;
+        bool                hasCollided;
         sf::Texture         texture;
         sf::IntRect         rectSourceSprite;
         sf::Sprite          sprite;

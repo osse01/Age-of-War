@@ -97,16 +97,14 @@ void GameState::handleEvent(sf::Event event)
 void GameState::updateLogic()         
 {
 //----PROJECTILES----
-    std::vector<int> deleteEntities{};
-    int i {};
+    int i { 0 };
     for (auto &it: projectileQueue)
     {
-        if (it->getPos().y >= window->getSize().y || it->isDead())
+        if (it->getPos().y >= window->getSize().y || it->isDead() )
         {
             deleteEntities.push_back(i);
-            i++;
-            continue;
         }
+        i++;
         it->updatePos();
     }
     for (int j: deleteEntities)
@@ -124,12 +122,12 @@ void GameState::updateLogic()
                 deleteEntities.push_back(i);
             }
             i++;
-            std::cout << frameDuration->asSeconds() << std::endl;
             it->updatePos();
             if (enemyQueue.size() > 0 && it->getType() == 2 && 
-               ( it->incrAtkCounter() ) >= ranged.attackSpeed &&
+               ( it->incrAtkCounter() ) >= frameDuration->asMicroseconds() / ranged.attackSpeed &&
                (abs(it->getPos().x - enemyQueue.at(0)->getPos().x) <= ranged.range * it->getSprite().getGlobalBounds().width))
             {
+                projectile.damage = ranged.damage;
                 projectileQueue.push_back(std::make_shared<Projectile>
                     (projectile, true, it->getPos(), frameDuration));
                     it->resetAtkCounter();
@@ -139,23 +137,24 @@ void GameState::updateLogic()
     {
         friendlyQueue.erase( friendlyQueue.begin() + j );
     }
-
-//----ENEMIES----
     deleteEntities.clear();
     i = 0;
+
+//----ENEMIES----   
     for(auto &it: enemyQueue)
         {
             if ( it->isDead() )
             {
                 deleteEntities.push_back(i);
             }
-            it->updatePos();
             i++;
+            it->updatePos();
         }
     for (int j: deleteEntities)
     {
         enemyQueue.erase( enemyQueue.begin() + j );
     }
+    deleteEntities.clear();
 
     handleCollisions();
 }
@@ -194,16 +193,18 @@ void GameState::handleCollisions()
             }
         }
     // Collision between projectile and Enemies
+    int index {0};
     for ( auto &itProjectile: projectileQueue )
     {
         for ( auto &itEnemy: enemyQueue)
         {
             if ( itProjectile->collides(itEnemy) )
             {
-                itEnemy->handleCollision( 1, itProjectile->getDamage());
-                itProjectile->changeHp(0);
+                itEnemy->handleCollision( 2, itProjectile->getDamage() / frameDuration->asSeconds() );
+                itProjectile->handleCollision( 0, 0 );
             }
         }
+        index ++;
     }
 }
 

@@ -25,7 +25,10 @@ void Troop::handleCollision(int troopState, int otherDamage)
             idle();
             break;
         case 1:
-            attack(otherDamage);
+            attack();
+            troopState = 2;
+        case 2:
+            takeDamage(otherDamage);
             break;
         default:
             throw std::logic_error("    >>Error: The troopState does not exist!");
@@ -40,13 +43,16 @@ void Troop::updatePos()
     }
     else
     {
-        std::cout << frameDuration->asSeconds() << std::endl;
+        //std::cout << frameDuration->asSeconds() << std::endl;
         Entity::xpos += Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
     }
 
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
     Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
-    walk();
+    if ( !hasCollided )
+    {
+        walk();
+    }
 }
 
 void Troop::changeSprite()
@@ -79,15 +85,13 @@ void Troop::idle()
     changeSprite();
 }
 
-void Troop::attack(int otherDamage)
+void Troop::attack()
 {
     Entity::rectSourceSprite.top = 256;
     changeSprite();
-    if ( damageCounter == 25 )
-    {
-        Entity::hp -= otherDamage;
-        damageCounter = 0;
-    }
-    damageCounter ++;
+}
 
+void Troop::takeDamage(int otherDamage)
+{
+        Entity::hp -= otherDamage * frameDuration->asSeconds();
 }

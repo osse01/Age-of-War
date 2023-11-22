@@ -11,7 +11,12 @@ Projectile::Projectile(const FileReader::Data& data, bool friendly, sf::Vector2f
 
 void Projectile::handleCollision(__attribute__((unused)) int, 
                                 __attribute__((unused)) int)
-{}
+{
+    if ( hasCollided )
+    {
+        hp = 0;
+    }
+}
 
 void Projectile::updatePos()
 {
@@ -29,9 +34,3 @@ void Projectile::updatePos()
     Entity::sprite.setTextureRect(Entity::rectSourceSprite);
 
 }
-
-void Projectile::kill()
-{
-    Entity::hp = 0;
-}
-

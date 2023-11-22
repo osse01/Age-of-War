@@ -17,7 +17,6 @@ class Dynamic : public Entity
         int incrAtkCounter(){return 0;};
         void resetAtkCounter(){};
 
-        int getAttackSpeed(){return ATTACK_SPEED;};
         int getDamage();
         //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
 
