@@ -12,7 +12,7 @@ class Projectile : public Dynamic
     virtual ~Projectile() = default;
 
     void handleCollision(int, int) override;
-    int getType(){return 4;};
+    int getType();
     void updatePos() ;
 
     private:

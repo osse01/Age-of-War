@@ -4,8 +4,7 @@ Range::Range(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std
  : Troop::Troop(stats, friendly, pos, frameDuration)
 {}
 
-/*Projectile Range::createProjectile(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
+int Range::getType()
 {
-   Projectile shot {stats, friendly, pos};
-   return shot;
-}*/
+   return 2;
+}

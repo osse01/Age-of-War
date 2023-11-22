@@ -18,6 +18,11 @@ void Projectile::handleCollision(__attribute__((unused)) int,
     }
 }
 
+int Projectile::getType()
+{
+    return 4;
+}
+
 void Projectile::updatePos()
 {
     Entity::xpos += Dynamic::MOVEMENTSPEED * 2;

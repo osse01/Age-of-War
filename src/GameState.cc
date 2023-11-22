@@ -219,14 +219,15 @@ void GameState::renderFrame()
     window->draw(backgroundSprite);
     
     //  Render units
-    for(auto &it: friendlyQueue)
-    {
-        window->draw(it->getSprite());
-    }
     for(auto &it: enemyQueue)
     {
         window->draw(it->getSprite());
     }
+    for(auto &it: friendlyQueue)
+    {
+        window->draw(it->getSprite());
+    }
+
     for(auto &it: projectileQueue)
     {
         window->draw(it->getSprite());

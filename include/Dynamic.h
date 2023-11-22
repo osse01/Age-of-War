@@ -18,7 +18,6 @@ class Dynamic : public Entity
         void resetAtkCounter(){};
 
         int getDamage();
-        //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
 
     protected:
         const int DAMAGE;
