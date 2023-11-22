@@ -26,7 +26,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     baseStats = reader.returnData("Base", "assets/stage1.txt");
 
     friendlyVector.push_back(std::make_shared<Base>(baseStats, true,
-    sf::Vector2f(baseStats.spriteDim.x/2, window->getSize().y / 1.5 -baseStats.spriteDim.y/2)));
+    sf::Vector2f(baseStats.spriteDim.x/2, view.getSize().y - baseStats.spriteDim.y/2)));
 
     window->setView(view);
 }
@@ -215,6 +215,7 @@ int GameState::getNextState()
 
 void GameState::spawnFriendly(std::string troop)
 {
+    auto it = friendlyVector.end()-1;
     if (troop == melee.type)
     {
         if (gold >= melee.cost)
@@ -222,7 +223,7 @@ void GameState::spawnFriendly(std::string troop)
             gold -= melee.cost;
             // Läs på om emplace
             // Lös kollision
-            friendlyVector.emplace_back(std::make_shared<Melee> 
+            friendlyVector.insert(it, std::make_shared<Melee> 
             ( melee, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) ) );
         }
     }

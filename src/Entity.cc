@@ -5,7 +5,7 @@
 Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
     
     : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, 
-      texture{}, rectSourceSprite { 0,128,128,128 }, sprite {texture, rectSourceSprite},
+      texture{}, rectSourceSprite { 0,0,stats.spriteDim.x,stats.spriteDim.y }, sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }
 {
     if(!texture.loadFromFile(stats.filename))

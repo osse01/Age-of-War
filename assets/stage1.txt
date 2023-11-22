@@ -3,7 +3,7 @@ Melee       50            200       60            0.1          1             70 
 Range       25            100       15            2            1             100        50          100                128 128           assets/range.png
 Tank        50            400       15            0.1          1             100        50          100                128 128           assets/tank.png
 Background  0             0         0             0            0             0          50          100                128 128           assets/background.jpeg
-Base        0             2000      0             0            300           100          50          100              128 128           assets/base.png
+Base        0             2000      0             0            300           200          50          100              249 323           assets/base_cropped.png
 GameFont    0             0         0             0            0             0          50          100                128 128           assets/coolFont.ttf
 Tree        0             0         0             0            0             0          50          100                128 128           assets/tree.png
 GameMusic   0             0         0             0            0             0          50          100                128 128           assets/Age-of-War-Theme-Song.ogg
