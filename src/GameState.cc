@@ -91,15 +91,16 @@ void GameState::updateLogic()
     {
         sf::Mouse mouse {};
         int margin {static_cast<int>(window->getSize().x/20)};
-        if (mouse.getPosition(*window).x < margin)
+        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
+        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
+
+        if (mouse.getPosition(*window).x+10 < margin &&  viewLeft > 0)
         {
             view.move(-200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
-        else if (mouse.getPosition(*window).x > 19*margin)
+        else if (mouse.getPosition(*window).x > 19*margin && viewRight < static_cast<int>(window->getSize().x-10))
         {
             view.move(200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
     }
 
