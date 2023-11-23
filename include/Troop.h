@@ -20,8 +20,9 @@ class Troop : public Dynamic
         void idle();
         void attack();
         void takeDamage(int);
-        int damageCounter;
-        int spriteCounter;
+        int   damageCounter;
+        int   spriteCounter;
+        float collisionCounter;
 };
 
 #endif

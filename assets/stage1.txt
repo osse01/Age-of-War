@@ -6,7 +6,7 @@ Ranged_E    25            150       70            5            20            70 
 Tank_F      50            400       70            0.1          1             100        50          100                128 128           assets/friendly_melee_sprite_sheet.png
 Tank_E      50            400       70            0.1          1             100        50          100                128 128           assets/enemy_melee_sprite_sheet.png
 Background  0             0         0             0            0             0          50          100                128 128           assets/background.jpeg
-Base        0             2000      0             0            300           200        50          100                249 323           assets/cursor.png
+Base        0             2000      0             0            300           500        50          100                249 323           assets/cursor.png
 GameFont    0             0         0             0            0             0          50          100                128 128           assets/coolFont.ttf
 Tree        0             0         0             0            0             0          50          100                128 128           assets/tree.png
 GameMusic   0             0         0             0            0             0          50          100                128 128           assets/Age-of-War-Theme-Song.ogg
