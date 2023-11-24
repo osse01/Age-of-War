@@ -20,7 +20,7 @@ Projectile::Projectile(const FileReader::Data& data, bool friendly, sf::Vector2f
     boundingbox.setPosition( xpos, ypos );
     if(isFriendly)
     {
-        sprite.setScale(sf::Vector2f(-1.f,1.f));
+        sprite.setScale(sf::Vector2f(-0.8f,0.8f));
     }
     sprite.setRotation( -45 );
 }
