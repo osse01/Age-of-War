@@ -129,7 +129,7 @@ void GameState::updateLogic()
     int i { 0 };
     for (auto &it: projectileQueue)
     {
-        if (it->getPos().y >= window->getSize().y || it->isDead() )
+        if (it->getSprite().getPosition().y >= window->getSize().y || it->isDead() )
         {
             deleteEntities.push_back(i);
         }
@@ -152,14 +152,14 @@ void GameState::updateLogic()
             }
             i++;
             it->updatePos();
-            if (it->getType() == 2 && 
-               ( it->incrAtkCounter() ) >= frameDuration->asMicroseconds() / rangedF.attackSpeed &&
-               (abs(it->getPos().x - enemyVector.at(0)->getPos().x) <= rangedF.range * it->getSprite().getGlobalBounds().width/2))
+            if (abs(it->getSprite().getPosition().x - enemyVector.at(0)->getSprite().getPosition().x) 
+                <= it->getRange())
             {
-                projectile.damage = rangedF.damage;
-                projectileQueue.push_back(std::make_shared<Projectile>
-                    (projectile, true, it->getPos(), frameDuration));
-                    it->resetAtkCounter();
+                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(projectile, frameDuration, sf::Vector2f(0,0))};
+                if ( tmpProjectile != nullptr)
+                {
+                    projectileQueue.push_back(tmpProjectile);
+                }
             }
         }
     for (int j: deleteEntities)
@@ -210,7 +210,7 @@ void GameState::handleCollisions()
             if( enemyVector.at(behind)->collides( enemyVector.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyVector.at(behind)->handleCollision(0, 0);
+                enemyVector.at(behind)->handleCollision();
             }
         }
     
@@ -221,7 +221,7 @@ void GameState::handleCollisions()
             if( friendlyVector.at(behind)->collides( friendlyVector.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyVector.at(behind)->handleCollision(0, 0);
+                friendlyVector.at(behind)->handleCollision();
             }
         }
 
@@ -232,9 +232,10 @@ void GameState::handleCollisions()
         {
             for (auto &itEnemy : enemyVector)
             {
-                if (itProjectile->collides(itEnemy))
+                if (itProjectile->collides(itEnemy->getBox()))
                 {
                     itEnemy->handleCollision(2, itProjectile->getDamage());
+                    itProjectile->handleCollision();
                 }
             }
         }
@@ -242,9 +243,10 @@ void GameState::handleCollisions()
         {
             for (auto &itFriendly : friendlyVector)
             {
-                if (itProjectile->collides(itFriendly))
+                if (itProjectile->collides(itFriendly->getBox()))
                 {
                     itFriendly->handleCollision(2, itProjectile->getDamage());
+                    itProjectile->handleCollision();
                 }
             }
         }
@@ -264,13 +266,13 @@ void GameState::renderFrame()
     
     //  Render units
     for(auto &it: friendlyVector)
-        {
-            window->draw(it->getSprite());
-        }
+    {
+        window->draw(it->getSprite());
+    }
     for(auto &it: enemyVector)
-        {
-            window->draw(it->getSprite());
-        }
+    {
+        window->draw(it->getSprite());
+    }
     for(auto &it: projectileQueue)
     {
         window->draw(it->getSprite());

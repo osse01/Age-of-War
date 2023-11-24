@@ -62,7 +62,7 @@ class GameState : public State
 
         std::vector<std::shared_ptr<Entity>> friendlyVector;
         std::vector<std::shared_ptr<Entity>> enemyVector;
-        std::deque<std::shared_ptr<Entity>> projectileQueue;
+        std::deque<std::shared_ptr<Projectile>> projectileQueue;
 
         std::string         backgroundFile;
 

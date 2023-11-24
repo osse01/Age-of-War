@@ -6,6 +6,15 @@ Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos, std:
 
 } 
 
+std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
+                                                    std::shared_ptr<sf::Time> frameDuration,
+                                                    sf::Vector2f pos)
+{
+   std::shared_ptr<Projectile> projectile {};
+
+   return projectile;
+}
+
 void Base::handleCollision(__attribute__((unused)) int, __attribute__((unused)) int)
 {
 
@@ -20,12 +29,12 @@ int Base::getDamage()
     return 0;
 }
 
-int  Base::getType() 
+int Base::getDeathValue()
 {
     return 0;
 }
 
-int Base::getDeathValue()
+float Base::getRange()
 {
-    return 0;
+    return 0.0f;
 }

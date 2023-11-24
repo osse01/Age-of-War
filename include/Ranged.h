@@ -10,9 +10,7 @@ class Ranged : public Troop
     public:
     Ranged(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
     virtual ~Ranged() = default;
-    int getType();
-
-    //Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) override;
+    std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f);
 };
 
 #endif

@@ -12,9 +12,10 @@ class Troop : public Dynamic
 
         void handleCollision(int, int) override;
         void updatePos()          override;
-        virtual int getType()           = 0;
+        virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f) = 0;
 
-    private:
+
+    protected:
         void changeSprite();
         void walk();
         void idle();
