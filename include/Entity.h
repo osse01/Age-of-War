@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
+#include "Projectile.h"
 
 #include "FileReader.h"
 #include "memory"
@@ -12,15 +13,16 @@ class Entity
          Entity(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Entity() = default;
         
-        virtual void    handleCollision(int, int) = 0;
+        virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
+                                                            std::shared_ptr<sf::Time>, 
+                                                            sf::Vector2f) = 0;
+        virtual void    handleCollision(int = 0, int = 0) = 0;
         virtual void    updatePos()       = 0;
-        virtual int     getDamage()        = 0;
-        virtual int     getType()          = 0;
-        virtual int     getDeathValue()       = 0;
-        int  incrAtkCounter();
-        void resetAtkCounter();
+        virtual int     getDamage()       = 0;
+        virtual int     getDeathValue()   = 0;
+        virtual float   getRange()        = 0;
+        sf::RectangleShape getBox();
 
-        sf::Vector2f getPos();
         bool getIsFriendly();
         bool isDead();
 
@@ -28,7 +30,6 @@ class Entity
         bool        collides( std::shared_ptr<Entity> );
 
     protected:
-        int                 atkCounter {0};
         double              xpos;
         double              ypos;
         int                 hp;

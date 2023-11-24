@@ -4,7 +4,11 @@ Melee::Melee(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std
  : Troop::Troop(stats, friendly, pos, frameDuration)
 {}
 
-int Melee::getType()
+std::shared_ptr<Projectile> Melee::spawnProjectile(FileReader::Data& stats,
+                                                    std::shared_ptr<sf::Time> frameDuration,
+                                                    sf::Vector2f pos)
 {
-    return 1;
+   std::shared_ptr<Projectile> projectile {};
+
+   return projectile;
 }

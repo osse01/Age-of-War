@@ -8,6 +8,9 @@ Dynamic::Dynamic(const FileReader::Data& stats, bool friendly, sf::Vector2f pos,
 {}
 
 int Dynamic::getDamage()
+//  ---------------------------------------------
+//  Returns the Dynamic object DAMAGE variable.
+//  ---------------------------------------------
 {
   return DAMAGE;
 }
@@ -18,4 +21,12 @@ int Dynamic::getDeathValue()
 //  ---------------------------------------------
 {
     return DEATH_VALUE;
+}
+
+float Dynamic::getRange()
+//  ---------------------------------------------
+//  Returns the Dynamic object RANGE variable.
+//  ---------------------------------------------
+{
+  return RANGE;
 }

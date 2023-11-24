@@ -4,7 +4,18 @@ Ranged::Ranged(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, s
  : Troop::Troop(stats, friendly, pos, frameDuration)
 {}
 
-int Ranged::getType()
+std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& stats,
+                                                    std::shared_ptr<sf::Time> frameDuration,
+                                                    sf::Vector2f pos)
 {
-   return 2;
+   std::shared_ptr<Projectile> projectile {};
+
+   if ( (rectSourceSprite.left/128)%12 == 4)
+   {
+      pos = sf::Vector2f(xpos, ypos);
+      stats.damage = DAMAGE;
+      projectile = std::make_shared<Projectile> (stats, Entity::isFriendly, pos, frameDuration);
+   }
+
+   return projectile;
 }
