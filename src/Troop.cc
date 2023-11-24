@@ -2,12 +2,14 @@
 
 #include <iostream>
 
-Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
-: Dynamic::Dynamic(stats, friendly, pos), damageCounter { 1 }
+Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+: Dynamic::Dynamic(stats, friendly, pos, frameDuration), damageCounter { 1 }, spriteCounter { 0 }, collisionCounter {1}
 {}
 
-void Troop::handleCollision(int troopState, int otherDamage, std::shared_ptr<sf::Time> frameDuration)
+void Troop::handleCollision(int troopState, int otherDamage)
 {   
+    collisionCounter = 0;
+
     if (Entity::isFriendly)    
     {
         Entity::xpos -= Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
@@ -25,15 +27,22 @@ void Troop::handleCollision(int troopState, int otherDamage, std::shared_ptr<sf:
             idle();
             break;
         case 1:
-            attack(otherDamage, frameDuration);
+            attack();
+            takeDamage(otherDamage);
+            break;
+        case 2:
+            takeDamage(otherDamage);
             break;
         default:
             throw std::logic_error("    >>Error: The troopState does not exist!");
+            break;
     }
 }
 
-void Troop::updatePos(std::shared_ptr<sf::Time> frameDuration)
+void Troop::updatePos()
 {
+    collisionCounter += frameDuration->asSeconds();
+
     if (!Entity::isFriendly)    
     {
         Entity::xpos -= Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
@@ -45,20 +54,28 @@ void Troop::updatePos(std::shared_ptr<sf::Time> frameDuration)
 
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
     Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
-    walk();
+    if ( collisionCounter >= 2*frameDuration->asSeconds() )
+    {
+        walk();
+    }
 }
 
 void Troop::changeSprite()
 {
-    if(Entity::rectSourceSprite.left == 128*23)
-        {
-            Entity::rectSourceSprite.left = 0;
-        }
-        else
-        {
-            Entity::rectSourceSprite.left += 128;
-        }
-        Entity::sprite.setTextureRect(Entity::rectSourceSprite);
+    if (spriteCounter * frameDuration->asSeconds() >= 0.04)
+    {
+        if(Entity::rectSourceSprite.left == 128*23)
+            {
+                Entity::rectSourceSprite.left = 0;
+            }
+            else
+            {
+                Entity::rectSourceSprite.left += 128;
+            }
+            Entity::sprite.setTextureRect(Entity::rectSourceSprite);
+        spriteCounter = 0;
+    }
+    spriteCounter ++;
 }
 
 void Troop::walk()
@@ -73,15 +90,13 @@ void Troop::idle()
     changeSprite();
 }
 
-void Troop::attack(int otherDamage, std::shared_ptr<sf::Time> frameDuration)
+void Troop::attack()
 {
     Entity::rectSourceSprite.top = 256;
     changeSprite();
-    if ( damageCounter == 25 )
-    {
-        Entity::hp -= otherDamage;
-        damageCounter = 0;
-    }
-    damageCounter ++;
+}
 
+void Troop::takeDamage(int otherDamage)
+{
+        Entity::hp -= otherDamage * frameDuration->asSeconds();
 }

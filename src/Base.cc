@@ -1,15 +1,40 @@
 #include "../include/Base.h"
 
-Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos)
-    : Entity::Entity(stats, friendly, pos), base {  }
+Base::Base(const FileReader::Data& stats,  bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+    : Entity::Entity(stats, friendly, pos, frameDuration)
 {
-    // if(!texture.loadFromFile(stats.filename))
-    // {
-    //     throw std::logic_error(
-    //     "    >> Error: Could Not Find background image. Error in Base::Base().");
-    // }
-    
-    
-
 
 } 
+
+std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
+                                                    std::shared_ptr<sf::Time> frameDuration,
+                                                    sf::Vector2f pos)
+{
+   std::shared_ptr<Projectile> projectile {};
+
+   return projectile;
+}
+
+void Base::handleCollision(__attribute__((unused)) int, __attribute__((unused)) int)
+{
+
+}
+void Base::updatePos()
+{
+
+}
+
+int Base::getDamage()
+{
+    return 0;
+}
+
+int Base::getDeathValue()
+{
+    return 0;
+}
+
+float Base::getRange()
+{
+    return 0.0f;
+}
