@@ -8,7 +8,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 :   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {}, friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -63,13 +63,23 @@ void GameState::handleEvent(sf::Event event)
                     break;
 
                 case sf::Keyboard::M:
-                    nextstate = MENU_STATE;
+                    nextState = MENU_STATE;
                     music->stop();
                     break;
 
                 case sf::Keyboard::Escape:
-                    nextstate = PAUSE_STATE;
+                    nextState = PAUSE_STATE;
                     music->pause();
+                    break;
+                
+                case sf::Keyboard::W:
+                    nextState = WIN_STATE;
+                    music->stop();
+                    break;
+
+                case sf::Keyboard::L:
+                    nextState = LOSE_STATE;
+                    music->stop();
                     break;
 
                 default:
@@ -108,20 +118,31 @@ void GameState::handleEvent(sf::Event event)
     }
 }
 
-void GameState::updateLogic()         
+void GameState::updateLogic()        
 {
+    if(friendlyVector.back()->isDead())
+    {
+        nextState = LOSE_STATE;
+        return;
+    }
+    if(enemyVector.back()->isDead())
+    {
+        nextState = WIN_STATE;
+        return;
+    }
     {
         sf::Mouse mouse {};
         int margin {static_cast<int>(window->getSize().x/20)};
-        if (mouse.getPosition(*window).x < margin)
+        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
+        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
+
+        if (mouse.getPosition(*window).x+10 < margin &&  viewLeft > 0)
         {
             view.move(-200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
-        else if (mouse.getPosition(*window).x > 19*margin)
+        else if (mouse.getPosition(*window).x > 19*margin && viewRight < static_cast<int>(window->getSize().x-10))
         {
             view.move(200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
     }
 
@@ -188,6 +209,7 @@ void GameState::updateLogic()
 
     handleCollisions();
     enemyPlay();
+
 }
 
 void GameState::handleCollisions()
@@ -278,21 +300,24 @@ void GameState::renderFrame()
         window->draw(it->getSprite());
     }
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window);
+    gui.draw(GAME_STATE, window, gold);
 }
 
 void GameState::resetState()
 {
-    nextstate = GAME_STATE;
+    nextState = GAME_STATE;
 }
 
 int GameState::getNextState()       
 {
-    return nextstate;
+    return nextState;
 }
 
 void GameState::spawnFriendly(std::string troop)
 {
+    sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
+    sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
     auto it = friendlyVector.end()-1;
     if (troop == meleeF.type)
     {
@@ -302,7 +327,7 @@ void GameState::spawnFriendly(std::string troop)
             // Läs på om emplace
             // Lös kollision
             friendlyVector.insert(it, std::make_shared<Melee> 
-            ( meleeF, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) , frameDuration) );
+            ( meleeF, true, spawnPoint, frameDuration) );
         }
     }
     else if (troop == rangedF.type)
@@ -311,7 +336,7 @@ void GameState::spawnFriendly(std::string troop)
         {
             gold -= rangedF.cost;
             friendlyVector.insert(it, std::make_shared<Ranged> 
-             ( rangedF, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) , frameDuration ) );
+             ( rangedF, true, spawnPoint, frameDuration ) );
         }
     }
     else if (troop == tankF.type)
@@ -320,7 +345,7 @@ void GameState::spawnFriendly(std::string troop)
         {
             gold -= tankF.cost;
             friendlyVector.insert(it, std::make_shared<Tank> 
-              ( tankF, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) , frameDuration ) );
+              ( tankF, true, spawnPoint, frameDuration ) );
         }
     }
     else
@@ -329,25 +354,30 @@ void GameState::spawnFriendly(std::string troop)
         "Error in GameState::spawnFriendly(std::string). \n");
     }
     
+    
 }
 
 void GameState::spawnEnemy(int type)
 {
+    sf::Sprite baseBounds {enemyVector.back()->getSprite()};
+    sf::Vector2f spawnPoint { baseBounds.getPosition().x - baseBounds.getGlobalBounds().width/2,
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
+
     auto it = enemyVector.end()-1;
 
     switch ( type )
     {
         case 1:
             enemyVector.insert(it, std::make_shared<Melee> 
-                ( meleeE, false, sf::Vector2f( window->getSize().x-40.f, 8*window->getSize().y/13 ), frameDuration ) );
+                ( meleeE, false, spawnPoint, frameDuration ) );
             break;
         case 2:
             enemyVector.insert(it, std::make_shared<Ranged> 
-                ( rangedE, false, sf::Vector2f( window->getSize().x-40.f, 8*window->getSize().y/13 ), frameDuration ) );
+                ( rangedE, false, spawnPoint, frameDuration ) );
             break;
         case 3:
             enemyVector.insert(it, std::make_shared<Tank> 
-                ( tankE, false, sf::Vector2f( window->getSize().x-40.f, 8*window->getSize().y/13 ), frameDuration ) );
+                ( tankE, false, spawnPoint, frameDuration ) );
             break;
         default:
             break;

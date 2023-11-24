@@ -11,6 +11,8 @@
 int const MENU_STATE    { 0 };
 int const GAME_STATE    { 1 };
 int const PAUSE_STATE   { 2 };
+int const WIN_STATE   { 3 };
+int const LOSE_STATE   { 4 };
 
 class State
 //  =============   State CLASS    ===============

@@ -4,7 +4,7 @@
 
 Projectile::Projectile(const FileReader::Data& data, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : DAMAGE { data.damage }, MOVEMENTSPEED { data.movementSpeed }, xpos { pos.x }, ypos { pos.y }, hp { data.hp }, 
-  isFriendly { friendly }, hasCollided { false }, texture {}, sprite {}, boundingbox { sf::Vector2f( data.boxSize, data.boxSize ) },
+  isFriendly { friendly }, hasCollided { false }, texture {}, sprite {}, boundingbox { data.boxSize },
   frameDuration { frameDuration }, counter { 0 }
 {
     if(!texture.loadFromFile(data.filename))

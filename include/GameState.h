@@ -72,7 +72,7 @@ class GameState : public State
         
         sf::Vector2f        zoomFactor;
 
-        int nextstate;
+        int nextState;
         int stage;
         int gold;
         GUI                 gui;
