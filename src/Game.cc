@@ -2,6 +2,8 @@
 #include "../include/MenuState.h"
 #include "../include/GameState.h"
 #include "../include/PauseState.h"
+#include "../include/WinState.h"
+#include "../include/LoseState.h"
 
 #include <utility>
 #include <iostream>
@@ -127,7 +129,11 @@ void Game::getNextState()
         switch (nextState)
         {
             case MENU_STATE:
-                states.pop();
+                do
+                {
+                    states.pop();
+                }
+                while(states.size() > 1);
 
                 break;
             case PAUSE_STATE:
@@ -148,6 +154,16 @@ void Game::getNextState()
                     states.push(std::move(ptr));
                 }
 
+                break;
+            case WIN_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<WinState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case LOSE_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<LoseState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
                 break;
         }
         currentState = nextState;

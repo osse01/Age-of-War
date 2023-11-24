@@ -8,7 +8,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 :   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {}, friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -63,13 +63,23 @@ void GameState::handleEvent(sf::Event event)
                     break;
 
                 case sf::Keyboard::M:
-                    nextstate = MENU_STATE;
+                    nextState = MENU_STATE;
                     music->stop();
                     break;
 
                 case sf::Keyboard::Escape:
-                    nextstate = PAUSE_STATE;
+                    nextState = PAUSE_STATE;
                     music->pause();
+                    break;
+                
+                case sf::Keyboard::W:
+                    nextState = WIN_STATE;
+                    music->stop();
+                    break;
+
+                case sf::Keyboard::L:
+                    nextState = LOSE_STATE;
+                    music->stop();
                     break;
 
                 default:
@@ -108,8 +118,18 @@ void GameState::handleEvent(sf::Event event)
     }
 }
 
-void GameState::updateLogic()         
+void GameState::updateLogic()        
 {
+    if(friendlyVector.back()->isDead())
+    {
+        nextState = LOSE_STATE;
+        return;
+    }
+    if(enemyVector.back()->isDead())
+    {
+        nextState = WIN_STATE;
+        return;
+    }
     {
         sf::Mouse mouse {};
         int margin {static_cast<int>(window->getSize().x/20)};
@@ -285,12 +305,12 @@ void GameState::renderFrame()
 
 void GameState::resetState()
 {
-    nextstate = GAME_STATE;
+    nextState = GAME_STATE;
 }
 
 int GameState::getNextState()       
 {
-    return nextstate;
+    return nextState;
 }
 
 void GameState::spawnFriendly(std::string troop)
