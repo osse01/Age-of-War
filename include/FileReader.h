@@ -49,7 +49,7 @@ public:
         float   movementSpeed;
         float   range;
         int     attackSpeed;
-        int     boxSize;
+        sf::Vector2f boxSize;
         int     cost;
         int     deathValue;
 

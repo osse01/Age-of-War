@@ -21,6 +21,7 @@
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;
 
+    private:
     // FUNCTIONS
     void    handleEvent     (sf::Event)                         override;
     void    renderFrame     ()                                  override;
@@ -28,7 +29,6 @@
     void    updateLogic     ()          override;
     void    startAnimation  ();
     void    resetState()        override;
-    private:
 
     // VARIABLES
     float   scale;

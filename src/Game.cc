@@ -134,7 +134,7 @@ void Game::getNextState()
                     states.pop();
                 }
                 while(states.size() > 1);
-                
+
                 break;
             case PAUSE_STATE:
                 states.top()->resetState();
@@ -160,7 +160,6 @@ void Game::getNextState()
                 ptr = std::make_unique<WinState>(window, music, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
-                
             case LOSE_STATE:
                 states.top()->resetState();
                 ptr = std::make_unique<LoseState>(window, music, frameDurationPtr);            

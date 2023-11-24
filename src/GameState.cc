@@ -8,7 +8,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
 :   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {}, friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
 {
     //  Load in Background Image
     if(!backgroundTexture.loadFromFile(backgroundFile))
@@ -63,22 +63,25 @@ void GameState::handleEvent(sf::Event event)
                     break;
 
                 case sf::Keyboard::M:
-                    nextstate = MENU_STATE;
+                    nextState = MENU_STATE;
                     music->stop();
                     break;
 
                 case sf::Keyboard::Escape:
-                    nextstate = PAUSE_STATE;
+                    nextState = PAUSE_STATE;
                     music->pause();
                     break;
+                
                 case sf::Keyboard::W:
-                    nextstate = WIN_STATE;
+                    nextState = WIN_STATE;
                     music->stop();
                     break;
+
                 case sf::Keyboard::L:
-                    nextstate = LOSE_STATE;
+                    nextState = LOSE_STATE;
                     music->stop();
                     break;
+
                 default:
                     break;
             }
@@ -115,20 +118,31 @@ void GameState::handleEvent(sf::Event event)
     }
 }
 
-void GameState::updateLogic()         
+void GameState::updateLogic()        
 {
+    if(friendlyVector.back()->isDead())
+    {
+        nextState = LOSE_STATE;
+        return;
+    }
+    if(enemyVector.back()->isDead())
+    {
+        nextState = WIN_STATE;
+        return;
+    }
     {
         sf::Mouse mouse {};
         int margin {static_cast<int>(window->getSize().x/20)};
-        if (mouse.getPosition(*window).x < margin)
+        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
+        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
+
+        if (mouse.getPosition(*window).x+10 < margin &&  viewLeft > 0)
         {
             view.move(-200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
-        else if (mouse.getPosition(*window).x > 19*margin)
+        else if (mouse.getPosition(*window).x > 19*margin && viewRight < static_cast<int>(window->getSize().x-10))
         {
             view.move(200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
     }
 
@@ -136,7 +150,7 @@ void GameState::updateLogic()
     int i { 0 };
     for (auto &it: projectileQueue)
     {
-        if (it->getPos().y >= window->getSize().y || it->isDead() )
+        if (it->getSprite().getPosition().y >= window->getSize().y || it->isDead() )
         {
             deleteEntities.push_back(i);
         }
@@ -159,14 +173,14 @@ void GameState::updateLogic()
             }
             i++;
             it->updatePos();
-            if (it->getType() == 2 && 
-               ( it->incrAtkCounter() ) >= frameDuration->asMicroseconds() / rangedF.attackSpeed &&
-               (abs(it->getPos().x - enemyVector.at(0)->getPos().x) <= rangedF.range * it->getSprite().getGlobalBounds().width/2))
+            if (abs(it->getSprite().getPosition().x - enemyVector.at(0)->getSprite().getPosition().x) 
+                <= it->getRange())
             {
-                projectile.damage = rangedF.damage;
-                projectileQueue.push_back(std::make_shared<Projectile>
-                    (projectile, true, it->getPos(), frameDuration));
-                    it->resetAtkCounter();
+                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(projectile, frameDuration, sf::Vector2f(0,0))};
+                if ( tmpProjectile != nullptr)
+                {
+                    projectileQueue.push_back(tmpProjectile);
+                }
             }
         }
     for (int j: deleteEntities)
@@ -195,6 +209,7 @@ void GameState::updateLogic()
 
     handleCollisions();
     enemyPlay();
+
 }
 
 void GameState::handleCollisions()
@@ -217,7 +232,7 @@ void GameState::handleCollisions()
             if( enemyVector.at(behind)->collides( enemyVector.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyVector.at(behind)->handleCollision(0, 0);
+                enemyVector.at(behind)->handleCollision();
             }
         }
     
@@ -228,7 +243,7 @@ void GameState::handleCollisions()
             if( friendlyVector.at(behind)->collides( friendlyVector.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyVector.at(behind)->handleCollision(0, 0);
+                friendlyVector.at(behind)->handleCollision();
             }
         }
 
@@ -239,9 +254,10 @@ void GameState::handleCollisions()
         {
             for (auto &itEnemy : enemyVector)
             {
-                if (itProjectile->collides(itEnemy))
+                if (itProjectile->collides(itEnemy->getBox()))
                 {
                     itEnemy->handleCollision(2, itProjectile->getDamage());
+                    itProjectile->handleCollision();
                 }
             }
         }
@@ -249,9 +265,10 @@ void GameState::handleCollisions()
         {
             for (auto &itFriendly : friendlyVector)
             {
-                if (itProjectile->collides(itFriendly))
+                if (itProjectile->collides(itFriendly->getBox()))
                 {
                     itFriendly->handleCollision(2, itProjectile->getDamage());
+                    itProjectile->handleCollision();
                 }
             }
         }
@@ -271,29 +288,29 @@ void GameState::renderFrame()
     
     //  Render units
     for(auto &it: friendlyVector)
-        {
-            window->draw(it->getSprite());
-        }
+    {
+        window->draw(it->getSprite());
+    }
     for(auto &it: enemyVector)
-        {
-            window->draw(it->getSprite());
-        }
+    {
+        window->draw(it->getSprite());
+    }
     for(auto &it: projectileQueue)
     {
         window->draw(it->getSprite());
     }
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window);
+    gui.draw(GAME_STATE, window, gold);
 }
 
 void GameState::resetState()
 {
-    nextstate = GAME_STATE;
+    nextState = GAME_STATE;
 }
 
 int GameState::getNextState()       
 {
-    return nextstate;
+    return nextState;
 }
 
 void GameState::spawnFriendly(std::string troop)
@@ -333,6 +350,7 @@ void GameState::spawnFriendly(std::string troop)
         throw std::logic_error("\n  >> Error, Unidentified troop type. "
         "Error in GameState::spawnFriendly(std::string). \n");
     }
+    
     
 }
 

@@ -7,14 +7,14 @@ Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, s
     
     : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, hasCollided { false },
       texture{}, rectSourceSprite { 0,0,stats.spriteDim.x,stats.spriteDim.y }, sprite {texture, rectSourceSprite},
-      boundingbox { sf::Vector2f ( stats.boxSize, stats.boxSize ) }, frameDuration {frameDuration}
+      boundingbox { stats.boxSize }, frameDuration {frameDuration}
 {
     if(!texture.loadFromFile(stats.filename))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in Entity::Entity().");
     }
-    sprite.setTextureRect(Entity::rectSourceSprite);
+    sprite.setTextureRect(rectSourceSprite);
     sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
     boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
 
@@ -26,27 +26,24 @@ Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, s
     }
 }
 
-sf::Sprite Entity::getSprite() const &
-{
-    return sprite;
-}
-
 bool Entity::collides( std::shared_ptr<Entity> other )
 {
     // Check whether this collides with other
     hasCollided = boundingbox.getGlobalBounds().intersects(
             ( other->boundingbox.getGlobalBounds() ) );
     other->hasCollided = hasCollided;
+
     return hasCollided;
 }
+
+sf::Sprite Entity::getSprite() const &
+{
+    return sprite;
+}
+
 bool Entity::isDead()
 {
     return hp <= 0;
-}
-
-sf::Vector2f Entity::getPos()
-{
-    return sf::Vector2f{static_cast<float>(xpos), static_cast<float>(ypos)};
 }
 
 bool Entity::getIsFriendly()
@@ -54,13 +51,7 @@ bool Entity::getIsFriendly()
     return isFriendly;
 }
 
-int Entity::incrAtkCounter()
+sf::RectangleShape Entity::getBox()
 {
-    atkCounter ++;
-    return atkCounter;
-}
-
-void Entity::resetAtkCounter()
-{
-    atkCounter = 0;
+    return boundingbox;
 }
