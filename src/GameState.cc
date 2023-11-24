@@ -113,15 +113,16 @@ void GameState::updateLogic()
     {
         sf::Mouse mouse {};
         int margin {static_cast<int>(window->getSize().x/20)};
-        if (mouse.getPosition(*window).x < margin)
+        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
+        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
+
+        if (mouse.getPosition(*window).x+10 < margin &&  viewLeft > 0)
         {
             view.move(-200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
-        else if (mouse.getPosition(*window).x > 19*margin)
+        else if (mouse.getPosition(*window).x > 19*margin && viewRight < static_cast<int>(window->getSize().x-10))
         {
             view.move(200*(frameDuration->asSeconds()), 0);
-            window->setView(view);
         }
     }
 
@@ -188,6 +189,7 @@ void GameState::updateLogic()
 
     handleCollisions();
     enemyPlay();
+
 }
 
 void GameState::handleCollisions()
@@ -278,7 +280,7 @@ void GameState::renderFrame()
         window->draw(it->getSprite());
     }
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window);
+    gui.draw(GAME_STATE, window, gold);
 }
 
 void GameState::resetState()
@@ -328,6 +330,7 @@ void GameState::spawnFriendly(std::string troop)
         throw std::logic_error("\n  >> Error, Unidentified troop type. "
         "Error in GameState::spawnFriendly(std::string). \n");
     }
+    
     
 }
 

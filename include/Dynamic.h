@@ -23,7 +23,6 @@ class Dynamic : public Entity
         float   getRange()      override;
 
     protected:
-        int       atkCounter {0};
         const int DAMAGE;
         const float MOVEMENTSPEED;
         const float RANGE;

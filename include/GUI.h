@@ -19,18 +19,38 @@ class GUI
         GUI& operator=(GUI&) = delete;
 
     //  FUNCTIONS
-        void handleEvent();
-        void draw(int, std::shared_ptr<sf::RenderWindow>);
+        void updateLogic(std::shared_ptr<sf::RenderWindow>);
+        void draw(int, std::shared_ptr<sf::RenderWindow>, int);
         int buttonClicked(int, float, float);
 
 
     private:
     //  VARIABLES
-        unsigned int buttonSize;
-        sf::RectangleShape interface;
+        unsigned int    buttonSize;
+        std::string     fontFile;
+        std::string     interfaceFile;
+        std::string     coinFile;
+        std::string     heartFile;
+
         std::vector<sf::RectangleShape> menuButtons;
         std::vector<sf::RectangleShape> gameButtons;
-        
+        std::vector<sf::Text>           menuTexts;
+
+
+        sf::RectangleShape  interface;
+        sf::RectangleShape  statsInterface;
+        sf::RectangleShape  healthBar;
+        sf::Texture         interfaceTexture;
+        sf::Texture         coinTexture;
+        sf::Texture         heartTexture;
+        sf::Sprite          coinSprite;
+        sf::Sprite          heartSprite;
+        sf::Font            font;
+        sf::Text            goldText;
+        sf::Text            playText;
+        sf::Text            optionsText;
+        sf::Text            creditsText;
+
 };
 
 #endif
