@@ -12,13 +12,9 @@ void Turret::updatePos()
 
 }
 
-int  Turret::getType()
-{
-    return 0;
-}
-
 std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& stats,
-        sf::Vector2f enemyPos, std::shared_ptr<sf::Time> frameDuration)
+                                                    std::shared_ptr<sf::Time> frameDuration,
+                                                    sf::Vector2f enemyPos)
 {
     aim(enemyPos);
 }
