@@ -13,29 +13,28 @@ class PauseState : public State
 //  =============   PauseState CLASS    ===============
 //  This Class Handles ...
 {
-public:
-    // CONSTRUCTORS
-    PauseState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
-    ~PauseState  () override;
-    PauseState   (const PauseState&) = delete;
-    PauseState& operator= ( const PauseState& ) = delete;
+    public:
+        // CONSTRUCTORS
+        PauseState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+        ~PauseState  () override;
+        PauseState   (const PauseState&) = delete;
+        PauseState& operator= ( const PauseState& ) = delete;
 
-private:
-    // FUNCTIONS
-    void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     ()                                  override;
-    int     getNextState    ()                                  override;
-    void    updateLogic     ()    override;
-    void    startAnimation  ();
-    void    resetState()     override;
+        // FUNCTIONS
+        void    handleEvent     (sf::Event)                         override;
+        void    renderFrame     ()                                  override;
+        int     getNextState    ()                                  override;
+        void    updateLogic     ()    override;
+        void    startAnimation  ();
+        void    resetState()     override;
+    private:
+        // VARIABLES
+        int nextstate;
+        std::string fontFile;
 
-    // VARIABLES
-    int nextstate;
-    std::string fontFile;
-
-    sf::Font*           textFont;
-    sf::Text*           pausedText;
-    sf::RectangleShape* greyOut;
+        sf::Font*           textFont;
+        sf::Text*           pausedText;
+        sf::RectangleShape* greyOut;
 };
 
 #endif

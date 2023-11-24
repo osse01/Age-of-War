@@ -71,7 +71,14 @@ void GameState::handleEvent(sf::Event event)
                     nextstate = PAUSE_STATE;
                     music->pause();
                     break;
-
+                case sf::Keyboard::W:
+                    nextstate = WIN_STATE;
+                    music->stop();
+                    break;
+                case sf::Keyboard::L:
+                    nextstate = LOSE_STATE;
+                    music->stop();
+                    break;
                 default:
                     break;
             }
