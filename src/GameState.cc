@@ -295,6 +295,9 @@ int GameState::getNextState()
 
 void GameState::spawnFriendly(std::string troop)
 {
+    sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
+    sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
     auto it = friendlyVector.end()-1;
     if (troop == meleeF.type)
     {
@@ -304,7 +307,7 @@ void GameState::spawnFriendly(std::string troop)
             // Läs på om emplace
             // Lös kollision
             friendlyVector.insert(it, std::make_shared<Melee> 
-            ( meleeF, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) , frameDuration) );
+            ( meleeF, true, spawnPoint, frameDuration) );
         }
     }
     else if (troop == rangedF.type)
@@ -313,7 +316,7 @@ void GameState::spawnFriendly(std::string troop)
         {
             gold -= rangedF.cost;
             friendlyVector.insert(it, std::make_shared<Ranged> 
-             ( rangedF, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) , frameDuration ) );
+             ( rangedF, true, spawnPoint, frameDuration ) );
         }
     }
     else if (troop == tankF.type)
@@ -322,7 +325,7 @@ void GameState::spawnFriendly(std::string troop)
         {
             gold -= tankF.cost;
             friendlyVector.insert(it, std::make_shared<Tank> 
-              ( tankF, true, sf::Vector2f( 40.f, 8*window->getSize().y/13 ) , frameDuration ) );
+              ( tankF, true, spawnPoint, frameDuration ) );
         }
     }
     else
@@ -336,21 +339,25 @@ void GameState::spawnFriendly(std::string troop)
 
 void GameState::spawnEnemy(int type)
 {
+    sf::Sprite baseBounds {enemyVector.back()->getSprite()};
+    sf::Vector2f spawnPoint { baseBounds.getPosition().x - baseBounds.getGlobalBounds().width/2,
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
+
     auto it = enemyVector.end()-1;
 
     switch ( type )
     {
         case 1:
             enemyVector.insert(it, std::make_shared<Melee> 
-                ( meleeE, false, sf::Vector2f( window->getSize().x-40.f, 8*window->getSize().y/13 ), frameDuration ) );
+                ( meleeE, false, spawnPoint, frameDuration ) );
             break;
         case 2:
             enemyVector.insert(it, std::make_shared<Ranged> 
-                ( rangedE, false, sf::Vector2f( window->getSize().x-40.f, 8*window->getSize().y/13 ), frameDuration ) );
+                ( rangedE, false, spawnPoint, frameDuration ) );
             break;
         case 3:
             enemyVector.insert(it, std::make_shared<Tank> 
-                ( tankE, false, sf::Vector2f( window->getSize().x-40.f, 8*window->getSize().y/13 ), frameDuration ) );
+                ( tankE, false, spawnPoint, frameDuration ) );
             break;
         default:
             break;
