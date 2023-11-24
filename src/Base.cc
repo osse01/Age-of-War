@@ -18,7 +18,6 @@ std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
 void Base::handleCollision(__attribute__((unused)) int, int otherDamage)
 {
     takeDamage(otherDamage);
-
 }
 void Base::updatePos()
 {
