@@ -15,9 +15,9 @@ std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
    return projectile;
 }
 
-void Base::handleCollision(__attribute__((unused)) int, __attribute__((unused)) int)
+void Base::handleCollision(__attribute__((unused)) int, int otherDamage)
 {
-
+    takeDamage(otherDamage);
 }
 void Base::updatePos()
 {
@@ -37,4 +37,9 @@ int Base::getDeathValue()
 float Base::getRange()
 {
     return 0.0f;
+}
+
+void Base::takeDamage(int otherDamage)
+{
+    Entity::hp -= otherDamage * frameDuration->asSeconds();
 }

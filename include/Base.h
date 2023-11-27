@@ -22,6 +22,7 @@ void updatePos()               override;
 int  getDamage()               override;
 int  getDeathValue() override;
 float getRange() override;
+void takeDamage(int);
 //void updateHp();
 //void getBaseStats();
 
