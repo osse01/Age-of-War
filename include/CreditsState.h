@@ -5,6 +5,8 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <list>
+
 
 class CreditsState: public State
 {
@@ -21,12 +23,18 @@ class CreditsState: public State
     void    renderFrame    ()          override;
     int     getNextState   ()          override;
     void    resetState     ()          override;  
+    void    setupCanvas    ();
 
     private:
     int     nextState;
+    double  elapsedTime;
 
-    sf::Texture     backgroundTexture;
-    sf::Sprite      backgroundSprite;
+    std::list<sf::Text> nameList;
+
+    sf::Font            font;
+    sf::Texture         backgroundTexture;
+    sf::Sprite          backgroundSprite;
+    sf::RenderTexture  canvas;
 
 };
 
