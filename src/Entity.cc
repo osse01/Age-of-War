@@ -22,7 +22,11 @@ Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, s
     boundingbox.setPosition( xpos, ypos );
     if(isFriendly)
     {
-        sprite.setScale(sf::Vector2f(-1.f,1.f));
+        sprite.setScale(sf::Vector2f(-stats.windowScale,stats.windowScale));
+    }
+    else
+    {
+        sprite.setScale(sf::Vector2f(stats.windowScale,stats.windowScale));
     }
 }
 

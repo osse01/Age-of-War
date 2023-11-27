@@ -1,14 +1,14 @@
 Type--------DAMAGE--------HP--------MVMSPD--------RANGE--------ATKSPD-------BOX_SIZE------COST--------DEATH_VALUE--------SPRITE_DIM--------FILE
-Melee_F     50            200       70            0.1          1            70  70        50          75                 128 128           assets/friendly_melee_sprite_sheet.png
-Melee_E     50            200       70            0.1          1            70  70        50          75                 128 128           assets/enemy_melee_sprite_sheet.png
-Ranged_F    25            150       70            300          20           70  70        75          100                128 128           assets/friendly_ranged_sprite_sheet.png
-Ranged_E    25            150       70            300          20           70  70        75          100                128 128           assets/enemy_ranged_sprite_sheet.png
-Tank_F      75            600       50            0.1          1            100 70        150         200                128 128           assets/friendly_melee_sprite_sheet.png
-Tank_E      75            600       50            0.1          1            100 70        150         200                128 128           assets/enemy_melee_sprite_sheet.png
+Melee_F     50            200       70            0.1          70           70  70        50          75                 128 128           assets/friendly_melee_sprite_sheet.png
+Melee_E     50            200       70            0.1          70           70  70        50          75                 128 128           assets/enemy_melee_sprite_sheet.png
+Ranged_F    25            150       70            300          70           70  70        75          100                128 128           assets/friendly_ranged_sprite_sheet.png
+Ranged_E    25            150       70            300          70           70  70        75          100                128 128           assets/enemy_ranged_sprite_sheet.png
+Tank_F      75            600       70            0.1          70           100 70        150         200                128 128           assets/friendly_melee_sprite_sheet.png
+Tank_E      75            600       70            0.1          70           100 70        150         200                128 128           assets/enemy_melee_sprite_sheet.png
 Background  0             0         0             0            0            0   70        50          100                128 128           assets/background.jpeg
 Base        0             2000      0             0            300          300 500       50          100                249 323           assets/cursor.png
 GameFont    0             0         0             0            0            0   70        50          100                128 128           assets/coolFont.ttf
 Tree        0             0         0             0            0            0   70        50          100                128 128           assets/tree.png
 GameMusic   0             0         0             0            0            0   70        50          100                128 128           assets/Age-of-War-Theme-Song.ogg
-Projectile  0             1         100            0.1          1            30 70        50          100                75  30            assets/arrow.png   
+Projectile  0             1         100           0.1          1            30 70         50          100                75  30            assets/arrow.png   
 Turret      50            1         0             4            1            100 70        50          100                128 128           assets/turrets.png
