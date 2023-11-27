@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
+#include "Projectile.h"
 
 #include "FileReader.h"
 #include "memory"
@@ -9,27 +10,36 @@
 class Entity
 {
     public:
-         Entity(const FileReader::Data&, bool, sf::Vector2f);
+         Entity(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Entity() = default;
         
-        virtual void    handleCollision( int, int, std::shared_ptr<sf::Time> )   = 0;
-        virtual void    updatePos( std::shared_ptr<sf::Time> frameDuration )     = 0;
+        virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
+                                                            std::shared_ptr<sf::Time>, 
+                                                            sf::Vector2f) = 0;
+        virtual void    handleCollision(int = 0, int = 0) = 0;
+        virtual void    updatePos()       = 0;
         virtual int     getDamage()       = 0;
-        virtual int     getDeathValue()       = 0;
-        bool        isDead          ();
-        bool        collides        ( std::shared_ptr<Entity> );
+        virtual int     getDeathValue()   = 0;
+        virtual float   getRange()        = 0;
+        sf::RectangleShape getBox();
+
+        bool getIsFriendly();
+        bool isDead();
 
         sf::Sprite  getSprite       ()         const &;
+        bool        collides( std::shared_ptr<Entity> );
 
     protected:
         double              xpos;
         double              ypos;
         int                 hp;
         bool                isFriendly;
+        bool                hasCollided;
         sf::Texture         texture;
         sf::IntRect         rectSourceSprite;
         sf::Sprite          sprite;
         sf::RectangleShape  boundingbox;
+        std::shared_ptr<sf::Time> frameDuration;
 };
 
 #endif

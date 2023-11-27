@@ -2,6 +2,8 @@
 #include "../include/MenuState.h"
 #include "../include/GameState.h"
 #include "../include/PauseState.h"
+#include "../include/WinState.h"
+#include "../include/LoseState.h"
 
 #include <utility>
 #include <iostream>
@@ -26,15 +28,15 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, music, frameDurationPtr);
     states.push(std::move(ptr));
 
-    std::string cursorFile{"assets/cursor.png"};
+    std::string cursorFile{"assets/cursor_pixelart.png"};
     if(!cursor.loadFromFile(cursorFile))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find cursor image. Error in GameState::GameState().");
     }
     cursorSprite.setTexture(cursor);
-    cursorSprite.setScale(window->getSize().y / cursorSprite.getGlobalBounds().height / 10,
-                          window->getSize().y / cursorSprite.getGlobalBounds().height / 10);
+    cursorSprite.setScale(window->getSize().y / cursorSprite.getGlobalBounds().height / 20,
+                          window->getSize().y / cursorSprite.getGlobalBounds().height / 20);
 
 
 }
@@ -127,7 +129,11 @@ void Game::getNextState()
         switch (nextState)
         {
             case MENU_STATE:
-                states.pop();
+                do
+                {
+                    states.pop();
+                }
+                while(states.size() > 1);
 
                 break;
             case PAUSE_STATE:
@@ -148,6 +154,16 @@ void Game::getNextState()
                     states.push(std::move(ptr));
                 }
 
+                break;
+            case WIN_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<WinState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case LOSE_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<LoseState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
                 break;
         }
         currentState = nextState;

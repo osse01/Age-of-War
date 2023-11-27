@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <SFML/Graphics.hpp>
 #include <vector>
 
 class FileReader
@@ -19,7 +20,7 @@ class FileReader
 //  FileReader funtion returnData(const std::string) Assumes
 //  the Data Read From StageX.txt File is in Format:
 //  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
-//  -/-BOX_SIZE-/SPRITE_DIM-/-TEXTUREFILE
+//  -/-BOX_SIZE-/-COST-/-DEATH_VALUE-/-SPRITE_DIM-/-TEXTUREFILE
 //
 //  Intended Use, to Create a FileReader Object Giving 
 //  it the Correct File Path To Stage Data File and Also
@@ -48,11 +49,11 @@ public:
         float   movementSpeed;
         float   range;
         int     attackSpeed;
-        int     boxSize;
+        sf::Vector2f boxSize;
         int     cost;
         int     deathValue;
 
-        std::vector<int> spriteDim;
+        sf::Vector2i spriteDim;
 
         std::string type;
         std::string filename;

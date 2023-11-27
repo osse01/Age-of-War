@@ -161,13 +161,13 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic()
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window)
 //  ---------------------------------------------
 {
     sf::Mouse mouse{};
     for (int i{0} ; i < 3 ; i++)
     {
-        if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
         {
             menuButtons.at(i).setFillColor(sf::Color(204, 107, 16));
         }

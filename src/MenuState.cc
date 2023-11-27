@@ -100,15 +100,7 @@ void MenuState::updateLogic()
 //  an Event.
 //  ---------------------------------------------
 {
-        sf::Mouse mouse {};
-        int margin {static_cast<int>(window->getSize().x/20)};
-        if (mouse.getPosition(*window).x < margin)
-        {
-        }
-        else if (mouse.getPosition(*window).x > 19*margin)
-        {
-        }
-        gui.updateLogic();
+        gui.updateLogic(window);
 }
 
 void MenuState::startAnimation()

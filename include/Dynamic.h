@@ -8,13 +8,19 @@
 class Dynamic : public Entity
 {
     public:
-        Dynamic(const FileReader::Data&, bool, sf::Vector2f);
+        Dynamic(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Dynamic() = default;
 
-        virtual void handleCollision(int, int, std::shared_ptr<sf::Time>)   = 0;
-        virtual void updatePos(std::shared_ptr<sf::Time> frameDuration)           = 0;
-        int     getDamage       () override;
-        int     getDeathValue   () override;
+        virtual void handleCollision(int, int)   = 0;
+        virtual void updatePos()                 = 0;
+
+        virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, 
+                                                            std::shared_ptr<sf::Time>, 
+                                                            sf::Vector2f) = 0;
+
+        int     getDamage()     override;
+        int     getDeathValue() override;
+        float   getRange()      override;
 
     protected:
         const int DAMAGE;
@@ -25,5 +31,4 @@ class Dynamic : public Entity
         const int BUY_VALUE;
 
 };
-
 #endif
