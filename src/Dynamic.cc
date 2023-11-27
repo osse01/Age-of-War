@@ -12,7 +12,7 @@ int Dynamic::getDamage()
 //  Returns the Dynamic object DAMAGE variable.
 //  ---------------------------------------------
 {
-  return DAMAGE;
+    return DAMAGE;
 }
 
 int Dynamic::getDeathValue()
