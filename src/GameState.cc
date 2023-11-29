@@ -307,8 +307,9 @@ void GameState::renderFrame()
     {
         window->draw(it->getSprite());
     }
+    gui.drawHPBar(window, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getHP());
+    gui.draw(GAME_STATE, window, gold);
 }
 
 void GameState::resetState()

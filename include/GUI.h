@@ -20,7 +20,8 @@ class GUI
 
     //  FUNCTIONS
         void updateLogic(std::shared_ptr<sf::RenderWindow>, int);
-        void draw(int, std::shared_ptr<sf::RenderWindow>, int, int);
+        void draw(int, std::shared_ptr<sf::RenderWindow>, int);
+        void drawHPBar(std::shared_ptr<sf::RenderWindow>, int, int);
         int buttonClicked(int, float, float);
         void setBaseHP(int);
 
@@ -42,7 +43,9 @@ class GUI
         sf::RectangleShape  interface;
         sf::RectangleShape  statsInterface;
         sf::RectangleShape  healthBar;
+        sf::RectangleShape  enemyHealthBar;
         sf::RectangleShape  healthRec;
+        sf::RectangleShape  enemyHealthRec;
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;
