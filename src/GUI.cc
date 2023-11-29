@@ -4,14 +4,15 @@
 
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
-    : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, fontFile{ "assets/newFont.ttf" },
       interfaceFile{ "assets/interfaceBackground.jpeg" },
       coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, menuTexts{}, 
       gameTextures {}, 
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
-      statsInterface { sf::Vector2f(7*buttonSize/2.f, 2*buttonSize) },
-      healthBar{ sf::Vector2f(buttonSize/3.f, 6*buttonSize) }, /*meleeTexture{}, rangeTexture{}, tankTexture{},*/
+      statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
+      healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
+      healthRec{ healthBar }, enemyHealthRec{ healthBar },
       interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
       playText{}, optionsText{}, creditsText{}, quitText {}
 {
@@ -71,11 +72,31 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 statsInterface.setOutlineThickness(2.f);
                 statsInterface.setOutlineColor(sf::Color(0, 0, 0));
                 statsInterface.setTexture(&interfaceTexture);
-
-                healthBar.setPosition(buttonSize/2, window->getSize().y/4);
+///////////////
+                healthBar.setOrigin(0,healthBar.getGlobalBounds().height);
+                healthBar.setPosition(buttonSize/2, 10*buttonSize);
                 healthBar.setOutlineThickness(3.f);
                 healthBar.setFillColor(sf::Color(109, 109, 110));
                 healthBar.setOutlineColor(sf::Color(0, 0, 0));
+                
+                healthRec.setOrigin(0,healthRec.getGlobalBounds().height);
+                healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
+                healthRec.setOutlineThickness(3.f);
+                healthRec.setFillColor(sf::Color(200, 10, 0));
+                healthRec.setOutlineColor(sf::Color(0, 0, 0));
+//////////////////
+                enemyHealthBar.setOrigin(0,enemyHealthBar.getGlobalBounds().height);
+                enemyHealthBar.setPosition(buttonSize/2, 10*buttonSize);
+                enemyHealthBar.setOutlineThickness(3.f);
+                enemyHealthBar.setFillColor(sf::Color(109, 109, 110));
+                enemyHealthBar.setOutlineColor(sf::Color(0, 0, 0));
+
+                enemyHealthRec.setOrigin(0,enemyHealthRec.getGlobalBounds().height);
+                enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
+                enemyHealthRec.setOutlineThickness(3.f);
+                enemyHealthRec.setFillColor(sf::Color(200, 10, 0));
+                enemyHealthRec.setOutlineColor(sf::Color(0, 0, 0));
+
 
             }
             else
@@ -130,7 +151,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     }
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold /*, int health*/)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold)
 //  ---------------------------------------------
 {
     switch (currentState)
@@ -147,7 +168,6 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case GAME_STATE:
             window->draw(interface);
             window->draw(statsInterface);
-            window->draw(healthBar);
             for (int i{0} ; i < 6 ; i++)
             {
                 coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
@@ -169,7 +189,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window)
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
 //  ---------------------------------------------
 {
     sf::Mouse mouse{};
@@ -217,4 +237,28 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
             break;
     }
     return 0;
+}
+
+void GUI::setBaseHP(int hp) // Change later when Data is implemented correctly
+{
+    originalBaseHP = hp;
+}
+
+void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, int friendlyHP, int enemyHP)
+{
+    enemyHealthBar.setPosition(window->getSize().x - buttonSize/2*1.5, 8*buttonSize);
+    enemyHealthBar.setScale(1/1.5, 1/1.5);
+    enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
+    enemyHealthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(enemyHP)/static_cast<double>(originalBaseHP)/1.5));
+    
+    healthBar.setPosition(buttonSize/2*1.5, 8*buttonSize);
+    healthBar.setScale(1/1.5, 1/1.5);
+    healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
+    healthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(friendlyHP)/static_cast<double>(originalBaseHP)/1.5));
+
+    window->draw(enemyHealthBar);
+    window->draw(enemyHealthRec);
+    window->draw(healthBar);
+    window->draw(healthRec);
+
 }

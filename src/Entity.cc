@@ -59,3 +59,8 @@ sf::RectangleShape Entity::getBox()
 {
     return boundingbox;
 }
+
+int Entity::getHP()
+{
+    return hp;
+}

@@ -103,7 +103,7 @@ void MenuState::updateLogic()
 //  an Event.
 //  ---------------------------------------------
 {
-        gui.updateLogic(window);
+        gui.updateLogic(window, MENU_STATE);
 }
 
 void MenuState::startAnimation()

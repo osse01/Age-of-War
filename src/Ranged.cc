@@ -10,7 +10,7 @@ std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& stats,
 {
    std::shared_ptr<Projectile> projectile {};
 
-   if ( troopState = IDLE )
+   if ( troopState == IDLE )
    {
       troopState = ATTACK;
    }

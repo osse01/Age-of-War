@@ -5,22 +5,28 @@
 #include <cmath>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {},
-    friendlyVector {}, enemyVector {}, projectileQueue {}, backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
-    view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
+:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {}, friendlyVector {}, enemyVector {}, projectileQueue {},
+    backgroundFile { "assets/background.jpeg" }, groundFile { "assets/Ground.png" }, backgroundTexture {}, groundTexture{}, backgroundSprite {}, groundSprite{}, 
+    view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) }, canvas{},
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
 {
-    //  Load in Background Image
-    if(!backgroundTexture.loadFromFile(backgroundFile))
+    //  Load in Background Image and ground image
+    if(!(backgroundTexture.loadFromFile(backgroundFile) && groundTexture.loadFromFile(groundFile)))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
+    //  Setup Background Image and ground image
     backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setScale(
-        window->getSize().x / backgroundSprite.getGlobalBounds().width, 
+    backgroundSprite.setScale(window->getSize().x / backgroundSprite.getGlobalBounds().width, 
         window->getSize().y / backgroundSprite.getGlobalBounds().height);
+    
+    groundSprite.setTexture(groundTexture);
+    groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height);
+    groundSprite.setPosition(0, view.getSize().y+window->getSize().y/13);
 
+
+    //  Load Unit data
     FileReader reader {window};
     meleeF = reader.returnData("Melee_F", "assets/stage1.txt");
     meleeE = reader.returnData("Melee_E", "assets/stage1.txt");
@@ -31,12 +37,13 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     
     projectile = reader.returnData("Projectile", "assets/stage1.txt");
     baseStats = reader.returnData("Base", "assets/stage1.txt");
+    gui.setBaseHP(baseStats.hp);
 
     friendlyVector.push_back(std::make_shared<Base>(baseStats, true,
-    sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7), frameDuration));
+    sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
     enemyVector.push_back(std::make_shared<Base>(baseStats, false,
-    sf::Vector2f(19*window->getSize().x/20, 5*view.getSize().y/7), frameDuration));
+    sf::Vector2f(19*window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
 }
 
@@ -217,6 +224,7 @@ void GameState::updateLogic()
 
     handleCollisions();
     enemyPlay();
+    gui.updateLogic(window, GAME_STATE);
 
 }
 
@@ -291,6 +299,7 @@ void GameState::renderFrame()
     window->clear(sf::Color(255, 255, 255));
     
     window->draw(backgroundSprite);
+    window->draw(groundSprite);
     
     //  Render units
     for(auto &it: friendlyVector)
@@ -305,6 +314,7 @@ void GameState::renderFrame()
     {
         window->draw(it->getSprite());
     }
+    gui.drawHPBar(window, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
     window->setView(window->getDefaultView());
     gui.draw(GAME_STATE, window, gold);
 }

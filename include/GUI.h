@@ -21,14 +21,17 @@ class GUI
         GUI& operator=(GUI&) = delete;
 
     //  FUNCTIONS
-        void updateLogic(std::shared_ptr<sf::RenderWindow>);
+        void updateLogic(std::shared_ptr<sf::RenderWindow>, int);
         void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
+        void drawHPBar(std::shared_ptr<sf::RenderWindow>, int, int);
         int buttonClicked(int, float, float);
+        void setBaseHP(int);
 
 
     protected:
     //  VARIABLES
         unsigned int    buttonSize;
+        unsigned int    originalBaseHP;
         std::string     fontFile;
         std::string     interfaceFile;
         std::string     coinFile;
@@ -43,10 +46,9 @@ class GUI
         sf::RectangleShape  interface;
         sf::RectangleShape  statsInterface;
         sf::RectangleShape  healthBar;
-        //sf::Texture         meleeTexture;
-        //sf::Texture         rangeTexture;
-        //sf::Texture         tankTexture;
-
+        sf::RectangleShape  enemyHealthBar;
+        sf::RectangleShape  healthRec;
+        sf::RectangleShape  enemyHealthRec;
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;
