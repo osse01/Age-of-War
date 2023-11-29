@@ -21,6 +21,7 @@ class Entity
         virtual int     getDamage()       = 0;
         virtual int     getDeathValue()   = 0;
         virtual float   getRange()        = 0;
+        int     getHP();
         sf::RectangleShape getBox();
 
         bool getIsFriendly();

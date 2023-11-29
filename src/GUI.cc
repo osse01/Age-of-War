@@ -4,12 +4,12 @@
 
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
-    : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, fontFile{ "assets/newFont.ttf" },
       interfaceFile{ "assets/interfaceBackground.jpeg" },
       coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, menuTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
-      healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, interfaceTexture{}, 
+      healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, healthRec{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, interfaceTexture{}, 
       coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
       playText{}, optionsText{}, creditsText{}
 {
@@ -70,10 +70,18 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 statsInterface.setOutlineColor(sf::Color(0, 0, 0));
                 statsInterface.setTexture(&interfaceTexture);
 
-                healthBar.setPosition(buttonSize/2, window->getSize().y/4);
+                healthBar.setOrigin(0,healthBar.getGlobalBounds().height);
+                healthBar.setPosition(buttonSize/2, 10*buttonSize);
                 healthBar.setOutlineThickness(3.f);
                 healthBar.setFillColor(sf::Color(109, 109, 110));
                 healthBar.setOutlineColor(sf::Color(0, 0, 0));
+                
+                healthRec.setOrigin(0,healthRec.getGlobalBounds().height);
+                healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
+                healthRec.setOutlineThickness(3.f);
+                healthRec.setFillColor(sf::Color(200, 10, 0));
+                healthRec.setOutlineColor(sf::Color(0, 0, 0));
+
 
             }
             else
@@ -123,7 +131,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     }
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold = 0 /*, int health*/)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold, int health)
 //  ---------------------------------------------
 {
     switch (currentState)
@@ -142,6 +150,8 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             window->draw(interface);
             window->draw(statsInterface);
             window->draw(healthBar);
+            healthRec.setScale(sf::Vector2f(1, static_cast<double>(health)/static_cast<double>(originalBaseHP)));
+            window->draw(healthRec);
             for (int i{0} ; i < 6 ; i++)
             {
                 coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
@@ -163,20 +173,32 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window)
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
 //  ---------------------------------------------
 {
     sf::Mouse mouse{};
-    for (int i{0} ; i < menuButtons.size() ; i++)
+    switch( currentState )
     {
-        if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
-        {
-            menuButtons.at(i).setFillColor(sf::Color(204, 107, 16));
-        }
-        else
-        {
-            menuButtons.at(i).setFillColor(sf::Color(112, 58, 7)); //112, 58, 7 is the original color.
-        }
+        case MENU_STATE:
+            
+            for (int i{0} ; i < menuButtons.size() ; i++)
+            {
+                if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+                {
+                    menuButtons.at(i).setFillColor(sf::Color(204, 107, 16));
+                }
+                else
+                {
+                    menuButtons.at(i).setFillColor(sf::Color(112, 58, 7)); //112, 58, 7 is the original color.
+                }
+            }
+            break;
+        case GAME_STATE:
+
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -211,4 +233,8 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
             break;
     }
     return 0;
+}
+void GUI::setBaseHP(int hp)
+{
+    originalBaseHP = hp;
 }

@@ -37,6 +37,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     
     projectile = reader.returnData("Projectile", "assets/stage1.txt");
     baseStats = reader.returnData("Base", "assets/stage1.txt");
+    gui.setBaseHP(baseStats.hp);
 
     friendlyVector.push_back(std::make_shared<Base>(baseStats, true,
     sf::Vector2f(baseStats.spriteDim.x/2, view.getSize().y - baseStats.spriteDim.y/2), frameDuration));
@@ -214,6 +215,7 @@ void GameState::updateLogic()
 
     handleCollisions();
     enemyPlay();
+    gui.updateLogic(window, GAME_STATE);
 
 }
 
@@ -306,7 +308,7 @@ void GameState::renderFrame()
         window->draw(it->getSprite());
     }
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold);
+    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getHP());
 }
 
 void GameState::resetState()
