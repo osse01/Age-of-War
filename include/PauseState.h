@@ -4,6 +4,8 @@
 #include "State.h"
 
 #include <string>
+#include <memory>
+
 
 
 
@@ -13,7 +15,7 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (sf::RenderWindow*, int*, sf::Music*, sf::Time*);
+    PauseState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~PauseState  () override;
     PauseState   (const PauseState&) = delete;
     PauseState& operator= ( const PauseState& ) = delete;
@@ -25,13 +27,12 @@ private:
     int     getNextState    ()                                  override;
     void    updateLogic     ()    override;
     void    startAnimation  ();
+    void    resetState()     override;
 
     // VARIABLES
-    int*    currentState;
-
+    int nextstate;
     std::string fontFile;
 
-    sf::RenderWindow*   window;
     sf::Font*           textFont;
     sf::Text*           pausedText;
     sf::RectangleShape* greyOut;

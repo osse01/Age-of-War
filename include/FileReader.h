@@ -1,12 +1,15 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
+#include <memory>
 
 class FileReader
 //  -------------------------------------------------------
@@ -18,7 +21,7 @@ class FileReader
 //  FileReader funtion returnData(const std::string) Assumes
 //  the Data Read From StageX.txt File is in Format:
 //  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
-//  -/-BOX_SIZE-/-TEXTUREFILE
+//  -/-BOX_SIZE-/-COST-/-DEATH_VALUE-/-SPRITE_DIM-/-TEXTUREFILE
 //
 //  Intended Use, to Create a FileReader Object Giving 
 //  it the Correct File Path To Stage Data File and Also
@@ -30,7 +33,7 @@ class FileReader
 {
 public:
 //  CONSTRUCTORS
-    FileReader  (const std::string&, const std::string&);
+    FileReader  (std::shared_ptr<sf::RenderWindow>);
     ~FileReader ()              = default;
     FileReader  (FileReader&)   = delete;
     FileReader  (FileReader&&)  = delete; 
@@ -42,28 +45,34 @@ public:
 //  STRUCTURES
     struct Data
     {
-        int damage;
-        int hp;
-        int attackSpeed;
-        int movementSpeed;
-        int boxSize;
+        int     damage;
+        int     hp;
+        float   movementSpeed;
+        float   range;
+        int     attackSpeed;
+        sf::Vector2f boxSize;
+        int     cost;
+        int     deathValue;
+
+        sf::Vector2i spriteDim;
 
         std::string type;
         std::string filename;
+
+        float windowScale;
     };
 
 //  FUNCTIONS
-    Data    getData();
+    Data    returnData(const std::string&, const std::string&);
 
 private:
 //  FUNCTIONS
-    bool    readFile();
-    Data    returnData(const std::string&);
+    void    readFile(const std::string&);
 
 //  VARIABLES
-    std::string     filename;
-    std::string     objectName;
 
+    float windowScale;
+    
     Data    data;
     
     std::vector<std::string> fileContents;
