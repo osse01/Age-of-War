@@ -3,7 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "Button.h"
 #include "State.h"
+
 
 class GUI
 {
@@ -20,11 +22,11 @@ class GUI
 
     //  FUNCTIONS
         void updateLogic(std::shared_ptr<sf::RenderWindow>);
-        void draw(int, std::shared_ptr<sf::RenderWindow>, int);
+        void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
         int buttonClicked(int, float, float);
 
 
-    private:
+    protected:
     //  VARIABLES
         unsigned int    buttonSize;
         std::string     fontFile;
@@ -32,9 +34,9 @@ class GUI
         std::string     coinFile;
         std::string     heartFile;
 
-        std::vector<sf::RectangleShape> menuButtons;
-        std::vector<sf::RectangleShape> gameButtons;
-        std::vector<sf::Text>           menuTexts;
+        std::vector<std::shared_ptr<Button>> menuButtons;
+        std::vector<std::shared_ptr<Button>> gameButtons;
+        std::vector<std::string>             menuTexts;
 
 
         sf::RectangleShape  interface;
@@ -50,6 +52,7 @@ class GUI
         sf::Text            playText;
         sf::Text            optionsText;
         sf::Text            creditsText;
+        sf::Text            quitText;
 
 };
 
