@@ -3,19 +3,22 @@
 
 
 
-Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
-:delayCounter{100}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
+Enemy::Enemy(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Time> frameDuration)
+:delayCounter{100}, spawnCounter{0}, spawnList{}, frameDuration{frameDuration}, stats {}
 {
-    for(int i = 0; i < 10; i++)
+    FileReader reader{window};
+    stats = reader.getEnemyData("Enemy", "assets/stage1.txt");
+    for(int i = 0; i < stats.spawnListSize; i++)
     {
         spawnList.push_back(1);
     }
+    
 }
 
 std::vector<int> Enemy::enemyPlay()
 {
     std::vector<int> play{};
-    if(delayCounter >= 100)
+    if(delayCounter >= stats.delayCount)
     {
         delayCounter = 0;
         return spawnAlgo();
@@ -26,13 +29,13 @@ std::vector<int> Enemy::enemyPlay()
 
 std::vector<int> Enemy::spawnAlgo()
 {
-    int tmp{std::experimental::randint(1,3)};
+    int tmp{std::experimental::randint(1,stats.waveSize)};
     std::vector<int> spawn{};
-    timeCounter++;
-    if(timeCounter == 5)
+    spawnCounter++;
+    if(spawnCounter == stats.spawnCount)
     {
         spawnList.erase(spawnList.begin());
-        timeCounter = 0;
+        spawnCounter = 0;
         spawnList.push_back(std::experimental::randint(1,3));
 
     }

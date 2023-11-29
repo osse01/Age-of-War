@@ -7,7 +7,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<s
 :   State(screen, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen }
+    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen}
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -66,7 +66,7 @@ void MenuState::handleEvent(sf::Event event)
                     case 2:
                         break;
                     case 3:
-                        window->close();
+                        nextState = CREDITS_STATE;
                         break;
                     default:
                         break;
@@ -99,7 +99,9 @@ void MenuState::updateLogic()
 //  Function to Handle User Input. User Input Triggers
 //  an Event.
 //  ---------------------------------------------
-{}
+{
+        gui.updateLogic(window);
+}
 
 void MenuState::startAnimation()
 //  ---------------------------------------------
@@ -153,7 +155,7 @@ void MenuState::startAnimation()
 
 void MenuState::renderFrame()
 //  ---------------------------------------------
-//  Funcion Explaination
+//  Render The Frame to Display.
 //  ---------------------------------------------
 {
     
@@ -161,8 +163,6 @@ void MenuState::renderFrame()
 
     t = t + 0.0003;
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
-
-    //sprite.setScale(zoomFactor);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
     gameTitle.setScale(zoomFactor*scale);
@@ -173,6 +173,6 @@ void MenuState::renderFrame()
     window->draw(gameTitle);
     window->draw(instructionText);
 
-    gui.draw(MENU_STATE, window);
+    gui.draw(MENU_STATE, window, 0);
 }
 

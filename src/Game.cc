@@ -2,6 +2,9 @@
 #include "../include/MenuState.h"
 #include "../include/GameState.h"
 #include "../include/PauseState.h"
+#include "../include/WinState.h"
+#include "../include/LoseState.h"
+#include "../include/CreditsState.h"
 
 #include <utility>
 #include <iostream>
@@ -10,7 +13,7 @@
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
     event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, states {}, currentState { MENU_STATE },
-    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}
+    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}
 {
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
     // Open Audio File
@@ -26,6 +29,16 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, music, frameDurationPtr);
     states.push(std::move(ptr));
 
+    std::string cursorFile{"assets/cursor_pixelart.png"};
+    if(!cursor.loadFromFile(cursorFile))
+    {
+        throw std::logic_error(
+        "    >> Error: Could Not Find cursor image. Error in GameState::GameState().");
+    }
+    cursorSprite.setTexture(cursor);
+    cursorSprite.setScale(window->getSize().y / cursorSprite.getGlobalBounds().height / 20,
+                          window->getSize().y / cursorSprite.getGlobalBounds().height / 20);
+
 
 }
 
@@ -38,7 +51,7 @@ Game::~Game()
 // Start Game
 void Game::startGame ()
 {
-
+    window->setMouseCursorVisible(false);
     // Main Game Loop, One Iteration is a Frame
     while ( window->isOpen() )
     {
@@ -94,6 +107,7 @@ void Game::handleEvents()
 // Update Game Logic
 void Game::updateLogic()
 {
+    cursorSprite.setPosition(mouse.getPosition(*window).x, mouse.getPosition(*window).y);
     states.top()->updateLogic();
 }
 
@@ -102,6 +116,7 @@ void Game::updateLogic()
 void Game::renderFrame()
 {
     states.top()->renderFrame();
+    window->draw(cursorSprite);
 }
 
 void Game::getNextState()
@@ -115,7 +130,11 @@ void Game::getNextState()
         switch (nextState)
         {
             case MENU_STATE:
-                states.pop();
+                do
+                {
+                    states.pop();
+                }
+                while(states.size() > 1);
 
                 break;
             case PAUSE_STATE:
@@ -136,6 +155,21 @@ void Game::getNextState()
                     states.push(std::move(ptr));
                 }
 
+                break;
+            case WIN_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<WinState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case LOSE_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<LoseState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case CREDITS_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<CreditsState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
                 break;
         }
         currentState = nextState;

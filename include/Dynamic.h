@@ -13,13 +13,14 @@ class Dynamic : public Entity
 
         virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()                 = 0;
-        virtual int getType()                    = 0;
-        int incrAtkCounter(){return 0;};
-        void resetAtkCounter(){};
 
-        int getAttackSpeed(){return ATTACK_SPEED;};
-        int getDamage();
-        //virtual Projectile createProjectile(const FileReader::Data&, bool, sf::Vector2f) = 0;
+        virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, 
+                                                            std::shared_ptr<sf::Time>, 
+                                                            sf::Vector2f) = 0;
+
+        virtual int     getDamage()     override;
+        int             getDeathValue() override;
+        float           getRange()      override;
 
     protected:
         const int DAMAGE;

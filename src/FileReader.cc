@@ -1,8 +1,8 @@
 #include "../include/FileReader.h"
 
 
-FileReader::FileReader()
-    : data{}, fileContents{}
+FileReader::FileReader(std::shared_ptr<sf::RenderWindow> window)
+    : windowScale {window->getSize().x/1920.f}, data{}, enemy{}, fileContents{}
 //  -------------------------------------------------------
 {}
 
@@ -39,8 +39,6 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
     readFile(filename);
     Data data{};
     std::string tmp{};
-    int spriteX{};
-    int spriteY{};
 
     for (const auto& element : fileContents)
     {
@@ -49,14 +47,53 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
 
         if (tmp == name)
         {
+            data.type = name;
+            
             dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
-                      >> data.attackSpeed >> data.boxSize >> spriteX
-                      >> spriteY >> data.filename;
+                      >> data.attackSpeed >> data.boxSize.x >> data.boxSize.y 
+                      >> data.cost  >> data.deathValue
+                      >> data.spriteDim.x >> data.spriteDim.y >> data.filename;
 
+            data.movementSpeed *= windowScale;
+            data.range *= windowScale;
+            data.boxSize.x *= windowScale;
+            data.boxSize.y *= windowScale;
             break;
         }
+
     }
-    (data.spriteDim).push_back(spriteX);
-    (data.spriteDim).push_back(spriteY);
+
+    data.windowScale = windowScale;
+
     return data;
+}
+
+FileReader::Enemy FileReader::getEnemyData(const std::string& name, const std::string& filename)
+//  -------------------------------------------------------
+//  Returns Data Struct Containing all Info from the String
+//  Starting with Argument Name. 
+//  -------------------------------------------------------
+{
+    readFile(filename);
+    Enemy enemy{};
+    std::string tmp{};
+
+    for (const auto& element : fileContents)
+    {
+        std::istringstream dataline{element};
+        dataline >> tmp;
+
+        if (tmp == name)
+        {
+            enemy.type = name;
+            
+            dataline >> enemy.waveSize >> enemy.spawnListSize >> enemy.spawnCount >> enemy.delayCount;
+            break;
+        }
+
+    }
+
+    data.windowScale = windowScale;
+
+    return enemy;
 }

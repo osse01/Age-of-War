@@ -45,6 +45,11 @@ class Game
     std::shared_ptr<sf::Music> music;
     int    nextState;
 
+    sf::Texture cursor;
+    sf::Sprite cursorSprite;
+
+    sf::Mouse mouse;
+
     protected:
 
 
