@@ -132,11 +132,7 @@ void Game::getNextState()
             case MENU_STATE:
                 do
                 {
-                    do
-                {
                     states.pop();
-                }
-                while(states.size() > 1);
                 }
                 while(states.size() > 1);
 

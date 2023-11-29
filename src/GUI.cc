@@ -26,6 +26,9 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 menuTexts.push_back(optionsText);
 
                 creditsText.setString("Credits");
+                menuTexts.push_back(creditsText);                  
+    
+                creditsText.setString("Quit");   
                 menuTexts.push_back(creditsText);
             }
             else
@@ -34,7 +37,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
-           for (int i{0} ; i < 3 ; i++)
+           for (int i{0} ; i < 4 ; i++)
             {
                 sf::RectangleShape button {sf::Vector2f(3*buttonSize, buttonSize)};
                 button.setFillColor(sf::Color(112, 58, 7));
@@ -118,7 +121,6 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     default:
         break;
     }
-    
 }
 
 void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold = 0 /*, int health*/)
@@ -129,7 +131,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case MENU_STATE:
         {
 
-            for (int i{0} ; i < 3 ; i++)
+            for (int i{0} ; i < menuButtons.size() ; i++)
             {
                 window->draw(menuButtons.at(i));
                 window->draw(menuTexts.at(i));
@@ -165,7 +167,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window)
 //  ---------------------------------------------
 {
     sf::Mouse mouse{};
-    for (int i{0} ; i < 3 ; i++)
+    for (int i{0} ; i < menuButtons.size() ; i++)
     {
         if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
         {
@@ -185,7 +187,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
     {
         case MENU_STATE:
         {
-            for (int i{0} ; i < 3 ; i++)
+            for (int i{0} ; i < menuButtons.size() ; i++)
                 {
                     if (menuButtons.at(i).getGlobalBounds().contains(mouseX,mouseY))
                     {

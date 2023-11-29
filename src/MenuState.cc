@@ -68,6 +68,9 @@ void MenuState::handleEvent(sf::Event event)
                     case 3:
                         nextState = CREDITS_STATE;
                         break;
+                    case 4:
+                        window->close();
+                        break;
                     default:
                         break;
                 }
