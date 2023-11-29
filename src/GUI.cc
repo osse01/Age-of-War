@@ -8,8 +8,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
       interfaceFile{ "assets/interfaceBackground.jpeg" },
       coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, menuTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
-      statsInterface { sf::Vector2f(7*buttonSize/2.f, 2*buttonSize) },
-      healthBar{ sf::Vector2f(buttonSize/3.f, 6*buttonSize) }, interfaceTexture{}, 
+      statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
+      healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, interfaceTexture{}, 
       coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
       playText{}, optionsText{}, creditsText{}
 {

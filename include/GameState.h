@@ -65,10 +65,14 @@ class GameState : public State
         std::deque<std::shared_ptr<Projectile>> projectileQueue;
 
         std::string         backgroundFile;
+        std::string         groundFile;
 
         sf::Texture         backgroundTexture;
+        sf::Texture         groundTexture;
         sf::Sprite          backgroundSprite;
+        sf::Sprite          groundSprite;
         sf::View            view;
+        sf::RenderWindow    canvas;
         
         sf::Vector2f        zoomFactor;
 
@@ -77,7 +81,7 @@ class GameState : public State
         int gold;
         GUI                 gui;
         Enemy               enemy;
-        std::vector<int> deleteEntities{};
+        std::vector<int>    deleteEntities{};
 };
 
 #endif
