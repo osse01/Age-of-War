@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Button::Button(sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, sf::Color outlineColor, std::string buttonText, sf::Font& font)
+Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, sf::Color outlineColor, std::string buttonText, sf::Font& font)
 : i {0}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}
 {
@@ -29,7 +29,7 @@ Button::Button(sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, s
     buttonSprite.setPosition(pos);
 }
 
-Button::Button(sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor)
+Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor)
 : i {1}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}
   {

@@ -13,8 +13,8 @@ class Button
 {
     public:
     //  CONSTRUCTORS
-        Button(sf::Vector2f, sf::Vector2f, sf::Color, sf::Color, std::string,sf::Font&);
-        Button(sf::Vector2f, sf::Vector2f, sf::Sprite&, sf::Color);
+        Button(sf::Vector2f const, sf::Vector2f const, sf::Color const, sf::Color const, std::string const, sf::Font&);
+        Button(sf::Vector2f const, sf::Vector2f const, sf::Sprite& , sf::Color const);
 
 
         //Button(sf::RectangleShape, sf::Sprite, std::string="");

@@ -37,11 +37,16 @@ class GUI
         std::vector<std::shared_ptr<Button>> menuButtons;
         std::vector<std::shared_ptr<Button>> gameButtons;
         std::vector<std::string>             menuTexts;
+        std::vector<sf::Texture>             gameTextures;
 
 
         sf::RectangleShape  interface;
         sf::RectangleShape  statsInterface;
         sf::RectangleShape  healthBar;
+        //sf::Texture         meleeTexture;
+        //sf::Texture         rangeTexture;
+        //sf::Texture         tankTexture;
+
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;

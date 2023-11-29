@@ -7,12 +7,27 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
       interfaceFile{ "assets/interfaceBackground.jpeg" },
       coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, menuTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
+      menuButtons {}, gameButtons {}, menuTexts{}, 
+      gameTextures {}, 
+      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2.f, 2*buttonSize) },
-      healthBar{ sf::Vector2f(buttonSize/3.f, 6*buttonSize) }, interfaceTexture{}, 
-      coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
+      healthBar{ sf::Vector2f(buttonSize/3.f, 6*buttonSize) }, /*meleeTexture{}, rangeTexture{}, tankTexture{},*/
+      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
       playText{}, optionsText{}, creditsText{}, quitText {}
 {
+    sf::Texture tmpText {};
+    tmpText.loadFromFile("assets/cursor.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/gameCoin.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/health.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/tree.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/friendly_ranged_sprite_sheet.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/friendly_melee_sprite_sheet.png");
+        gameTextures.push_back(tmpText);
     switch (currentState)
     {
     case MENU_STATE:
@@ -98,10 +113,15 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
 
             for (int i{0} ; i < 6 ; i++)
             {
+                sf::Sprite sprite {gameTextures.at(i)};
+                if (i>3)
+                {
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128));
+                }
                 gameButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(buttonSize, buttonSize), 
                                             sf::Vector2f(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2), 
-                                            coinSprite, sf::Color(0, 50*i, 50*i)));
+                                            sprite, sf::Color(128,128,128)));
             }
             break;
         }
