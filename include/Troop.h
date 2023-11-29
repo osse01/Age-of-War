@@ -17,10 +17,16 @@ class Troop : public Dynamic
 
 
     protected:
-        void changeSprite(int);
+        void changeSprite();
         void takeDamage(int);
+        int troopState;
         int   spriteCounter;
         float collisionCounter;
+
+        const static int WALK   { 0 };
+        const static int IDLE   { 1 };
+        const static int ATTACK { 2 };
+        const static int TAKE_DAMAGE { 3 };
 };
 
 #endif
