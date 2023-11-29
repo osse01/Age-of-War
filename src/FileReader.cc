@@ -1,8 +1,8 @@
 #include "../include/FileReader.h"
 
 
-FileReader::FileReader(std::shared_ptr<sf::RenderWindow> window)
-    : data{}, fileContents{}, windowScale {window->getSize().x/1920.f}
+FileReader::FileReader()
+    : data{}, fileContents{}
 //  -------------------------------------------------------
 {}
 
@@ -48,22 +48,12 @@ FileReader::Data FileReader::returnData(const std::string& name, const std::stri
         if (tmp == name)
         {
             data.type = name;
-            
             dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
-                      >> data.attackSpeed >> data.boxSize.x >> data.boxSize.y 
-                      >> data.cost  >> data.deathValue
+                      >> data.attackSpeed >> data.boxSize.x >> data.boxSize.y >> data.cost  >> data.deathValue
                       >> data.spriteDim.x >> data.spriteDim.y >> data.filename;
-
-            data.movementSpeed *= windowScale;
-            data.range *= windowScale;
-            data.boxSize.x *= windowScale;
-            data.boxSize.y *= windowScale;
             break;
         }
-
     }
-
-    data.windowScale = windowScale;
 
     return data;
 }

@@ -10,12 +10,7 @@ std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& stats,
 {
    std::shared_ptr<Projectile> projectile {};
 
-   if ( troopState = IDLE )
-   {
-      troopState = ATTACK;
-   }
-
-   if ( (rectSourceSprite.left)%(12*128) == 4*128 && spriteCounter == 0 )
+   if ( (rectSourceSprite.left/128)%12 == 4)
    {
       pos = sf::Vector2f(xpos, ypos);
       stats.damage = DAMAGE;

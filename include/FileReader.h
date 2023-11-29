@@ -1,15 +1,14 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 
-#include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <SFML/Graphics.hpp>
 #include <vector>
-#include <memory>
 
 class FileReader
 //  -------------------------------------------------------
@@ -33,7 +32,7 @@ class FileReader
 {
 public:
 //  CONSTRUCTORS
-    FileReader  (std::shared_ptr<sf::RenderWindow>);
+    FileReader  ();
     ~FileReader ()              = default;
     FileReader  (FileReader&)   = delete;
     FileReader  (FileReader&&)  = delete; 
@@ -58,8 +57,6 @@ public:
 
         std::string type;
         std::string filename;
-
-        float windowScale;
     };
 
 //  FUNCTIONS
@@ -71,8 +68,6 @@ private:
 
 //  VARIABLES
 
-    float windowScale;
-    
     Data    data;
     
     std::vector<std::string> fileContents;

@@ -5,8 +5,8 @@
 #include <cmath>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {},
-    friendlyVector {}, enemyVector {}, projectileQueue {}, backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
+:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {}, friendlyVector {}, enemyVector {}, projectileQueue {},
+    backgroundFile { "assets/background.jpeg" }, backgroundTexture {}, backgroundSprite {}, 
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
 {
@@ -21,7 +21,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
         window->getSize().x / backgroundSprite.getGlobalBounds().width, 
         window->getSize().y / backgroundSprite.getGlobalBounds().height);
 
-    FileReader reader {window};
+    FileReader reader {};
     meleeF = reader.returnData("Melee_F", "assets/stage1.txt");
     meleeE = reader.returnData("Melee_E", "assets/stage1.txt");
     rangedF = reader.returnData("Ranged_F", "assets/stage1.txt");
@@ -33,10 +33,10 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     baseStats = reader.returnData("Base", "assets/stage1.txt");
 
     friendlyVector.push_back(std::make_shared<Base>(baseStats, true,
-    sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7), frameDuration));
+    sf::Vector2f(baseStats.spriteDim.x/2, view.getSize().y - baseStats.spriteDim.y/2), frameDuration));
 
     enemyVector.push_back(std::make_shared<Base>(baseStats, false,
-    sf::Vector2f(19*window->getSize().x/20, 5*view.getSize().y/7), frameDuration));
+    sf::Vector2f(window->getSize().x - baseStats.spriteDim.x/2, view.getSize().y - baseStats.spriteDim.y/2), frameDuration));
 
 }
 
@@ -135,23 +135,15 @@ void GameState::updateLogic()
         int margin {static_cast<int>(window->getSize().x/20)};
         int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
         int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
-        
-            if (mouse.getPosition(*window).x < margin)
-            {
-                view.move(-200*(frameDuration->asSeconds()), 0);
-                if (viewLeft - 10 < backgroundSprite.getGlobalBounds().left)
-                {
-                    view.move(200*(frameDuration->asSeconds()), 0);
-                }
-            }
-            else if (mouse.getPosition(*window).x > 19*margin)
-            {
-                view.move(200*(frameDuration->asSeconds()), 0);
-                if (viewRight + 10 > backgroundSprite.getGlobalBounds().width)
-                {
-                    view.move(-200*(frameDuration->asSeconds()), 0);
-                }
-            }
+
+        if (mouse.getPosition(*window).x+10 < margin &&  viewLeft > 0)
+        {
+            view.move(-200*(frameDuration->asSeconds()), 0);
+        }
+        else if (mouse.getPosition(*window).x > 19*margin && viewRight < static_cast<int>(window->getSize().x-10))
+        {
+            view.move(200*(frameDuration->asSeconds()), 0);
+        }
     }
 
     //----PROJECTILES----
@@ -227,8 +219,8 @@ void GameState::handleCollisions()
     {
         if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
         {
-            friendlyVector.at(0) ->handleCollision(2, enemyVector.at(0)->getDamage());
-            enemyVector.at(0)    ->handleCollision(2, friendlyVector.at(0)->getDamage());
+            friendlyVector.at(0) ->handleCollision(1, enemyVector.at(0)->getDamage());
+            enemyVector.at(0)    ->handleCollision(1, friendlyVector.at(0)->getDamage());
         }
     }
     
@@ -240,7 +232,7 @@ void GameState::handleCollisions()
             if( enemyVector.at(behind)->collides( enemyVector.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyVector.at(behind)->handleCollision(1);
+                enemyVector.at(behind)->handleCollision();
             }
         }
     
@@ -251,7 +243,7 @@ void GameState::handleCollisions()
             if( friendlyVector.at(behind)->collides( friendlyVector.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyVector.at(behind)->handleCollision(1);
+                friendlyVector.at(behind)->handleCollision();
             }
         }
 
@@ -264,7 +256,7 @@ void GameState::handleCollisions()
             {
                 if (itProjectile->collides(itEnemy->getBox()))
                 {
-                    itEnemy->handleCollision(3, itProjectile->getDamage());
+                    itEnemy->handleCollision(2, itProjectile->getDamage());
                     itProjectile->handleCollision();
                 }
             }
@@ -275,7 +267,7 @@ void GameState::handleCollisions()
             {
                 if (itProjectile->collides(itFriendly->getBox()))
                 {
-                    itFriendly->handleCollision(3, itProjectile->getDamage());
+                    itFriendly->handleCollision(2, itProjectile->getDamage());
                     itProjectile->handleCollision();
                 }
             }
@@ -289,6 +281,8 @@ void GameState::renderFrame()
     
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
+
+    //backgroundSprite.setScale(zoomFactor*0.694422f);
     
     window->draw(backgroundSprite);
     
@@ -324,7 +318,6 @@ void GameState::spawnFriendly(std::string troop)
     sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
     sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
                               baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
-
     auto it = friendlyVector.end()-1;
     if (troop == meleeF.type)
     {

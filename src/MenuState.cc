@@ -66,7 +66,6 @@ void MenuState::handleEvent(sf::Event event)
                     case 2:
                         break;
                     case 3:
-                        nextState = CREDITS_STATE;
                         break;
                     case 4:
                         window->close();
@@ -176,6 +175,6 @@ void MenuState::renderFrame()
     window->draw(gameTitle);
     window->draw(instructionText);
 
-    gui.draw(MENU_STATE, window, 0);
+    gui.draw(MENU_STATE, window);
 }
 
