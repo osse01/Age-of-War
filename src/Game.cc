@@ -4,6 +4,7 @@
 #include "../include/PauseState.h"
 #include "../include/WinState.h"
 #include "../include/LoseState.h"
+#include "../include/CreditsState.h"
 
 #include <utility>
 #include <iostream>
@@ -131,7 +132,11 @@ void Game::getNextState()
             case MENU_STATE:
                 do
                 {
+                    do
+                {
                     states.pop();
+                }
+                while(states.size() > 1);
                 }
                 while(states.size() > 1);
 
@@ -163,6 +168,11 @@ void Game::getNextState()
             case LOSE_STATE:
                 states.top()->resetState();
                 ptr = std::make_unique<LoseState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case CREDITS_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<CreditsState>(window, music, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
         }
