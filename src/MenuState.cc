@@ -103,7 +103,7 @@ void MenuState::updateLogic()
 //  an Event.
 //  ---------------------------------------------
 {
-        gui.updateLogic(window);
+        gui.updateLogic(window, MENU_STATE);
 }
 
 void MenuState::startAnimation()
@@ -176,6 +176,6 @@ void MenuState::renderFrame()
     window->draw(gameTitle);
     window->draw(instructionText);
 
-    gui.draw(MENU_STATE, window, 0);
+    gui.draw(MENU_STATE, window);
 }
 

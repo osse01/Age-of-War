@@ -4,32 +4,44 @@
 
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
-    : buttonSize { window->getSize().x/30 }, fontFile{ "assets/newFont.ttf" },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, fontFile{ "assets/newFont.ttf" },
       interfaceFile{ "assets/interfaceBackground.jpeg" },
       coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, menuTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
-      statsInterface { sf::Vector2f(7*buttonSize/2.f, 2*buttonSize) },
-      healthBar{ sf::Vector2f(buttonSize/3.f, 6*buttonSize) }, interfaceTexture{}, 
-      coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
-      playText{}, optionsText{}, creditsText{}
+      menuButtons {}, gameButtons {}, menuTexts{}, 
+      gameTextures {}, 
+      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
+      statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
+      healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
+      healthRec{ healthBar }, enemyHealthRec{ healthBar },
+      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
+      playText{}, optionsText{}, creditsText{}, quitText {}
 {
+    sf::Texture tmpText {};
+    tmpText.loadFromFile("assets/cursor.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/gameCoin.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/health.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/tree.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/friendly_ranged_sprite_sheet.png");
+        gameTextures.push_back(tmpText);
+    tmpText.loadFromFile("assets/friendly_melee_sprite_sheet.png");
+        gameTextures.push_back(tmpText);
     switch (currentState)
     {
     case MENU_STATE:
         {
             if ( font.loadFromFile(fontFile) )
             {
-                playText.setString("Start game");
-                menuTexts.push_back(playText);
+                menuTexts.push_back("Start game");
 
-                optionsText.setString("Options");
-                menuTexts.push_back(optionsText);
+                menuTexts.push_back("Options");
 
-                creditsText.setString("Credits");
-                menuTexts.push_back(creditsText);                  
-    
-                creditsText.setString("Quit");   
-                menuTexts.push_back(creditsText);
+                menuTexts.push_back("Credits");
+
+                menuTexts.push_back("Quit");
             }
             else
             {
@@ -37,21 +49,12 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
-           for (int i{0} ; i < 4 ; i++)
+           for (int i{0} ; i < menuTexts.size() ; i++)
             {
-                sf::RectangleShape button {sf::Vector2f(3*buttonSize, buttonSize)};
-                button.setFillColor(sf::Color(112, 58, 7));
-                button.setOutlineColor(sf::Color::Black);
-                button.setOutlineThickness(2.0f);
-                button.setOrigin(button.getSize().x/2, button.getSize().y/2);
-                button.setPosition(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize);
-                menuButtons.push_back(button);
-
-                menuTexts.at(i).setFont(font);
-                menuTexts.at(i).setCharacterSize(buttonSize*0.6);
-                menuTexts.at(i).setColor(sf::Color::Black);
-                menuTexts.at(i).setOrigin(menuTexts.at(i).getGlobalBounds().width/2, menuTexts.at(i).getGlobalBounds().height/2);
-                menuTexts.at(i).setPosition(menuButtons.at(i).getPosition().x, menuButtons.at(i).getPosition().y);
+                menuButtons.push_back(std::make_shared<Button>(
+                                            sf::Vector2f(3*buttonSize, buttonSize), 
+                                            sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize), 
+                                            sf::Color(112, 58, 7), sf::Color::Black, menuTexts.at(i), font));
             }
             break;
         }
@@ -69,11 +72,31 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 statsInterface.setOutlineThickness(2.f);
                 statsInterface.setOutlineColor(sf::Color(0, 0, 0));
                 statsInterface.setTexture(&interfaceTexture);
-
-                healthBar.setPosition(buttonSize/2, window->getSize().y/4);
+///////////////
+                healthBar.setOrigin(0,healthBar.getGlobalBounds().height);
+                healthBar.setPosition(buttonSize/2, 10*buttonSize);
                 healthBar.setOutlineThickness(3.f);
                 healthBar.setFillColor(sf::Color(109, 109, 110));
                 healthBar.setOutlineColor(sf::Color(0, 0, 0));
+                
+                healthRec.setOrigin(0,healthRec.getGlobalBounds().height);
+                healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
+                healthRec.setOutlineThickness(3.f);
+                healthRec.setFillColor(sf::Color(200, 10, 0));
+                healthRec.setOutlineColor(sf::Color(0, 0, 0));
+//////////////////
+                enemyHealthBar.setOrigin(0,enemyHealthBar.getGlobalBounds().height);
+                enemyHealthBar.setPosition(buttonSize/2, 10*buttonSize);
+                enemyHealthBar.setOutlineThickness(3.f);
+                enemyHealthBar.setFillColor(sf::Color(109, 109, 110));
+                enemyHealthBar.setOutlineColor(sf::Color(0, 0, 0));
+
+                enemyHealthRec.setOrigin(0,enemyHealthRec.getGlobalBounds().height);
+                enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
+                enemyHealthRec.setOutlineThickness(3.f);
+                enemyHealthRec.setFillColor(sf::Color(200, 10, 0));
+                enemyHealthRec.setOutlineColor(sf::Color(0, 0, 0));
+
 
             }
             else
@@ -111,10 +134,15 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
 
             for (int i{0} ; i < 6 ; i++)
             {
-                sf::RectangleShape button {sf::Vector2f(buttonSize, buttonSize)};
-                button.setFillColor(sf::Color(0, 50*i, 50*i));
-                button.setPosition(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2);
-                gameButtons.push_back(button);
+                sf::Sprite sprite {gameTextures.at(i)};
+                if (i>3)
+                {
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128));
+                }
+                gameButtons.push_back(std::make_shared<Button>(
+                                            sf::Vector2f(buttonSize, buttonSize), 
+                                            sf::Vector2f(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2), 
+                                            sprite, sf::Color(128,128,128)));
             }
             break;
         }
@@ -123,7 +151,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     }
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold = 0 /*, int health*/)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold)
 //  ---------------------------------------------
 {
     switch (currentState)
@@ -133,15 +161,13 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
 
             for (int i{0} ; i < menuButtons.size() ; i++)
             {
-                window->draw(menuButtons.at(i));
-                window->draw(menuTexts.at(i));
+                window->draw(menuButtons.at(i)->draw());
             }
             break;
         }
         case GAME_STATE:
             window->draw(interface);
             window->draw(statsInterface);
-            window->draw(healthBar);
             for (int i{0} ; i < 6 ; i++)
             {
                 coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
@@ -154,7 +180,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
                 window->draw(goldText);
                 window->draw(coinSprite);
                 window->draw(heartSprite);
-                window->draw(gameButtons.at(i));
+                window->draw(gameButtons.at(i)->draw());
             }
             break;
         default:
@@ -163,19 +189,19 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window)
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
 //  ---------------------------------------------
 {
     sf::Mouse mouse{};
     for (int i{0} ; i < menuButtons.size() ; i++)
     {
-        if (menuButtons.at(i).getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+        if (menuButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
         {
-            menuButtons.at(i).setFillColor(sf::Color(204, 107, 16));
+            menuButtons.at(i)->hover();
         }
         else
         {
-            menuButtons.at(i).setFillColor(sf::Color(112, 58, 7)); //112, 58, 7 is the original color.
+            menuButtons.at(i)->stopHover(); 
         }
     }
 }
@@ -189,7 +215,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         {
             for (int i{0} ; i < menuButtons.size() ; i++)
                 {
-                    if (menuButtons.at(i).getGlobalBounds().contains(mouseX,mouseY))
+                    if (menuButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
                         return i+1;
                     }
@@ -200,7 +226,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         {
             for (int i{0} ; i < 6 ; i++)
                 {
-                    if (gameButtons.at(i).getGlobalBounds().contains(mouseX,mouseY))
+                    if (gameButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
                         return i+1;
                     }
@@ -211,4 +237,28 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
             break;
     }
     return 0;
+}
+
+void GUI::setBaseHP(int hp) // Change later when Data is implemented correctly
+{
+    originalBaseHP = hp;
+}
+
+void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, int friendlyHP, int enemyHP)
+{
+    enemyHealthBar.setPosition(window->getSize().x - buttonSize/2*1.5, 8*buttonSize);
+    enemyHealthBar.setScale(1/1.5, 1/1.5);
+    enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
+    enemyHealthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(enemyHP)/static_cast<double>(originalBaseHP)/1.5));
+    
+    healthBar.setPosition(buttonSize/2*1.5, 8*buttonSize);
+    healthBar.setScale(1/1.5, 1/1.5);
+    healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
+    healthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(friendlyHP)/static_cast<double>(originalBaseHP)/1.5));
+
+    window->draw(enemyHealthBar);
+    window->draw(enemyHealthRec);
+    window->draw(healthBar);
+    window->draw(healthRec);
+
 }
