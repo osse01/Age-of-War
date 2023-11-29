@@ -2,17 +2,17 @@
 
 #include <iostream>
 
-const int WALK   { 0 };
-const int IDLE   { 1 };
-const int ATTACK { 2 };
-const int TAKE_DAMAGE { 3 };
-
 Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : Dynamic::Dynamic(stats, friendly, pos, frameDuration), spriteCounter { 0 }, collisionCounter {0}
 {}
 
-void Troop::handleCollision(int troopState, int otherDamage)
+void Troop::handleCollision(int nextTroopState, int otherDamage)
 {   
+    if (troopState != ATTACK)
+    {
+        troopState = nextTroopState;
+    }
+    
     collisionCounter = 0;
 
     if (Entity::isFriendly)    
@@ -29,10 +29,10 @@ void Troop::handleCollision(int troopState, int otherDamage)
 
     switch ( troopState ) {
         case IDLE:
-            changeSprite(troopState);
+            changeSprite();
             break;
         case ATTACK:
-            changeSprite(troopState);
+            changeSprite();
             takeDamage(otherDamage);
             break;
         case TAKE_DAMAGE:
@@ -61,11 +61,12 @@ void Troop::updatePos()
     Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
     if ( collisionCounter >= 2*frameDuration->asSeconds() )
     {
-        changeSprite(WALK);
+        troopState = WALK;
+        changeSprite();
     }
 }
 
-void Troop::changeSprite(int troopState)
+void Troop::changeSprite()
 {
     float swapSprite {};
 
@@ -73,14 +74,14 @@ void Troop::changeSprite(int troopState)
     {
     case WALK:
         swapSprite = MOVEMENTSPEED;
-        Entity::rectSourceSprite.top = 0;
+        Entity::rectSourceSprite.top = WALK*128;
         break;
     case ATTACK:
         swapSprite = ATTACK_SPEED;
-        Entity::rectSourceSprite.top = 256;
+        Entity::rectSourceSprite.top = ATTACK*128;
         break;
     default:
-        Entity::rectSourceSprite.top = 128;
+        Entity::rectSourceSprite.top = IDLE*128;
         swapSprite = 100;
         break;
     }
