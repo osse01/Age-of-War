@@ -4,6 +4,7 @@
 #include "../include/PauseState.h"
 #include "../include/WinState.h"
 #include "../include/LoseState.h"
+#include "../include/CreditsState.h"
 
 #include <utility>
 #include <iostream>
@@ -19,7 +20,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     std::string file{"assets/Age-of-War-Theme-Song.ogg"};
     if (!music->openFromFile(file))
     {
-        std::cout << "  >> Error: Could Not Find Audio File. Error in Game::Game()." << std::endl;
+        std::cout << "  >> Error: Could Not Find Audio File. Error in GameState::GameState()." << std::endl;
     }
     music->setVolume(50);
     music->setLoop(true);
@@ -28,11 +29,11 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, music, frameDurationPtr);
     states.push(std::move(ptr));
 
-    std::string cursorFile{"assets/cursor.png"};
+    std::string cursorFile{"assets/cursor_pixelart.png"};
     if(!cursor.loadFromFile(cursorFile))
     {
         throw std::logic_error(
-        "    >> Error: Could Not Find cursor image. Error in Game::Game().");
+        "    >> Error: Could Not Find cursor image. Error in GameState::GameState().");
     }
     cursorSprite.setTexture(cursor);
     cursorSprite.setScale(window->getSize().y / cursorSprite.getGlobalBounds().height / 20,
@@ -163,6 +164,11 @@ void Game::getNextState()
             case LOSE_STATE:
                 states.top()->resetState();
                 ptr = std::make_unique<LoseState>(window, music, frameDurationPtr);            
+                states.push(std::move(ptr));
+                break;
+            case CREDITS_STATE:
+                states.top()->resetState();
+                ptr = std::make_unique<CreditsState>(window, music, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
         }
