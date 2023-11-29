@@ -5,7 +5,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <string>
-#include <list>
+#include <vector>
 
 
 class CreditsState: public State
@@ -29,12 +29,14 @@ class CreditsState: public State
     int     nextState;
     double  elapsedTime;
 
-    std::list<sf::Text> nameList;
+    std::vector<sf::Text> nameList;
 
-    sf::Font            font;
+    sf::Font            nameFont;
+    sf::Font            textFont;
     sf::Texture         backgroundTexture;
     sf::Sprite          backgroundSprite;
-    sf::RenderTexture  canvas;
+    sf::RenderTexture   canvas;
+    sf::Sprite          canvasSprite;
 
 };
 

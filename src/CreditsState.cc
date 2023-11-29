@@ -4,7 +4,7 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window,
      std::shared_ptr<sf::Music> gameMusic, std::shared_ptr<sf::Time> frameDuration)
 //  ---------------------------------------------
 :   State(window, gameMusic, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
-    nameList{}, font{}, backgroundTexture{}, backgroundSprite{}, canvas{}
+    nameList{}, nameFont{}, textFont{}, backgroundTexture{}, backgroundSprite{}, canvas{}, canvasSprite{}
 {
     //  Load background image
     if(!backgroundTexture.loadFromFile("assets/background.jpeg"))
@@ -16,23 +16,29 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window,
     backgroundSprite.setScale(window->getSize().x /backgroundSprite.getGlobalBounds().width,
     window->getSize().y /backgroundSprite.getGlobalBounds().height);
     
-    //  Load font
-    if(!font.loadFromFile("assets/royalFont.ttf"))
+    //  Load fonts
+    if(!(nameFont.loadFromFile("assets/royalFont.ttf") && textFont.loadFromFile("assets/newFont.ttf")))
     {
-        throw std::logic_error("    >> Error: Could Not Find credits image."
+        throw std::logic_error("    >> Error: Could Not Find font file(s)."
          "Error in CreditsState::CreditsState().");
     }
     
-    //  List of contributors
-    std::list<std::string> stringList {"Oskar Bollner", "Logan Eriksson", 
+    //  Set up Vector of Contributors
+    const std::vector<std::string> stringList {"Oskar Bollner", "Logan Eriksson", 
     "Adam Hallberg", "Oscar Jemsson", "Johanna Nilsson", "Filip Ripstrand"};
     for ( auto &name : stringList)
     {
-        nameList.push_back(sf::Text{name, font, 30});
+        nameList.push_back(sf::Text{name, nameFont, 50});
     }
 
-    //  Init canvas
-    canvas.create(window->getSize().x, window->getSize().y*20);
+    //  Setup canvas
+    if(!canvas.create(window->getSize().x, window->getSize().y*12))
+    {
+        throw std::logic_error("    >> Error: Could not create sf::RenderTexture canvas."
+         "Error in CreditsState::CreditsState().");
+    }
+    setupCanvas();
+
 }
 
 CreditsState::~CreditsState()
@@ -42,7 +48,24 @@ CreditsState::~CreditsState()
 void CreditsState::setupCanvas()
 //  ---------------------------------------------
 {
-    
+    sf::Text header{"Credits", textFont, 150};
+    header.setPosition(canvas.getSize().x/2, window->getSize().y);
+    header.setColor(sf::Color(255, 255, 255));
+    header.setOrigin(header.getGlobalBounds().width/2, header.getGlobalBounds().height/2 );
+
+    canvas.draw(header);
+
+    for (unsigned i{}; i < nameList.size(); i++)
+    {
+        nameList.at(i).setPosition(canvas.getSize().x/2, window->getSize().y *(1.5 + 0.3*i));
+        nameList.at(i).setColor(sf::Color(255, 255, 255));
+        nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2, nameList.at(i).getGlobalBounds().height/2 );
+
+        canvas.draw(nameList.at(i));
+    }
+    canvas.display();
+
+    canvasSprite.setTexture(canvas.getTexture());
 }
 
 int CreditsState::getNextState()
@@ -89,8 +112,12 @@ void CreditsState::renderFrame()
     window->clear(sf::Color(5, 0, 43));
 
     backgroundSprite.setPosition(backgroundSprite.getGlobalBounds().left,
-        backgroundSprite.getGlobalBounds().top - 50 * frameDuration->asSeconds()); // Make slower later
+        backgroundSprite.getGlobalBounds().top - 40 * frameDuration->asSeconds()); // Make slower later
+    
+    canvasSprite.setPosition(backgroundSprite.getGlobalBounds().left,
+        backgroundSprite.getGlobalBounds().top - 30 * frameDuration->asSeconds());
 
 
     window->draw(backgroundSprite);
+    window->draw(canvasSprite);
 }
