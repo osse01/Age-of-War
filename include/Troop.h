@@ -7,7 +7,7 @@
 class Troop : public Dynamic
 {
     public:
-        Troop(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+        Troop(FileReader::Data&, std::string, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Troop() = default;
 
         virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f);
@@ -22,6 +22,7 @@ class Troop : public Dynamic
         int troopState;
         int   spriteCounter;
         float collisionCounter;
+        const float MOVEMENTSPEED;
 
         const static int WALK   { 0 };
         const static int IDLE   { 1 };

@@ -50,21 +50,11 @@ class GameState : public State
 
     private:
         // VARIABLES
-        FileReader::Data meleeF;
-        FileReader::Data rangedF;
-        FileReader::Data meleeE;
-        FileReader::Data rangedE;
-        FileReader::Data tankF;
-        FileReader::Data tankE;
-        FileReader::Data projectile;
-
-        FileReader::Data baseStats;
+        FileReader::Data dataMap;
 
         std::vector<std::shared_ptr<Entity>> friendlyVector;
         std::vector<std::shared_ptr<Entity>> enemyVector;
         std::deque<std::shared_ptr<Projectile>> projectileQueue;
-
-        std::string         backgroundFile;
 
         sf::Texture         backgroundTexture;
         sf::Sprite          backgroundSprite;

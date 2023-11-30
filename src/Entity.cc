@@ -3,13 +3,14 @@
 #include <iostream>
 
 
-Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
-    : xpos { pos.x }, ypos { pos.y }, hp { stats.hp }, isFriendly { friendly }, hasCollided { false },
-      texture{}, rectSourceSprite { 0,0,stats.spriteDim.x,stats.spriteDim.y }, sprite {texture, rectSourceSprite},
-      boundingbox { stats.boxSize }, frameDuration {frameDuration}
+    : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
+      texture{}, rectSourceSprite { sf::Vector2i(0,0),data.dimensions[troopType]["spriteDim"] }, sprite {texture, rectSourceSprite},
+      boundingbox { sf::RectangleShape(static_cast<sf::Vector2f>(data.dimensions[troopType]["boxSize"])) }, frameDuration {frameDuration}
 {
-    if(!texture.loadFromFile(stats.filename))
+    std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
+    if(!texture.loadFromFile("assets/" + friendOrFoe + data.files[troopType]))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in Entity::Entity().");
@@ -22,11 +23,11 @@ Entity::Entity(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, s
     boundingbox.setPosition( xpos, ypos );
     if(isFriendly)
     {
-        sprite.setScale(sf::Vector2f(-stats.windowScale,stats.windowScale));
+        sprite.setScale(sf::Vector2f(-data.windowScale,data.windowScale));
     }
     else
     {
-        sprite.setScale(sf::Vector2f(stats.windowScale,stats.windowScale));
+        sprite.setScale(sf::Vector2f(data.windowScale,data.windowScale));
     }
 }
 

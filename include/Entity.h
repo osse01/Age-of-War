@@ -10,7 +10,7 @@
 class Entity
 {
     public:
-         Entity(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+         Entity(FileReader::Data&, std::string, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Entity() = default;
         
         virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
