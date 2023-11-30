@@ -49,6 +49,9 @@ class GameState : public State
         void enemyPlay        ();
 
     private:
+        //  FUNCTIONS
+        void windowPanning     (bool);
+
         // VARIABLES
         FileReader::Data meleeF;
         FileReader::Data rangedF;
@@ -66,11 +69,14 @@ class GameState : public State
 
         std::string         backgroundFile;
         std::string         groundFile;
+        std::string         woodsFile;
 
         sf::Texture         backgroundTexture;
         sf::Texture         groundTexture;
+        sf::Texture         woodsTexture;
         sf::Sprite          backgroundSprite;
         sf::Sprite          groundSprite;
+        sf::Sprite          woodsSprite;
         sf::View            view;
         sf::RenderWindow    canvas;
         
