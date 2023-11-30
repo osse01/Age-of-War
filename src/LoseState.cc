@@ -1,11 +1,11 @@
 #include "../include/LoseState.h"
 
-LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-: State(screen, sound, frameDuration), nextState{LOSE_STATE}, fontFile { "assets/coolFont.ttf" },
+LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+: State(screen, dataMap, sound, frameDuration), nextState{LOSE_STATE},
     textFont     { new sf::Font{} }, loseText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
 {
-    if(textFont->loadFromFile(fontFile))
+    if(textFont->loadFromFile(dataMap.files["GameFont"]))
     {
         loseText->setFont          (*textFont);
         loseText->setString        ("You Lose!");
@@ -20,7 +20,6 @@ LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<s
     }
     greyOut->setSize(static_cast<sf::Vector2f>(window->getSize()));
     greyOut->setFillColor(sf::Color(115, 90, 100, 2));
-
 }
 
 LoseState::~LoseState()

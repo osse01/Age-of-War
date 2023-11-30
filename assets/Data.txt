@@ -1,0 +1,84 @@
+Melee
+    damage        50
+    hp            200
+    movementSpeed 70
+    attackSpeed   70
+    cost          50
+    deathValue    75
+    boxSize       70 70
+    spriteDim     128 128
+    filename      melee_sprite_sheet.png
+
+Ranged
+    damage        25
+    hp            150
+    movementSpeed 70
+    range         300
+    attackSpeed   70
+    cost          75
+    deathValue    100
+    boxSize       70 70
+    spriteDim     128 128
+    filename      ranged_sprite_sheet.png
+
+Tank
+    damage        75
+    hp            600
+    movementSpeed 70
+    attackSpeed   70
+    cost          150
+    deathValue    200
+    boxSize       70 70
+    spriteDim     128 128
+    filename      melee_sprite_sheet.png
+
+Base
+    hp            1500
+    boxSize       300 500
+    spriteDim     249 323
+    filename      cursor.png
+
+Turret
+    range    600
+    cost     300
+    filename tree.png
+
+RangedProjectile
+    damage        50
+    hp            1
+    movementSpeed 100
+    boxSize       70 30
+    spriteDim     75 30
+    filename      assets/arrow.png
+
+TurretProjectile
+    damage        50
+    hp            1
+    movementSpeed 1250
+    boxSize       70 30
+    spriteDim     75 30
+    filename      assets/arrow.png 
+
+GameMusic
+    filename assets/Age-of-War-Theme-Song.ogg
+
+GameFont
+    filename assets/coolFont.ttf
+
+NumberFont
+    filename assets/newFont.ttf
+
+CreditFont
+    filename assets/royalFont.ttf
+
+Background
+    filename assets/background.jpeg
+
+Cursor
+    filename assets/cursor_pixelart.png
+
+Ground
+    filename assets/ground.png
+    
+Trees
+    filename assets/trees.png

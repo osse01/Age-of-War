@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-Troop::Troop(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic::Dynamic(stats, friendly, pos, frameDuration), spriteCounter { 0 }, collisionCounter {0}
+Troop::Troop(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), spriteCounter { 0 }, collisionCounter {0}, MOVEMENTSPEED { data.stats[troopType]["movementSpeed"] }
 {}
 
 void Troop::handleCollision(int nextTroopState, int otherDamage)
@@ -17,11 +17,11 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
 
     if (Entity::isFriendly)    
     {
-        Entity::xpos -= Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     else
     {
-        Entity::xpos += Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos += MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
@@ -50,11 +50,11 @@ void Troop::updatePos()
 
     if (!Entity::isFriendly)    
     {
-        Entity::xpos -= Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     else
     {
-        Entity::xpos += Dynamic::MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos += MOVEMENTSPEED * (frameDuration->asSeconds());
     }
 
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);

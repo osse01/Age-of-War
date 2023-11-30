@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), nextstate{PAUSE_STATE}, fontFile { "assets/coolFont.ttf" },
+PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, dataMap, sound, frameDuration), nextstate{PAUSE_STATE},
     textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
   
@@ -15,7 +15,7 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr
 //  For Now File Names are Hardcoded Values. This must Change!!!
 //  -------------------------------------------------------
 {
-    if(textFont->loadFromFile(fontFile))
+    if(textFont->loadFromFile(dataMap.files["GameFont"]))
     {
         pausedText->setFont          (*textFont);
         pausedText->setString        ("PAUSED");

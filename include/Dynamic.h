@@ -8,7 +8,7 @@
 class Dynamic : public Entity
 {
     public:
-        Dynamic(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+        Dynamic(FileReader::Data&, std::string, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Dynamic() = default;
 
         virtual void handleCollision(int, int)   = 0;
@@ -23,12 +23,10 @@ class Dynamic : public Entity
         float           getRange()      override;
 
     protected:
-        const int DAMAGE;
-        const float MOVEMENTSPEED;
+        const int   DAMAGE;
+        const int   ATTACK_SPEED;
         const float RANGE;
-        const int ATTACK_SPEED;
-        const int DEATH_VALUE;
-        const int BUY_VALUE;
+        const int   DEATH_VALUE;
 
 };
 #endif

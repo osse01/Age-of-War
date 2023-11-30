@@ -1,11 +1,11 @@
 #include "../include/WinState.h"
 
-WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-: State(screen, sound, frameDuration), nextState{WIN_STATE}, fontFile { "assets/coolFont.ttf" },
+WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+: State(screen, dataMap, sound, frameDuration), nextState{WIN_STATE},
     textFont     { new sf::Font{} }, winText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
 {
-    if(textFont->loadFromFile(fontFile))
+    if(textFont->loadFromFile(dataMap.files["GameFont"]))
     {
         winText->setFont          (*textFont);
         winText->setString        ("You Win!");

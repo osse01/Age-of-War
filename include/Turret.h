@@ -10,7 +10,7 @@ class Turret : public Dynamic
 {
 public:
         // CONSTRUCTORS / DESTRUCTORS
-        Turret(const FileReader::Data&, bool, sf::Vector2f, 
+        Turret(FileReader::Data&, bool, sf::Vector2f, 
                std::shared_ptr<sf::Time>);
         virtual ~Turret() = default;
 

@@ -4,14 +4,15 @@
 #include <utility>
 #include <cmath>
 
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), meleeF {}, rangedF {}, meleeE {}, rangedE {}, tankF {}, tankE {}, projectile {}, baseStats {}, friendlyVector {}, enemyVector {}, projectileQueue {},
-    backgroundFile { "assets/background.jpeg" }, groundFile { "assets/Ground.png" }, backgroundTexture {}, groundTexture{}, backgroundSprite {}, groundSprite{}, 
-    view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) }, canvas{},
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
+    backgroundTexture {},  groundTexture{}, backgroundSprite {}, groundSprite{},
+    view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen }, enemy{frameDuration}
 {
-    //  Load in Background Image and ground image
-    if(!(backgroundTexture.loadFromFile(backgroundFile) && groundTexture.loadFromFile(groundFile)))
+
+    //  Load in Background Image
+    if(!backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
@@ -19,30 +20,18 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<
     //  Setup Background Image and ground image
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setScale(window->getSize().x / backgroundSprite.getGlobalBounds().width, 
-        window->getSize().y / backgroundSprite.getGlobalBounds().height);
-    
+                              window->getSize().y / backgroundSprite.getGlobalBounds().height);
+
     groundSprite.setTexture(groundTexture);
     groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height);
     groundSprite.setPosition(0, view.getSize().y+window->getSize().y/13);
 
+    gui.setBaseHP(dataMap.stats["Base"]["hp"]);
 
-    //  Load Unit data
-    FileReader reader {window};
-    meleeF = reader.returnData("Melee_F", "assets/stage1.txt");
-    meleeE = reader.returnData("Melee_E", "assets/stage1.txt");
-    rangedF = reader.returnData("Ranged_F", "assets/stage1.txt");
-    rangedE = reader.returnData("Ranged_E", "assets/stage1.txt");
-    tankF = reader.returnData("Tank_F", "assets/stage1.txt");
-    tankE = reader.returnData("Tank_E", "assets/stage1.txt");
-    
-    projectile = reader.returnData("Projectile", "assets/stage1.txt");
-    baseStats = reader.returnData("Base", "assets/stage1.txt");
-    gui.setBaseHP(baseStats.hp);
-
-    friendlyVector.push_back(std::make_shared<Base>(baseStats, true,
+    friendlyVector.push_back(std::make_shared<Base>(dataMap, true,
     sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
-    enemyVector.push_back(std::make_shared<Base>(baseStats, false,
+    enemyVector.push_back(std::make_shared<Base>(dataMap, false,
     sf::Vector2f(19*window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
 }
@@ -58,7 +47,7 @@ void GameState::handleEvent(sf::Event event)
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                    spawnFriendly(meleeF.type);
+                    spawnFriendly("Melee");
                     break;
 
                 case sf::Keyboard::Num2:
@@ -102,13 +91,13 @@ void GameState::handleEvent(sf::Event event)
                 switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
                 {
                     case 6:
-                        spawnFriendly(meleeF.type);
+                        spawnFriendly("Melee");
                         break;
                     case 5:
-                        spawnFriendly(rangedF.type);
+                        spawnFriendly("Ranged");
                         break;
                     case 4:
-                        spawnFriendly(tankF.type);
+                        spawnFriendly("Tank");
                         break;
                     case 1:
                         window->close();
@@ -191,7 +180,7 @@ void GameState::updateLogic()
             if (abs(it->getSprite().getPosition().x - enemyVector.at(0)->getSprite().getPosition().x) 
                 <= it->getRange())
             {
-                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(projectile, frameDuration, sf::Vector2f(0,0))};
+                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, sf::Vector2f(0,0))};
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
@@ -336,42 +325,32 @@ void GameState::spawnFriendly(std::string troop)
                               baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
 
     auto it = friendlyVector.end()-1;
-    if (troop == meleeF.type)
+    if (gold >= dataMap.stats[troop]["cost"])
     {
-        if (gold >= meleeF.cost)
+        gold -= dataMap.stats[troop]["cost"];
+        // Läs på om emplace
+        // Lös kollision
+        if (troop == "Melee")
         {
-            gold -= meleeF.cost;
-            // Läs på om emplace
-            // Lös kollision
             friendlyVector.insert(it, std::make_shared<Melee> 
-            ( meleeF, true, spawnPoint, frameDuration) );
+            ( dataMap, true, spawnPoint, frameDuration) );
         }
-    }
-    else if (troop == rangedF.type)
-    {
-        if (gold >= rangedF.cost)
+        else if(troop == "Ranged")
         {
-            gold -= rangedF.cost;
             friendlyVector.insert(it, std::make_shared<Ranged> 
-             ( rangedF, true, spawnPoint, frameDuration ) );
+             ( dataMap, true, spawnPoint, frameDuration ) );
         }
-    }
-    else if (troop == tankF.type)
-    {
-        if (gold >= tankF.cost)
+        else if(troop == "Tank")
         {
-            gold -= tankF.cost;
             friendlyVector.insert(it, std::make_shared<Tank> 
-              ( tankF, true, spawnPoint, frameDuration ) );
+             ( dataMap, true, spawnPoint, frameDuration ) );
         }
-    }
-    else
-    {
-        throw std::logic_error("\n  >> Error, Unidentified troop type. "
-        "Error in GameState::spawnFriendly(std::string). \n");
-    }
-    
-    
+        else
+        {
+            throw std::logic_error("\n  >> Error, Unidentified troop type. "
+            "Error in GameState::spawnFriendly(std::string). \n");
+        }
+    }    
 }
 
 void GameState::spawnEnemy(int type)
@@ -386,15 +365,15 @@ void GameState::spawnEnemy(int type)
     {
         case 1:
             enemyVector.insert(it, std::make_shared<Melee> 
-                ( meleeE, false, spawnPoint, frameDuration ) );
+                ( dataMap, false, spawnPoint, frameDuration) );
             break;
         case 2:
             enemyVector.insert(it, std::make_shared<Ranged> 
-                ( rangedE, false, spawnPoint, frameDuration ) );
+                ( dataMap, false, spawnPoint, frameDuration ) );
             break;
         case 3:
             enemyVector.insert(it, std::make_shared<Tank> 
-                ( tankE, false, spawnPoint, frameDuration ) );
+                ( dataMap, false, spawnPoint, frameDuration ) );
             break;
         default:
             break;

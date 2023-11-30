@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <vector>
 #include <memory>
+#include <map>
 
 class FileReader
 //  -------------------------------------------------------
@@ -43,27 +44,34 @@ public:
     FileReader& operator = (FileReader&&)       = delete;
 
 //  STRUCTURES
+    //struct Stats
+    //{
+    //    int     damage;
+    //    int     hp;
+    //    float   movementSpeed;
+    //    float   range;
+    //    int     attackSpeed;
+    //    int     cost;
+    //    int     deathValue;
+//
+    //    sf::Vector2f boxSize;
+    //    sf::Vector2i spriteDim;
+//
+    //    std::string filename;
+//
+    //    float windowScale;
+    //};
+
     struct Data
     {
-        int     damage;
-        int     hp;
-        float   movementSpeed;
-        float   range;
-        int     attackSpeed;
-        sf::Vector2f boxSize;
-        int     cost;
-        int     deathValue;
-
-        sf::Vector2i spriteDim;
-
-        std::string type;
-        std::string filename;
-
+        std::map<std::string, std::map<std::string, float>> stats;
+        std::map<std::string, std::map<std::string, sf::Vector2i>> dimensions;
+        std::map<std::string, std::string> files;
         float windowScale;
     };
 
 //  FUNCTIONS
-    Data    returnData(const std::string&, const std::string&);
+    Data    returnData(const std::string&);
 
 private:
 //  FUNCTIONS
@@ -74,8 +82,6 @@ private:
     float windowScale;
     
     Data    data;
-    
-    std::vector<std::string> fileContents;
 };
 
 #endif

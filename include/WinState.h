@@ -10,7 +10,7 @@ class WinState: public State
 {
     public:
     // CONSTRUCTORS / DESTRUCTORS
-    WinState(std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+    WinState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~WinState() override;
     WinState(const WinState&) = delete;
     WinState& operator= (const WinState&) = delete;
@@ -24,7 +24,6 @@ class WinState: public State
 
     private:
     int nextState;
-    std::string fontFile;
 
     sf::Font*           textFont;
     sf::Text*           winText;

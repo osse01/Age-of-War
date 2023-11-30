@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-Turret::Turret(const FileReader::Data & stats, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic(stats, isFriendly, pos, frameDuration), angle { 30 }
+Turret::Turret(FileReader::Data& data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+: Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 }
 {
 
 }

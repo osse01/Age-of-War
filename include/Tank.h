@@ -8,7 +8,7 @@
     class Tank : public Troop
     {
         public:
-            Tank(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+            Tank(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
             virtual ~Tank() = default;
 
     };
