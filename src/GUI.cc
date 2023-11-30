@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+// standard button rgb color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
     : buttonSize { window->getSize().x/30 }, originalBaseHP{}, fontFile{ "assets/newFont.ttf" },
@@ -142,7 +143,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 gameButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(buttonSize, buttonSize), 
                                             sf::Vector2f(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2), 
-                                            sprite, sf::Color(128,128,128)));
+                                            sprite, sf::Color(112, 58, 7)));
             }
             break;
         }
@@ -192,17 +193,37 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
 void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
 //  ---------------------------------------------
 {
-    sf::Mouse mouse{};
-    for (int i{0} ; i < menuButtons.size() ; i++)
+    sf::Mouse mouse{}; 
+
+    switch ( currentState )
     {
-        if (menuButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
-        {
-            menuButtons.at(i)->hover();
-        }
-        else
-        {
-            menuButtons.at(i)->stopHover(); 
-        }
+        case MENU_STATE:
+            for (int i{0} ; i < menuButtons.size() ; i++)
+            {
+                if (menuButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+                {
+                    menuButtons.at(i)->hover();
+                }
+                else
+                {
+                    menuButtons.at(i)->stopHover(); 
+                }
+            }
+            break;
+        case GAME_STATE:
+            for (int i{0} ; i < gameButtons.size() ; i++)
+            {
+                if (gameButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+                {
+                    gameButtons.at(i)->hover();
+                }
+                else
+                {
+                    gameButtons.at(i)->stopHover(); 
+                }
+            }
+        default:
+            break;
     }
 }
 
