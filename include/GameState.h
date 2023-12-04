@@ -1,7 +1,6 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-#include "FileReader.h"
 #include "State.h"
 #include "Melee.h"
 #include "Ranged.h"
@@ -29,7 +28,7 @@ class GameState : public State
 {
     public:
         // CONSTRUCTORS
-        GameState  (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+        GameState  (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
         ~GameState () override;
         GameState (const GameState&) = delete;
 
@@ -50,22 +49,10 @@ class GameState : public State
 
     private:
         // VARIABLES
-        FileReader::Data meleeF;
-        FileReader::Data rangedF;
-        FileReader::Data meleeE;
-        FileReader::Data rangedE;
-        FileReader::Data tankF;
-        FileReader::Data tankE;
-        FileReader::Data projectile;
-
-        FileReader::Data baseStats;
 
         std::vector<std::shared_ptr<Entity>> friendlyVector;
         std::vector<std::shared_ptr<Entity>> enemyVector;
         std::deque<std::shared_ptr<Projectile>> projectileQueue;
-
-        std::string         backgroundFile;
-        std::string         groundFile;
 
         sf::Texture         backgroundTexture;
         sf::Texture         groundTexture;

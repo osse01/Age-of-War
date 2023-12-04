@@ -10,7 +10,7 @@ class LoseState: public State
 {
     public:
     // CONSTRUCTORS / DESTRUCTORS
-    LoseState(std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+    LoseState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~LoseState() override;
     LoseState(const LoseState&) = delete;
     LoseState& operator= (const LoseState&) = delete;
@@ -24,7 +24,6 @@ class LoseState: public State
 
     private:
     int nextState;
-    std::string fontFile;
 
     sf::Font*           textFont;
     sf::Text*           loseText;

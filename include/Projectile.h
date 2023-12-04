@@ -8,7 +8,7 @@
 class Projectile
 {
     public:
-    Projectile(const FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+    Projectile(FileReader::Data&, std::string, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
     virtual ~Projectile() = default;
 
     bool collides( sf::RectangleShape );
