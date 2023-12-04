@@ -61,7 +61,7 @@ sf::RectangleShape Entity::getBox()
     return boundingbox;
 }
 
-int Entity::getHP()
+float Entity::getHP()
 {
     return hp;
 }

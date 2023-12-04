@@ -12,7 +12,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 {
 
     //  Load in Background Image
-    if(!backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]))
+    if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"])))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
@@ -24,7 +24,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 
     groundSprite.setTexture(groundTexture);
     groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height);
-    groundSprite.setPosition(0, view.getSize().y+window->getSize().y/13);
+    groundSprite.setPosition(0, view.getSize().y);
 
     gui.setBaseHP(dataMap.stats["Base"]["hp"]);
 

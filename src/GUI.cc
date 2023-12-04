@@ -32,7 +32,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
     {
     case MENU_STATE:
         {
-            if ( font.loadFromFile(dataMap.files["NumberFont"]) )
+            if ( font.loadFromFile(dataMap.files["GameFont"]) )
             {
                 menuTexts.push_back("Start game");
 
@@ -119,7 +119,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
-            if ( font.loadFromFile(dataMap.files["NumberFont"]) )
+            if ( font.loadFromFile(dataMap.files["GameFont"]) )
             {
                 goldText.setFont(font);
                 goldText.setCharacterSize(buttonSize*0.4);

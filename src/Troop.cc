@@ -3,7 +3,7 @@
 #include <iostream>
 
 Troop::Troop(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), spriteCounter { 0 }, collisionCounter {0}, MOVEMENTSPEED { data.stats[troopType]["movementSpeed"] }
+: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), troopState { 1 }, spriteCounter { 0 }, collisionCounter {0}, MOVEMENTSPEED { data.stats[troopType]["movementSpeed"] }
 {}
 
 void Troop::handleCollision(int nextTroopState, int otherDamage)
@@ -109,7 +109,7 @@ void Troop::takeDamage(int otherDamage)
         Entity::hp -= otherDamage;
 }
 
-int Troop::getDamage()
+float Troop::getDamage()
 {
     int damage {};
     if ( (rectSourceSprite.left)%(12*128) == 4*128 && spriteCounter == 0 )

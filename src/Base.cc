@@ -22,22 +22,11 @@ void Base::handleCollision(__attribute__((unused)) int, int otherDamage)
 {
     takeDamage(otherDamage);
 }
+
 void Base::updatePos()
 //  ---------------------------------------------
 {
 
-}
-
-int Base::getDamage()
-//  ---------------------------------------------
-{
-    return 0;
-}
-
-int Base::getDeathValue()
-//  ---------------------------------------------
-{
-    return 0;
 }
 
 float Base::getRange()

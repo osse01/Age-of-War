@@ -18,10 +18,10 @@ class Entity
                                                             sf::Vector2f) = 0;
         virtual void    handleCollision(int = 0, int = 0) = 0;
         virtual void    updatePos()       = 0;
-        virtual int     getDamage()       = 0;
-        virtual int     getDeathValue()   = 0;
         virtual float   getRange()        = 0;
-        int     getHP();
+        virtual float   getDamage()       {return 0;};
+        virtual float   getDeathValue()   {return 0;};
+        float     getHP();
         sf::RectangleShape getBox();
 
         bool getIsFriendly();
@@ -33,7 +33,7 @@ class Entity
     protected:
         double              xpos;
         double              ypos;
-        int                 hp;
+        float                 hp;
         bool                isFriendly;
         bool                hasCollided;
         sf::Texture         texture;

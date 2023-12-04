@@ -59,7 +59,6 @@ class GameState : public State
         sf::Sprite          backgroundSprite;
         sf::Sprite          groundSprite;
         sf::View            view;
-        sf::RenderWindow    canvas;
         
         sf::Vector2f        zoomFactor;
 

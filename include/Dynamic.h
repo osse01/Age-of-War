@@ -18,15 +18,15 @@ class Dynamic : public Entity
                                                             std::shared_ptr<sf::Time>, 
                                                             sf::Vector2f) = 0;
 
-        virtual int     getDamage()     override;
-        int             getDeathValue() override;
+        virtual float     getDamage()     override;
+        float             getDeathValue() override;
         float           getRange()      override;
 
     protected:
-        const int   DAMAGE;
-        const int   ATTACK_SPEED;
+        const float   DAMAGE;
+        const float   ATTACK_SPEED;
         const float RANGE;
-        const int   DEATH_VALUE;
+        const float   DEATH_VALUE;
 
 };
 #endif

@@ -5,7 +5,7 @@ LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     textFont     { new sf::Font{} }, loseText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
 {
-    if(textFont->loadFromFile(dataMap.files["GameFont"]))
+    if(textFont->loadFromFile(dataMap.files["TitleFont"]))
     {
         loseText->setFont          (*textFont);
         loseText->setString        ("You Lose!");

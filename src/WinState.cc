@@ -5,7 +5,7 @@ WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& d
     textFont     { new sf::Font{} }, winText { new sf::Text {} }, 
     greyOut      { new sf::RectangleShape{} }
 {
-    if(textFont->loadFromFile(dataMap.files["GameFont"]))
+    if(textFont->loadFromFile(dataMap.files["TitleFont"]))
     {
         winText->setFont          (*textFont);
         winText->setString        ("You Win!");

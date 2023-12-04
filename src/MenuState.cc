@@ -25,7 +25,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
         throw std::logic_error("    >> Error: Could Not Find background image. Error in MenuState::MenuState().");
     }
 
-    if(textFont.loadFromFile(dataMap.files["GameFont"]))
+    if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         gameTitle.setFont(textFont);
         gameTitle.setString("AGE OF WAR");

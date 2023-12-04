@@ -15,7 +15,7 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
 //  For Now File Names are Hardcoded Values. This must Change!!!
 //  -------------------------------------------------------
 {
-    if(textFont->loadFromFile(dataMap.files["GameFont"]))
+    if(textFont->loadFromFile(dataMap.files["TitleFont"]))
     {
         pausedText->setFont          (*textFont);
         pausedText->setString        ("PAUSED");

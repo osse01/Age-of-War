@@ -17,12 +17,10 @@ public:
 
 //FUNCTIONS
 std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f);
-void    handleCollision(int, int) override;
-void    updatePos()               override;
-int     getDamage()               override;
-int     getDeathValue() override;
-float   getRange() override;
-void    takeDamage(int);
+void      handleCollision(int, int) override;
+void      updatePos()               override;
+float     getRange() override;
+void      takeDamage(int);
 //void updateHp();
 //void getBaseStats();
 
