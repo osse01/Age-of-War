@@ -22,12 +22,12 @@ class Entity
         virtual int     getDeathValue()   = 0;
         virtual float   getRange()        = 0;
         int     getHP();
-        sf::RectangleShape getBox();
+        const sf::RectangleShape& getBox() ;
 
         bool getIsFriendly();
         bool isDead();
 
-        sf::Sprite  getSprite       ()         const &;
+        const sf::Sprite &  getSprite       ()         ;
         bool        collides( std::shared_ptr<Entity> );
 
     protected:
