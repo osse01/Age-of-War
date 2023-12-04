@@ -8,10 +8,7 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
     textFont {}, pausedText {}, greyOut {}
   
 //  -------------------------------------------------------
-//  PauseState constructor. Loads in the Font Used for Text and Backround Image, the Name of the Files
-//  are Saved in the fontFile and backroundFile Variables.
-//
-//  For Now File Names are Hardcoded Values. This must Change!!!
+//  PauseState constructor. Setup for pausedText and grayOut.
 //  -------------------------------------------------------
 {
     if(textFont.loadFromFile(dataMap.files["GameFont"]))
@@ -32,6 +29,9 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
 }
 
 PauseState::~PauseState()
+//  ---------------------------------------------
+//  PausedState Destructor.
+//  ---------------------------------------------
 {
     window = nullptr;
     frameDuration = nullptr;
@@ -39,7 +39,8 @@ PauseState::~PauseState()
 
 void PauseState::handleEvent(sf::Event event)
 //  ---------------------------------------------
-//  Handle Event, For Now We Can Only Start Game.
+//  Handle Event, When any Key is Pressed the Game
+//  is Resumed.
 //  ---------------------------------------------
 {
     switch (event.type)
@@ -62,8 +63,6 @@ int PauseState::getNextState()
     return  nextstate;
 }
 
-
-
 void PauseState::updateLogic()
 //  ---------------------------------------------
 //  Function to Handle User Input. User Input Triggers
@@ -71,24 +70,19 @@ void PauseState::updateLogic()
 //  ---------------------------------------------
 {}
 
-void PauseState::startAnimation()
-//  ---------------------------------------------
-//  This Fuction Rescales the Backround Such That it
-//  Looks like an animation.
-//  ---------------------------------------------
-{}
-
 void PauseState::renderFrame()
 //  ---------------------------------------------
-//  Funcion Explaination
+//  Draws next Frame.
 //  ---------------------------------------------
 {
     window->draw(greyOut);
-
     window->draw(pausedText);
 }
 
 void PauseState::resetState()
+//  ---------------------------------------------
+//  Sets Next State to PAUSED_STATE.
+//  ---------------------------------------------
 {
     nextstate = PAUSE_STATE;
 }

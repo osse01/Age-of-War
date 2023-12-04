@@ -27,7 +27,6 @@ private:
     int     getNextState    ()          override;
     void    updateLogic     ()          override;
     void    resetState      ()          override;
-    void    startAnimation  ();
     
     // VARIABLES
     int nextstate;
