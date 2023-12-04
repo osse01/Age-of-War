@@ -2,6 +2,8 @@
 #define PauseState_H
 
 #include "State.h"
+#include "GUI.h"
+
 
 #include <string>
 #include <memory>
@@ -29,11 +31,13 @@ private:
     void    resetState      ()          override;
     
     // VARIABLES
-    int nextstate;
+    int nextState;
 
     sf::Font            textFont;
     sf::Text            pausedText;
     sf::RectangleShape  greyOut;
+    
+    GUI     gui;
 };
 
 #endif

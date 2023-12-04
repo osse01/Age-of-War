@@ -4,8 +4,8 @@
 #include <cmath>
 
 PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, sound, frameDuration), nextstate{PAUSE_STATE},
-    textFont {}, pausedText {}, greyOut {}
+:   State(screen, dataMap, sound, frameDuration), nextState{PAUSE_STATE},
+    textFont {}, pausedText {}, greyOut {}, gui { PAUSE_STATE, screen, dataMap }
   
 //  -------------------------------------------------------
 //  PauseState constructor. Setup for pausedText and grayOut.
@@ -45,11 +45,29 @@ void PauseState::handleEvent(sf::Event event)
 {
     switch (event.type)
     {
-    case sf::Event::KeyPressed:
-        music->play();
-        startAnimation();
-        nextstate = GAME_STATE;      
+    case sf::Event::MouseButtonPressed:
+    {
+        sf::Event::MouseButtonEvent mouse { event.mouseButton };
+        if (mouse.button == sf::Mouse::Button::Left)
+        {
+            switch (gui.buttonClicked(PAUSE_STATE, mouse.x, mouse.y))
+            {
+                case 1:
+                    nextState = GAME_STATE;
+                    music->play();      
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    nextState = MENU_STATE;
+                    break;
+                default:
+                    break;
+            }
+        }
         break;
+    }
+
     default:
         break;
     }
@@ -60,7 +78,7 @@ int PauseState::getNextState()
 //  Returns Wich State is The Next State.
 //  ---------------------------------------------
 {
-    return  nextstate;
+    return  nextState;
 }
 
 void PauseState::updateLogic()
@@ -68,7 +86,9 @@ void PauseState::updateLogic()
 //  Function to Handle User Input. User Input Triggers
 //  an Event.
 //  ---------------------------------------------
-{}
+{
+    gui.updateLogic(window, PAUSE_STATE);
+}
 
 void PauseState::renderFrame()
 //  ---------------------------------------------
@@ -77,6 +97,8 @@ void PauseState::renderFrame()
 {
     window->draw(greyOut);
     window->draw(pausedText);
+
+    gui.draw(PAUSE_STATE, window, 0);
 }
 
 void PauseState::resetState()
@@ -84,5 +106,5 @@ void PauseState::resetState()
 //  Sets Next State to PAUSED_STATE.
 //  ---------------------------------------------
 {
-    nextstate = PAUSE_STATE;
+    nextState = PAUSE_STATE;
 }

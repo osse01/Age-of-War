@@ -6,7 +6,7 @@
 MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen, dataMap }
+    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { MENU_STATE, screen, dataMap }
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -163,7 +163,7 @@ void MenuState::renderFrame()
     
     window->clear(sf::Color(255, 255, 255));
 
-    t = t + 0.0003;
+    t = t + 0.0006;
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
@@ -175,6 +175,6 @@ void MenuState::renderFrame()
     window->draw(gameTitle);
     window->draw(instructionText);
 
-    gui.draw(MENU_STATE, window);
+    gui.draw(MENU_STATE, window, 0);
 }
 
