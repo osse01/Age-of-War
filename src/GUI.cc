@@ -6,14 +6,12 @@
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
     : buttonSize { window->getSize().x/30 }, originalBaseHP{}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, menuTexts{}, 
-      gameTextures {}, 
+      menuButtons {}, gameButtons {}, pausedButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
       healthRec{ healthBar }, enemyHealthRec{ healthBar },
-      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{},
-      playText{}, optionsText{}, creditsText{}, quitText {}
+      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{}
 {
     sf::Texture tmpText {};
     tmpText.loadFromFile(dataMap.files["Cursor"]);
@@ -32,21 +30,16 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
     {
     case MENU_STATE:
         {
-            if ( font.loadFromFile(dataMap.files["GameFont"]) )
-            {
-                menuTexts.push_back("Start game");
-
-                menuTexts.push_back("Options");
-
-                menuTexts.push_back("Credits");
-
-                menuTexts.push_back("Quit");
-            }
-            else
+            if ( !font.loadFromFile(dataMap.files["GameFont"]) )
             {
                 throw std::logic_error("\n  >> Error. Could not load font file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
+                    "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) MENU_STATE");
             }
+            menuTexts.push_back("Start game");
+            menuTexts.push_back("Options");
+            menuTexts.push_back("Credits");
+            menuTexts.push_back("Quit");
+
 
            for (int i{0} ; i < menuTexts.size() ; i++)
             {
@@ -57,79 +50,90 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             }
             break;
         }
-
-    case GAME_STATE:
+    case PAUSE_STATE:
         {
-            if ( interfaceTexture.loadFromFile(dataMap.files["GUITexture"]) )
-            {
-                interface.setPosition(window->getSize().x - interface.getSize().x, 0.f);
-                interface.setOutlineThickness(2.f);
-                interface.setOutlineColor(sf::Color(0, 0, 0));
-                interface.setTexture(&interfaceTexture);
-                
-                statsInterface.setPosition(0.f, 0.f);
-                statsInterface.setOutlineThickness(2.f);
-                statsInterface.setOutlineColor(sf::Color(0, 0, 0));
-                statsInterface.setTexture(&interfaceTexture);
-///////////////
-                healthBar.setOrigin(0,healthBar.getGlobalBounds().height);
-                healthBar.setPosition(buttonSize/2, 10*buttonSize);
-                healthBar.setOutlineThickness(3.f);
-                healthBar.setFillColor(sf::Color(109, 109, 110));
-                healthBar.setOutlineColor(sf::Color(0, 0, 0));
-                
-                healthRec.setOrigin(0,healthRec.getGlobalBounds().height);
-                healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
-                healthRec.setOutlineThickness(3.f);
-                healthRec.setFillColor(sf::Color(200, 10, 0));
-                healthRec.setOutlineColor(sf::Color(0, 0, 0));
-//////////////////
-                enemyHealthBar.setOrigin(0,enemyHealthBar.getGlobalBounds().height);
-                enemyHealthBar.setPosition(buttonSize/2, 10*buttonSize);
-                enemyHealthBar.setOutlineThickness(3.f);
-                enemyHealthBar.setFillColor(sf::Color(109, 109, 110));
-                enemyHealthBar.setOutlineColor(sf::Color(0, 0, 0));
-
-                enemyHealthRec.setOrigin(0,enemyHealthRec.getGlobalBounds().height);
-                enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
-                enemyHealthRec.setOutlineThickness(3.f);
-                enemyHealthRec.setFillColor(sf::Color(200, 10, 0));
-                enemyHealthRec.setOutlineColor(sf::Color(0, 0, 0));
-
-
-            }
-            else
-            {
-                throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
-            }
-
-            if ( coinTexture.loadFromFile(dataMap.files["GameCoin"]) && heartTexture.loadFromFile(heartFile))
-            {
-                coinSprite.setTexture(coinTexture);
-                coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
-
-                heartSprite.setTexture(heartTexture);
-                heartSprite.setScale(0.00083*buttonSize, 0.000833*buttonSize);
-
-            }
-            else
-            {
-                throw std::logic_error("\n  >> Error. Could not load coin or heart icon file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
-            }
-
-            if ( font.loadFromFile(dataMap.files["GameFont"]) )
-            {
-                goldText.setFont(font);
-                goldText.setCharacterSize(buttonSize*0.4);
-                goldText.setColor(sf::Color::Yellow);
-            }
-            else
+            if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
             {
                 throw std::logic_error("\n  >> Error. Could not load font file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
             }
+            pausedTexts.push_back("Resume Game");
+            pausedTexts.push_back("Options");
+            pausedTexts.push_back("Main Menu");
+    
+
+           for (int i{0} ; i < pausedTexts.size() ; i++)
+            {
+                pausedButtons.push_back(std::make_shared<Button>(
+                                            sf::Vector2f(3*buttonSize, buttonSize), 
+                                            sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize), 
+                                            sf::Color(112, 58, 7), sf::Color::Black, pausedTexts.at(i), font));
+            }
+            break;
+        }
+    case GAME_STATE:
+        {
+        //  Setup interface
+            if ( !interfaceTexture.loadFromFile(dataMap.files["GUITexture"]) )
+            {
+                throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) GAME_STATE");
+            }
+            interface.setPosition(window->getSize().x - interface.getSize().x, 0.f);
+            interface.setOutlineThickness(2.f);
+            interface.setOutlineColor(sf::Color(0, 0, 0));
+            interface.setTexture(&interfaceTexture);
+            
+            statsInterface.setPosition(0.f, 0.f);
+            statsInterface.setOutlineThickness(2.f);
+            statsInterface.setOutlineColor(sf::Color(0, 0, 0));
+            statsInterface.setTexture(&interfaceTexture);
+
+            healthBar.setOrigin(0,healthBar.getGlobalBounds().height);
+            healthBar.setPosition(buttonSize/2, 10*buttonSize);
+            healthBar.setOutlineThickness(3.f);
+            healthBar.setFillColor(sf::Color(109, 109, 110));
+            healthBar.setOutlineColor(sf::Color(0, 0, 0));
+            
+            healthRec.setOrigin(0,healthRec.getGlobalBounds().height);
+            healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
+            healthRec.setOutlineThickness(3.f);
+            healthRec.setFillColor(sf::Color(200, 10, 0));
+            healthRec.setOutlineColor(sf::Color(0, 0, 0));
+
+            enemyHealthBar.setOrigin(0,enemyHealthBar.getGlobalBounds().height);
+            enemyHealthBar.setPosition(buttonSize/2, 10*buttonSize);
+            enemyHealthBar.setOutlineThickness(3.f);
+            enemyHealthBar.setFillColor(sf::Color(109, 109, 110));
+            enemyHealthBar.setOutlineColor(sf::Color(0, 0, 0));
+
+            enemyHealthRec.setOrigin(0,enemyHealthRec.getGlobalBounds().height);
+            enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
+            enemyHealthRec.setOutlineThickness(3.f);
+            enemyHealthRec.setFillColor(sf::Color(200, 10, 0));
+            enemyHealthRec.setOutlineColor(sf::Color(0, 0, 0));
+            
+            //  Setup gold info 
+            if ( !(coinTexture.loadFromFile(dataMap.files["GameCoin"]) && heartTexture.loadFromFile(heartFile)))
+            {
+                throw std::logic_error("\n  >> Error. Could not load coin or heart icon file. "
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) GAME_STATE");
+            }
+            coinSprite.setTexture(coinTexture);
+            coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
+
+            heartSprite.setTexture(heartTexture);
+            heartSprite.setScale(0.00083*buttonSize, 0.000833*buttonSize);
+
+            if ( !font.loadFromFile(dataMap.files["GameFont"]) )
+            {
+                throw std::logic_error("\n  >> Error. Could not load font file. "
+                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) GAME_STATE");
+            }
+
+            goldText.setFont(font);
+            goldText.setCharacterSize(buttonSize*0.4);
+            goldText.setColor(sf::Color::Yellow);
 
             for (int i{0} ; i < 6 ; i++)
             {
@@ -158,7 +162,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case MENU_STATE:
         {
 
-            for (int i{0} ; i < menuButtons.size() ; i++)
+            for (unsigned i{0} ; i < menuButtons.size() ; i++)
             {
                 window->draw(menuButtons.at(i)->draw());
             }
@@ -167,7 +171,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case GAME_STATE:
             window->draw(interface);
             window->draw(statsInterface);
-            for (int i{0} ; i < 6 ; i++)
+            for (unsigned i{0} ; i < 6 ; i++)
             {
                 coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
                 heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
@@ -182,6 +186,15 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
                 window->draw(gameButtons.at(i)->draw());
             }
             break;
+        case PAUSE_STATE:
+        {
+
+            for (unsigned i{0} ; i < pausedButtons.size() ; i++)
+            {
+                window->draw(pausedButtons.at(i)->draw());
+            }
+            break;
+        }
         default:
             break; 
     }
@@ -220,6 +233,19 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                     gameButtons.at(i)->stopHover(); 
                 }
             }
+        case PAUSE_STATE:
+            for (int i{0} ; i < pausedButtons.size() ; i++)
+            {
+                if (pausedButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+                {
+                    pausedButtons.at(i)->hover();
+                }
+                else
+                {
+                    pausedButtons.at(i)->stopHover(); 
+                }
+            }
+            break;
         default:
             break;
     }
@@ -246,6 +272,17 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
             for (int i{0} ; i < 6 ; i++)
                 {
                     if (gameButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
+                    {
+                        return i+1;
+                    }
+                }
+            break;
+        }
+        case PAUSE_STATE:
+        {
+            for (int i{0} ; i < pausedButtons.size() ; i++)
+                {
+                    if (pausedButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
                         return i+1;
                     }

@@ -2,6 +2,8 @@
 #define PauseState_H
 
 #include "State.h"
+#include "GUI.h"
+
 
 #include <string>
 #include <memory>
@@ -22,19 +24,20 @@ public:
 
 private:
     // FUNCTIONS
-    void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     ()                                  override;
-    int     getNextState    ()                                  override;
-    void    updateLogic     ()    override;
-    void    startAnimation  ();
-    void    resetState()     override;
-
+    void    handleEvent     (sf::Event) override;
+    void    renderFrame     ()          override;
+    int     getNextState    ()          override;
+    void    updateLogic     ()          override;
+    void    resetState      ()          override;
+    
     // VARIABLES
-    int nextstate;
+    int nextState;
 
-    sf::Font*           textFont;
-    sf::Text*           pausedText;
-    sf::RectangleShape* greyOut;
+    sf::Font            textFont;
+    sf::Text            pausedText;
+    sf::RectangleShape  greyOut;
+    
+    GUI     gui;
 };
 
 #endif

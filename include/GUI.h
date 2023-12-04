@@ -37,8 +37,11 @@ class GUI
 
         std::vector<std::shared_ptr<Button>> menuButtons;
         std::vector<std::shared_ptr<Button>> gameButtons;
+        std::vector<std::shared_ptr<Button>> pausedButtons;
         std::vector<std::string>             menuTexts;
+        std::vector<std::string>             pausedTexts;
         std::vector<sf::Texture>             gameTextures;
+
 
 
         sf::RectangleShape  interface;
@@ -54,10 +57,6 @@ class GUI
         sf::Sprite          heartSprite;
         sf::Font            font;
         sf::Text            goldText;
-        sf::Text            playText;
-        sf::Text            optionsText;
-        sf::Text            creditsText;
-        sf::Text            quitText;
 
 };
 
