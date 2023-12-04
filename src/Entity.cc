@@ -41,7 +41,7 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     return hasCollided;
 }
 
-sf::Sprite Entity::getSprite() const &
+const sf::Sprite& Entity::getSprite()  
 {
     return sprite;
 }
@@ -56,7 +56,7 @@ bool Entity::getIsFriendly()
     return isFriendly;
 }
 
-sf::RectangleShape Entity::getBox()
+sf::RectangleShape Entity::getBox() 
 {
     return boundingbox;
 }
