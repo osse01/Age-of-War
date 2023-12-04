@@ -17,18 +17,6 @@ class FileReader
 //  FileReader class contains functions for reading data
 //  from .txt files and can return that data in vector
 //  format for easy acces to the data.
-//
-//  Data will be acceseble through struct called Data.
-//  FileReader funtion returnData(const std::string) Assumes
-//  the Data Read From StageX.txt File is in Format:
-//  TYPE-/-DAMAGE-/-HP-/-MOVEMENTSPEED-/-RANGE-/-ATTACKSPEED
-//  -/-BOX_SIZE-/-COST-/-DEATH_VALUE-/-SPRITE_DIM-/-TEXTUREFILE
-//
-//  Intended Use, to Create a FileReader Object Giving 
-//  it the Correct File Path To Stage Data File and Also
-//  Wich Type of Object we are Supposed To fetch Data for.
-//  Then Call getData() to get a Struct Containing the 
-//  Desired Data.
 //  -------------------------------------------------------
 
 {
@@ -42,25 +30,6 @@ public:
 //  OPERATORS
     FileReader& operator = (const FileReader&)  = delete;
     FileReader& operator = (FileReader&&)       = delete;
-
-//  STRUCTURES
-    //struct Stats
-    //{
-    //    int     damage;
-    //    int     hp;
-    //    float   movementSpeed;
-    //    float   range;
-    //    int     attackSpeed;
-    //    int     cost;
-    //    int     deathValue;
-//
-    //    sf::Vector2f boxSize;
-    //    sf::Vector2i spriteDim;
-//
-    //    std::string filename;
-//
-    //    float windowScale;
-    //};
 
     struct Data
     {

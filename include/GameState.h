@@ -48,6 +48,9 @@ class GameState : public State
         void enemyPlay        ();
 
     private:
+        //  FUNCTIONS
+        void windowPanning     (bool);
+
         // VARIABLES
 
         std::vector<std::shared_ptr<Entity>> friendlyVector;
@@ -56,8 +59,10 @@ class GameState : public State
 
         sf::Texture         backgroundTexture;
         sf::Texture         groundTexture;
+        sf::Texture         woodsTexture;
         sf::Sprite          backgroundSprite;
         sf::Sprite          groundSprite;
+        sf::Sprite          woodsSprite;
         sf::View            view;
         sf::RenderWindow    canvas;
         
