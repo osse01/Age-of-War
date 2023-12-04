@@ -5,7 +5,7 @@
 #include <vector>
 #include "Button.h"
 #include "State.h"
-
+#include "FileReader.h"
 
 class GUI
 {
@@ -15,7 +15,7 @@ class GUI
 
     public:
     //  CONSTRUCTORS
-        GUI(int, std::shared_ptr<sf::RenderWindow>);
+        GUI(int, std::shared_ptr<sf::RenderWindow>, FileReader::Data&);
         ~GUI() = default;
         GUI(const GUI&) = delete;
         GUI& operator=(GUI&) = delete;
@@ -30,12 +30,10 @@ class GUI
 
     protected:
     //  VARIABLES
-        unsigned int    buttonSize;
-        unsigned int    originalBaseHP;
-        std::string     fontFile;
-        std::string     interfaceFile;
-        std::string     coinFile;
-        std::string     heartFile;
+        unsigned int     buttonSize;
+        unsigned int     originalBaseHP;
+        FileReader::Data dataMap;
+        std::string      heartFile;
 
         std::vector<std::shared_ptr<Button>> menuButtons;
         std::vector<std::shared_ptr<Button>> gameButtons;

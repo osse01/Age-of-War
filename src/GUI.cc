@@ -4,10 +4,8 @@
 
 // standard button rgb color: (112, 58, 7)
 
-GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
-    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, fontFile{ "assets/newFont.ttf" },
-      interfaceFile{ "assets/interfaceBackground.jpeg" },
-      coinFile{ "assets/gameCoin.png" }, heartFile{ "assets/health.png" },
+GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, menuTexts{}, 
       gameTextures {}, 
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
@@ -18,23 +16,23 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
       playText{}, optionsText{}, creditsText{}, quitText {}
 {
     sf::Texture tmpText {};
-    tmpText.loadFromFile("assets/cursor.png");
+    tmpText.loadFromFile(dataMap.files["Cursor"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile("assets/gameCoin.png");
+    tmpText.loadFromFile(dataMap.files["GameCoin"]);
         gameTextures.push_back(tmpText);
     tmpText.loadFromFile("assets/health.png");
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile("assets/tree.png");
+    tmpText.loadFromFile(dataMap.files["Trees"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile("assets/friendly_ranged_sprite_sheet.png");
+    tmpText.loadFromFile("assets/friendly_" + dataMap.files["Ranged"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile("assets/friendly_melee_sprite_sheet.png");
+    tmpText.loadFromFile("assets/friendly_" + dataMap.files["Melee"]);
         gameTextures.push_back(tmpText);
     switch (currentState)
     {
     case MENU_STATE:
         {
-            if ( font.loadFromFile(fontFile) )
+            if ( font.loadFromFile(dataMap.files["NumberFont"]) )
             {
                 menuTexts.push_back("Start game");
 
@@ -62,7 +60,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
 
     case GAME_STATE:
         {
-            if ( interfaceTexture.loadFromFile(interfaceFile) )
+            if ( interfaceTexture.loadFromFile(dataMap.files["GUITexture"]) )
             {
                 interface.setPosition(window->getSize().x - interface.getSize().x, 0.f);
                 interface.setOutlineThickness(2.f);
@@ -106,7 +104,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
-            if ( coinTexture.loadFromFile(coinFile) && heartTexture.loadFromFile(heartFile))
+            if ( coinTexture.loadFromFile(dataMap.files["GameCoin"]) && heartTexture.loadFromFile(heartFile))
             {
                 coinSprite.setTexture(coinTexture);
                 coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
@@ -121,7 +119,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window)
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>)");
             }
 
-            if ( font.loadFromFile(fontFile) )
+            if ( font.loadFromFile(dataMap.files["NumberFont"]) )
             {
                 goldText.setFont(font);
                 goldText.setCharacterSize(buttonSize*0.4);

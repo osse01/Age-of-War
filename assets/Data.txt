@@ -82,3 +82,9 @@ Ground
     
 Trees
     filename assets/trees.png
+
+GameCoin
+    filename assets/gameCoin.png
+
+GUITexture
+    filename assets/interfaceBackground.jpeg
