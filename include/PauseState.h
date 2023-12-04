@@ -22,19 +22,19 @@ public:
 
 private:
     // FUNCTIONS
-    void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     ()                                  override;
-    int     getNextState    ()                                  override;
-    void    updateLogic     ()    override;
+    void    handleEvent     (sf::Event) override;
+    void    renderFrame     ()          override;
+    int     getNextState    ()          override;
+    void    updateLogic     ()          override;
+    void    resetState      ()          override;
     void    startAnimation  ();
-    void    resetState()     override;
-
+    
     // VARIABLES
     int nextstate;
 
-    sf::Font*           textFont;
-    sf::Text*           pausedText;
-    sf::RectangleShape* greyOut;
+    sf::Font            textFont;
+    sf::Text            pausedText;
+    sf::RectangleShape  greyOut;
 };
 
 #endif

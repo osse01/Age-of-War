@@ -5,8 +5,7 @@
 
 PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, sound, frameDuration), nextstate{PAUSE_STATE},
-    textFont     { new sf::Font{} }, pausedText { new sf::Text {} }, 
-    greyOut      { new sf::RectangleShape{} }
+    textFont {}, pausedText {}, greyOut {}
   
 //  -------------------------------------------------------
 //  PauseState constructor. Loads in the Font Used for Text and Backround Image, the Name of the Files
@@ -15,28 +14,25 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
 //  For Now File Names are Hardcoded Values. This must Change!!!
 //  -------------------------------------------------------
 {
-    if(textFont->loadFromFile(dataMap.files["GameFont"]))
+    if(textFont.loadFromFile(dataMap.files["GameFont"]))
     {
-        pausedText->setFont          (*textFont);
-        pausedText->setString        ("PAUSED");
-        pausedText->setCharacterSize (50);
-        pausedText->setOrigin        (pausedText->getLocalBounds().width / 2, pausedText->getLocalBounds().height / 2);
-        pausedText->setPosition      (window->getSize().x / 2, window->getSize().y / 3);
-        pausedText->setFillColor     (sf::Color::Black); 
+        pausedText.setFont          (textFont);
+        pausedText.setString        ("PAUSED");
+        pausedText.setCharacterSize (50);
+        pausedText.setOrigin        (pausedText.getLocalBounds().width / 2, pausedText.getLocalBounds().height / 2);
+        pausedText.setPosition      (window->getSize().x / 2, window->getSize().y / 3);
+        pausedText.setFillColor     (sf::Color::Black); 
     }
     else
     {
         throw std::logic_error("    >> Error: Could Not Find font .ttf file. Error in PauseState::PauseState().");
     }
-    greyOut->setSize(static_cast<sf::Vector2f>(window->getSize()));
-    greyOut->setFillColor(sf::Color(115, 90, 100, 2));
+    greyOut.setSize(static_cast<sf::Vector2f>(window->getSize()));
+    greyOut.setFillColor(sf::Color(115, 90, 100, 2));
 }
 
 PauseState::~PauseState()
 {
-    delete textFont;
-    delete pausedText;
-    delete greyOut;
     window = nullptr;
     frameDuration = nullptr;
 }
@@ -87,9 +83,9 @@ void PauseState::renderFrame()
 //  Funcion Explaination
 //  ---------------------------------------------
 {
-    window->draw(*greyOut);
+    window->draw(greyOut);
 
-    window->draw(*pausedText);
+    window->draw(pausedText);
 }
 
 void PauseState::resetState()
