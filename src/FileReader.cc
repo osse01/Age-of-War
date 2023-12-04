@@ -1,8 +1,8 @@
 #include "../include/FileReader.h"
-
+#include <iostream>
 
 FileReader::FileReader(std::shared_ptr<sf::RenderWindow> window)
-    : data{}, windowScale {window->getSize().x/1920.f}
+    : windowScale {window->getSize().x/1920.f}, data{}
 //  -------------------------------------------------------
 {}
 
