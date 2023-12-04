@@ -263,10 +263,11 @@ void GUI::setBaseHP(int hp) // Change later when Data is implemented correctly
     originalBaseHP = hp;
 }
 
-void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, int friendlyHP, int enemyHP)
+void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)
 {
-    enemyHealthBar.setPosition(window->getSize().x - buttonSize/2*1.5, 8*buttonSize);
+    enemyHealthBar.setPosition(groundSprite.getGlobalBounds().width/2 + buttonSize/2*1.5, 8*buttonSize);
     enemyHealthBar.setScale(1/1.5, 1/1.5);
+
     enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
     enemyHealthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(enemyHP)/static_cast<double>(originalBaseHP)/1.5));
     

@@ -15,7 +15,7 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 
 
     text->setColor(sf::Color::Black);
-    text->setOrigin(text->getGlobalBounds().width/2+2, text->getGlobalBounds().height/2);
+    text->setOrigin(text->getGlobalBounds().width/2+2, text->getGlobalBounds().height/2 - 2);
     text->setPosition(button.getPosition());
 
     renderButton->create(buttonSize.x+4, buttonSize.y+4);
@@ -33,14 +33,16 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& spri
 : i {1}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}
   {
-    renderButton->create(buttonSize.x, buttonSize.y);
+    renderButton->create(buttonSize.x + 4, buttonSize.y + 4);
 
     button.setFillColor(fillColor);
     button.setOutlineColor(sf::Color::Black);
     button.setOutlineThickness(2.0f);
-    button.setPosition(0,0);
+    button.setOrigin(button.getSize().x/2-2, button.getSize().y/2-2);
+    button.setPosition(buttonSize.x/2, buttonSize.y/2);
+
     
-    Button::sprite.setOrigin(0,0);
+    Button::sprite.setOrigin(sprite.getGlobalBounds().width/2 + 4, sprite.getGlobalBounds().height/2 + 2);
     Button::sprite.setPosition(button.getPosition());
     Button::sprite.scale(renderButton->getSize().x/Button::sprite.getGlobalBounds().width, renderButton->getSize().y/Button::sprite.getGlobalBounds().height);
 

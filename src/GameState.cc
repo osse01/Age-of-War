@@ -6,25 +6,37 @@
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
-    backgroundTexture {},  groundTexture{}, backgroundSprite {}, groundSprite{},
+    backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { 1, screen, dataMap }, enemy{frameDuration}
 {
 
     //  Load in Background Image
-    if(!backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]))
+    if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]) && woodsTexture.loadFromFile(dataMap.files["Trees"])))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
     //  Setup Background Image and ground image
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setScale(window->getSize().x / backgroundSprite.getGlobalBounds().width, 
-                              window->getSize().y / backgroundSprite.getGlobalBounds().height);
-
     groundSprite.setTexture(groundTexture);
-    groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height);
-    groundSprite.setPosition(0, view.getSize().y+window->getSize().y/13);
+    groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height); 
+    groundSprite.setPosition(window->getSize().x/2, view.getSize().y + screen->getSize().y/13);
+
+
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width/2, backgroundSprite.getGlobalBounds().height/2);
+    backgroundSprite.setPosition(backgroundSprite.getGlobalBounds().width/2, backgroundSprite.getGlobalBounds().height/2);
+    backgroundSprite.scale(1.75, 1);
+
+    
+    woodsSprite.setScale(1, 1);
+    woodsTexture.setRepeated(true);
+    woodsSprite.setTexture(woodsTexture);
+    woodsSprite.setTextureRect(sf::Rect(0,0,
+     static_cast<int>(8*woodsSprite.getGlobalBounds().width),static_cast<int>(woodsSprite.getGlobalBounds().height)));
+    woodsSprite.setOrigin(woodsSprite.getGlobalBounds().width/2, woodsSprite.getGlobalBounds().height);
+    woodsSprite.setPosition(groundSprite.getPosition().x, groundSprite.getPosition().y  ); 
+    woodsSprite.setScale(0.5, 0.5);
 
     gui.setBaseHP(dataMap.stats["Base"]["hp"]);
 
@@ -32,7 +44,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
     enemyVector.push_back(std::make_shared<Base>(dataMap, false,
-    sf::Vector2f(19*window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
+    sf::Vector2f(groundSprite.getGlobalBounds().width/2, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
 }
 
@@ -40,6 +52,7 @@ GameState::~GameState()
 {}
 
 void GameState::handleEvent(sf::Event event)
+//  ---------------------------------------------
 {
     switch (event.type)
     {
@@ -114,7 +127,42 @@ void GameState::handleEvent(sf::Event event)
     }
 }
 
+void GameState::windowPanning(bool direction)
+//  ---------------------------------------------
+//  direction = true  => move left
+//  direvtion = false => move right
+//  ---------------------------------------------
+{
+    float   scale       { 100 };
+    float   distance    { groundSprite.getGlobalBounds().width/2 };
+    float   bScale      { 0.9 };
+    float   tScale      { 0.7 };
+
+
+    if (direction)
+    {
+        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
+        if (!(viewLeft - 10 < friendlyVector.back()->getSprite().getPosition().x - friendlyVector.back()->getSprite().getGlobalBounds().width/2))
+        {
+            view.move(-scale*(frameDuration->asSeconds()), 0);
+            backgroundSprite.move(-bScale*scale*(frameDuration->asSeconds()), 0);
+            woodsSprite.move(-tScale*scale*(frameDuration->asSeconds()), 0);
+        }
+    }
+    else
+    {
+        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
+        if (!(viewRight + 10 > enemyVector.back()->getSprite().getPosition().x + enemyVector.back()->getSprite().getGlobalBounds().width/2))
+        {
+            view.move(scale*(frameDuration->asSeconds()), 0);
+            backgroundSprite.move(bScale*scale*(frameDuration->asSeconds()), 0);
+            woodsSprite.move(tScale*scale*(frameDuration->asSeconds()), 0);
+        }
+    }
+}
+
 void GameState::updateLogic()        
+//  ---------------------------------------------
 {
     if(friendlyVector.back()->isDead())
     {
@@ -129,24 +177,15 @@ void GameState::updateLogic()
     {
         sf::Mouse mouse {};
         int margin {static_cast<int>(window->getSize().x/20)};
-        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
-        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
+        
         
             if (mouse.getPosition(*window).x < margin)
             {
-                view.move(-200*(frameDuration->asSeconds()), 0);
-                if (viewLeft - 10 < backgroundSprite.getGlobalBounds().left)
-                {
-                    view.move(200*(frameDuration->asSeconds()), 0);
-                }
+                windowPanning(true);
             }
             else if (mouse.getPosition(*window).x > 19*margin)
             {
-                view.move(200*(frameDuration->asSeconds()), 0);
-                if (viewRight + 10 > backgroundSprite.getGlobalBounds().width)
-                {
-                    view.move(-200*(frameDuration->asSeconds()), 0);
-                }
+                windowPanning(false);
             }
     }
 
@@ -218,6 +257,7 @@ void GameState::updateLogic()
 }
 
 void GameState::handleCollisions()
+//  ---------------------------------------------
 {
     // Handle Collision between Friendly and Enemy
     if ( friendlyVector.size() > 0 && enemyVector.size() > 0 )
@@ -281,14 +321,16 @@ void GameState::handleCollisions()
 }
 
 void GameState::renderFrame()  
+//  ---------------------------------------------
 {
     window->setView(view);
     
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
-    
+
     window->draw(backgroundSprite);
-    window->draw(groundSprite);
+    window->draw(woodsSprite);
+    window->draw(groundSprite);    
     
     //  Render units
     for(auto &it: friendlyVector)
@@ -303,22 +345,25 @@ void GameState::renderFrame()
     {
         window->draw(it->getSprite());
     }
-    gui.drawHPBar(window, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
+    gui.drawHPBar(window, groundSprite, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
     window->setView(window->getDefaultView());
     gui.draw(GAME_STATE, window, gold);
 }
 
 void GameState::resetState()
+//  ---------------------------------------------
 {
     nextState = GAME_STATE;
 }
 
 int GameState::getNextState()       
+//  ---------------------------------------------
 {
     return nextState;
 }
 
 void GameState::spawnFriendly(std::string troop)
+//  ---------------------------------------------
 {
     sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
     sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
@@ -354,6 +399,7 @@ void GameState::spawnFriendly(std::string troop)
 }
 
 void GameState::spawnEnemy(int type)
+//  ---------------------------------------------
 {
     sf::Sprite baseBounds {enemyVector.back()->getSprite()};
     sf::Vector2f spawnPoint { baseBounds.getPosition().x - baseBounds.getGlobalBounds().width/2,
@@ -381,11 +427,13 @@ void GameState::spawnEnemy(int type)
 }
 
 void GameState::updateStage()
+//  ---------------------------------------------
 {
     stage++;
 }
 
 void GameState::enemyPlay()
+//  ---------------------------------------------
 {
     std::vector<int> play = enemy.enemyPlay();
     for(int type : play)
