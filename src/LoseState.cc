@@ -1,9 +1,9 @@
 #include "../include/LoseState.h"
 
-LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
 : State(screen, dataMap, sound, frameDuration), nextState{LOSE_STATE},
     textFont     { new sf::Font{} }, loseText { new sf::Text {} }, 
-    greyOut      { new sf::RectangleShape{} }
+    greyOut      { new sf::RectangleShape{} }, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}
 {
     if(textFont->loadFromFile(dataMap.files["TitleFont"]))
     {
@@ -20,6 +20,9 @@ LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     }
     greyOut->setSize(static_cast<sf::Vector2f>(window->getSize()));
     greyOut->setFillColor(sf::Color(115, 90, 100, 2));
+    
+    //  Load Last GameState Frame
+    gamestateFrameSprite.setTexture(gamestateFrameTexture);
 }
 
 LoseState::~LoseState()
@@ -47,8 +50,10 @@ void LoseState::updateLogic()
 
 void LoseState::renderFrame()
 {
-    window->draw(*greyOut);
+    window->clear(sf::Color(255, 0, 0));
 
+    window->draw(gamestateFrameSprite);
+    window->draw(*greyOut);
     window->draw(*loseText);
 }
 
