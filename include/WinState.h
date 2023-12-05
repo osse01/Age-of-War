@@ -3,6 +3,8 @@
 
 #include "State.h"
 #include <memory>
+#include "GUI.h"
+
 #include <SFML/Graphics.hpp>
 #include <string>
 
@@ -25,11 +27,13 @@ class WinState: public State
     private:
     int nextState;
 
-    sf::Font*           textFont;
-    sf::Text*           winText;
-    sf::RectangleShape* greyOut;
+    sf::Font            textFont;
+    sf::Text            winText;
+    sf::RectangleShape  greyOut;
     sf::Texture         gamestateFrameTexture;
     sf::Sprite          gamestateFrameSprite;
+
+    GUI     gui;
 
 };
 

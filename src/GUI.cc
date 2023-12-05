@@ -5,7 +5,7 @@
 // standard button rgb color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, dataMap{data}, heartFile{ "assets/health.png" },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
       winTexts{}, loseTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
@@ -79,7 +79,6 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
             }
 
-            winTexts.push_back("Play again");
             winTexts.push_back("Main Menu");
             winTexts.push_back("Quit");
     
@@ -100,7 +99,6 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
             }
 
-            loseTexts.push_back("Resume Game");
             loseTexts.push_back("Main Menu");
             loseTexts.push_back("Quit");
     

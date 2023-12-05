@@ -163,14 +163,16 @@ void Game::getNextState()
 
                 break;
             case WIN_STATE:
-                states.top()->resetState();
+                states.top()->renderFrame();
                 saveFrame();
+                states.top()->resetState();
                 ptr = std::make_unique<WinState>(window, dataMap, music, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
                 break;
             case LOSE_STATE:
-                states.top()->resetState();
+                states.top()->renderFrame();
                 saveFrame();
+                states.top()->resetState();
                 ptr = std::make_unique<LoseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
                 break;
