@@ -38,8 +38,6 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     woodsSprite.setPosition(groundSprite.getPosition().x, groundSprite.getPosition().y  ); 
     woodsSprite.setScale(0.5, 0.5);
 
-    gui.setBaseHP(dataMap.stats["Base"]["hp"]);
-
     friendlyVector.push_back(std::make_shared<Base>(dataMap, true,
     sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
