@@ -163,7 +163,7 @@ void MenuState::renderFrame()
     
     window->clear(sf::Color(255, 255, 255));
 
-    t = t + frameDuration->asSeconds();
+    t = t + 0.25*frameDuration->asSeconds();
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
