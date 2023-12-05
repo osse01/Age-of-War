@@ -50,7 +50,7 @@ void CreditsState::setupCanvas()
 {
     sf::Text header{"Credits", textFont, 150};
     header.setPosition(canvas.getSize().x/2, window->getSize().y);
-    header.setColor(sf::Color(255, 255, 255));
+    header.setFillColor(sf::Color(255, 255, 255));
     header.setOrigin(header.getGlobalBounds().width/2, header.getGlobalBounds().height/2 );
 
     canvas.draw(header);
@@ -58,7 +58,7 @@ void CreditsState::setupCanvas()
     for (unsigned i{}; i < nameList.size(); i++)
     {
         nameList.at(i).setPosition(canvas.getSize().x/2, window->getSize().y *(1.5 + 0.3*i));
-        nameList.at(i).setColor(sf::Color(255, 255, 255));
+        nameList.at(i).setFillColor(sf::Color(255, 255, 255));
         nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2, nameList.at(i).getGlobalBounds().height/2 );
 
         canvas.draw(nameList.at(i));
