@@ -8,7 +8,7 @@
     class Melee : public Troop
     {
         public:
-            Melee(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+            Melee(const FileReader::Data&, bool, sf::Vector2f);
             virtual ~Melee() = default;
     };
 

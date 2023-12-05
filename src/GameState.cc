@@ -1,58 +1,32 @@
 #include "../include/GameState.h"
 
 #include <iostream>
-#include <utility>
-#include <cmath>
+#include "utility"
 
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
-    backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
-    view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemy{frameDuration}
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, sound, frameDuration), melee {}, ranged {}, tank {}, friendlyQueue {}, enemyQueue {},
+    backgroundFile { "assets/background.jpeg" }, backgroundTexture {},
+    backgroundSprite {}, zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextstate { GAME_STATE }, stage { 1 }, gui { 1, screen }
 {
+    window->setFramerateLimit(18);
 
     //  Load in Background Image
-    if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]) && woodsTexture.loadFromFile(dataMap.files["Trees"])))
+    if(!backgroundTexture.loadFromFile(backgroundFile))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in GameState::GameState().");
     }
-    //  Setup Background Image and ground image
-    groundSprite.setTexture(groundTexture);
-    groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height); 
-    groundSprite.setPosition(window->getSize().x/2, view.getSize().y + screen->getSize().y/13);
-
-
     backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width/2, backgroundSprite.getGlobalBounds().height/2);
-    backgroundSprite.setPosition(backgroundSprite.getGlobalBounds().width/2, backgroundSprite.getGlobalBounds().height/2);
-    backgroundSprite.scale(1.75, 1);
+    backgroundSprite.setScale(window->getSize().x / backgroundSprite.getGlobalBounds().width, window->getSize().y / backgroundSprite.getGlobalBounds().height);
 
-    
-    woodsSprite.setScale(1, 1);
-    woodsTexture.setRepeated(true);
-    woodsSprite.setTexture(woodsTexture);
-    woodsSprite.setTextureRect(sf::Rect(0,0,
-     static_cast<int>(8*woodsSprite.getGlobalBounds().width),static_cast<int>(woodsSprite.getGlobalBounds().height)));
-    woodsSprite.setOrigin(woodsSprite.getGlobalBounds().width/2, woodsSprite.getGlobalBounds().height);
-    woodsSprite.setPosition(groundSprite.getPosition().x, groundSprite.getPosition().y  ); 
-    woodsSprite.setScale(0.5, 0.5);
-
-    gui.setBaseHP(dataMap.stats["Base"]["hp"]);
-
-    friendlyVector.push_back(std::make_shared<Base>(dataMap, true,
-    sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
-
-    enemyVector.push_back(std::make_shared<Base>(dataMap, false,
-    sf::Vector2f(groundSprite.getGlobalBounds().width/2, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
-
+    FileReader reader {};
+    melee = reader.returnData("Melee", "assets/stage1.txt");
 }
 
 GameState::~GameState()
 {}
 
 void GameState::handleEvent(sf::Event event)
-//  ---------------------------------------------
 {
     switch (event.type)
     {
@@ -60,35 +34,21 @@ void GameState::handleEvent(sf::Event event)
             switch (event.key.code)
             {
                 case sf::Keyboard::Num1:
-                    spawnFriendly("Melee");
+                    spawnFriendly();
                     break;
 
                 case sf::Keyboard::Num2:
-                    spawnEnemy(1);
-                    break;
-                
-                case sf::Keyboard::Num3:
-                    spawnEnemy(3);
+                    spawnEnemy();
                     break;
 
                 case sf::Keyboard::M:
-                    nextState = MENU_STATE;
+                    nextstate = MENU_STATE;
                     music->stop();
                     break;
 
                 case sf::Keyboard::Escape:
-                    nextState = PAUSE_STATE;
+                    nextstate = PAUSE_STATE;
                     music->pause();
-                    break;
-                
-                case sf::Keyboard::W:
-                    nextState = WIN_STATE;
-                    music->stop();
-                    break;
-
-                case sf::Keyboard::L:
-                    nextState = LOSE_STATE;
-                    music->stop();
                     break;
 
                 default:
@@ -104,16 +64,13 @@ void GameState::handleEvent(sf::Event event)
                 switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
                 {
                     case 6:
-                        spawnFriendly("Melee");
+                        spawnFriendly();
                         break;
                     case 5:
-                        spawnFriendly("Ranged");
-                        break;
-                    case 4:
-                        spawnFriendly("Tank");
+                        spawnEnemy();
                         break;
                     case 1:
-                        nextState = PAUSE_STATE;
+                        window->close();
                         break;
                     default:
                         break;
@@ -127,317 +84,123 @@ void GameState::handleEvent(sf::Event event)
     }
 }
 
-void GameState::windowPanning(bool direction)
-//  ---------------------------------------------
-//  direction = true  => move left
-//  direvtion = false => move right
-//  ---------------------------------------------
+void GameState::updateLogic()         
 {
-    float   scale       { 100 };
-    float   distance    { groundSprite.getGlobalBounds().width/2 };
-    float   bScale      { 0.9 };
-    float   tScale      { 0.7 };
-
-
-    if (direction)
-    {
-        int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
-        if (!(viewLeft - 10 < friendlyVector.back()->getSprite().getPosition().x - friendlyVector.back()->getSprite().getGlobalBounds().width/2))
-        {
-            view.move(-scale*(frameDuration->asSeconds()), 0);
-            backgroundSprite.move(-bScale*scale*(frameDuration->asSeconds()), 0);
-            woodsSprite.move(-tScale*scale*(frameDuration->asSeconds()), 0);
-        }
-    }
-    else
-    {
-        int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
-        if (!(viewRight + 10 > enemyVector.back()->getSprite().getPosition().x + enemyVector.back()->getSprite().getGlobalBounds().width/2))
-        {
-            view.move(scale*(frameDuration->asSeconds()), 0);
-            backgroundSprite.move(bScale*scale*(frameDuration->asSeconds()), 0);
-            woodsSprite.move(tScale*scale*(frameDuration->asSeconds()), 0);
-        }
-    }
-}
-
-void GameState::updateLogic()        
-//  ---------------------------------------------
-{
-    if(friendlyVector.back()->isDead())
-    {
-        nextState = LOSE_STATE;
-        return;
-    }
-    if(enemyVector.back()->isDead())
-    {
-        nextState = WIN_STATE;
-        return;
-    }
-    {
-        sf::Mouse mouse {};
-        int margin {static_cast<int>(window->getSize().x/20)};
-        
-        
-            if (mouse.getPosition(*window).x < margin)
-            {
-                windowPanning(true);
-            }
-            else if (mouse.getPosition(*window).x > 19*margin)
-            {
-                windowPanning(false);
-            }
-    }
-
-    //----PROJECTILES----
-    int i { 0 };
-    for (auto &it: projectileQueue)
-    {
-        if (it->getSprite().getPosition().y >= window->getSize().y || it->isDead() )
-        {
-            deleteEntities.push_back(i);
-        }
-        i++;
-        it->updatePos();
-    }
-    for (int j: deleteEntities)
-    {
-        projectileQueue.erase( projectileQueue.begin() + j );
-    }
-    deleteEntities.clear();
-    i = 0;
-
-//----FRIENDS----
-    for(auto &it: friendlyVector)
+    std::vector<int> deadEntitiesFriendly{};
+    std::vector<int> deadEntitiesEnemy{};
+    int i {};
+    for(auto &it: friendlyQueue)
         {
             if ( it->isDead() )
             {
-                deleteEntities.push_back(i);
+                deadEntitiesFriendly.push_back(i);
             }
-            i++;
             it->updatePos();
-            if (abs(it->getSprite().getPosition().x - enemyVector.at(0)->getSprite().getPosition().x) 
-                <= it->getRange())
-            {
-                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, sf::Vector2f(0,0))};
-                if ( tmpProjectile != nullptr)
-                {
-                    projectileQueue.push_back(tmpProjectile);
-                }
-            }
+            i++;
         }
-    for (int j: deleteEntities)
-    {
-        friendlyVector.erase( friendlyVector.begin() + j );
-    }
-    deleteEntities.clear();
     i = 0;
-
-//----ENEMIES----   
-    for(auto &it: enemyVector)
+    for(auto &it: enemyQueue)
         {
             if ( it->isDead() )
             {
-                deleteEntities.push_back(i);
-                gold += it->getDeathValue();
+                deadEntitiesEnemy.push_back(i);
             }
-            i++;
             it->updatePos();
+            i++;
         }
-    for (int j: deleteEntities)
+    for (int j: deadEntitiesFriendly)
     {
-        enemyVector.erase( enemyVector.begin() + j );
+        friendlyQueue.erase( friendlyQueue.begin() + j );
     }
-    deleteEntities.clear();
-
+    for (int j: deadEntitiesEnemy)
+    {
+        enemyQueue.erase( enemyQueue.begin() + j );
+    }
     handleCollisions();
-    enemyPlay();
-    gui.updateLogic(window, GAME_STATE);
-
 }
 
 void GameState::handleCollisions()
-//  ---------------------------------------------
 {
     // Handle Collision between Friendly and Enemy
-    if ( friendlyVector.size() > 0 && enemyVector.size() > 0 )
+    if ( friendlyQueue.size() > 0 && enemyQueue.size() > 0 )
     {
-        if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
+        if ( friendlyQueue.at(0)->collides(  enemyQueue.at(0) ) )
         {
-            friendlyVector.at(0) ->handleCollision(2, enemyVector.at(0)->getDamage());
-            enemyVector.at(0)    ->handleCollision(2, friendlyVector.at(0)->getDamage());
+            friendlyQueue.at(0) ->handleCollision(1, enemyQueue.at(0)->getDamage());
+            enemyQueue.at(0)    ->handleCollision(1, friendlyQueue.at(0)->getDamage());
         }
     }
     
-    
     // Handle Collision between Enemies
     int behind{ 1 };
-    for(int inFront{ 0 }; inFront < static_cast<int>(enemyVector.size()) - 1; inFront++, behind++)
+    for(int inFront{ 0 }; inFront < static_cast<int>(enemyQueue.size()) - 1; inFront++, behind++)
         { 
-            if( enemyVector.at(behind)->collides( enemyVector.at(inFront) ) )
+            if( enemyQueue.at(behind)->collides( enemyQueue.at(inFront) ) )
             {
                 // Enemy Behind waits for Enemy in Front
-                enemyVector.at(behind)->handleCollision(1);
+                enemyQueue.at(behind)->handleCollision(0, 0);
             }
         }
     
     // Handle Collision between Friends
     behind = 1;
-    for( int inFront{ 0 }; inFront < static_cast<int>(friendlyVector.size()) - 1; inFront++, behind++ )
+    for( int inFront{ 0 }; inFront < static_cast<int>(friendlyQueue.size()) - 1; inFront++, behind++ )
         { 
-            if( friendlyVector.at(behind)->collides( friendlyVector.at(inFront) ) )
+            if( friendlyQueue.at(behind)->collides( friendlyQueue.at(inFront) ) )
             {
                 // Friend Behind waits for Friend in Front
-                friendlyVector.at(behind)->handleCollision(1);
+                friendlyQueue.at(behind)->handleCollision(0, 0);
             }
         }
 
-    // Handle Collision between Projectiles and Entities
-    for (auto &itProjectile : projectileQueue)
-    {
-        if (itProjectile->getIsFriendly())
-        {
-            for (auto &itEnemy : enemyVector)
-            {
-                if (itProjectile->collides(itEnemy->getBox()))
-                {
-                    itEnemy->handleCollision(3, itProjectile->getDamage());
-                    itProjectile->handleCollision();
-                }
-            }
-        }
-        else
-        {
-            for (auto &itFriendly : friendlyVector)
-            {
-                if (itProjectile->collides(itFriendly->getBox()))
-                {
-                    itFriendly->handleCollision(3, itProjectile->getDamage());
-                    itProjectile->handleCollision();
-                }
-            }
-        }
-    }
 }
 
 void GameState::renderFrame()  
-//  ---------------------------------------------
 {
-    window->setView(view);
-    
+
     //  Fix Background
     window->clear(sf::Color(255, 255, 255));
 
+    //backgroundSprite.setScale(zoomFactor*0.694422f);
+    
     window->draw(backgroundSprite);
-    window->draw(woodsSprite);
-    window->draw(groundSprite);    
     
     //  Render units
-    for(auto &it: friendlyVector)
-    {
-        window->draw(it->getSprite());
-    }
-    for(auto &it: enemyVector)
-    {
-        window->draw(it->getSprite());
-    }
-    for(auto &it: projectileQueue)
-    {
-        window->draw(it->getSprite());
-    }
-    gui.drawHPBar(window, groundSprite, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
-    window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold);
+    for(auto &it: friendlyQueue)
+        {
+            window->draw(it->getSprite());
+        }
+    for(auto &it: enemyQueue)
+        {
+            window->draw(it->getSprite());
+        }
+    gui.draw(GAME_STATE, window);
 }
 
 void GameState::resetState()
-//  ---------------------------------------------
 {
-    nextState = GAME_STATE;
+    nextstate = GAME_STATE;
 }
 
 int GameState::getNextState()       
-//  ---------------------------------------------
 {
-    return nextState;
+    return nextstate;
 }
 
-void GameState::spawnFriendly(std::string troop)
-//  ---------------------------------------------
+void GameState::spawnFriendly()
 {
-    sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
-
-    auto it = friendlyVector.end()-1;
-    if (gold >= dataMap.stats[troop]["cost"])
-    {
-        gold -= dataMap.stats[troop]["cost"];
-        // Läs på om emplace
-        // Lös kollision
-        if (troop == "Melee")
-        {
-            friendlyVector.insert(it, std::make_shared<Melee> 
-            ( dataMap, true, spawnPoint, frameDuration) );
-        }
-        else if(troop == "Ranged")
-        {
-            friendlyVector.insert(it, std::make_shared<Ranged> 
-             ( dataMap, true, spawnPoint, frameDuration ) );
-        }
-        else if(troop == "Tank")
-        {
-            friendlyVector.insert(it, std::make_shared<Tank> 
-             ( dataMap, true, spawnPoint, frameDuration ) );
-        }
-        else
-        {
-            throw std::logic_error("\n  >> Error, Unidentified troop type. "
-            "Error in GameState::spawnFriendly(std::string). \n");
-        }
-    }    
+    friendlyQueue.push_back(std::make_shared<Melee> 
+        ( melee, true, sf::Vector2f( 40.f, window->getSize().y-200.f ) ) );
+    
 }
 
-void GameState::spawnEnemy(int type)
-//  ---------------------------------------------
+void GameState::spawnEnemy()
 {
-    sf::Sprite baseBounds {enemyVector.back()->getSprite()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x - baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
-
-    auto it = enemyVector.end()-1;
-
-    switch ( type )
-    {
-        case 1:
-            enemyVector.insert(it, std::make_shared<Melee> 
-                ( dataMap, false, spawnPoint, frameDuration) );
-            break;
-        case 2:
-            enemyVector.insert(it, std::make_shared<Ranged> 
-                ( dataMap, false, spawnPoint, frameDuration ) );
-            break;
-        case 3:
-            enemyVector.insert(it, std::make_shared<Tank> 
-                ( dataMap, false, spawnPoint, frameDuration ) );
-            break;
-        default:
-            break;
-    };
+    enemyQueue.push_back(std::make_shared<Melee> 
+        ( melee, false, sf::Vector2f( window->getSize().x - 40.f, window->getSize().y-200.f ) ) );
 }
 
 void GameState::updateStage()
-//  ---------------------------------------------
 {
     stage++;
-}
-
-void GameState::enemyPlay()
-//  ---------------------------------------------
-{
-    std::vector<int> play = enemy.enemyPlay();
-    for(int type : play)
-    {
-        spawnEnemy(type);
-    }
 }

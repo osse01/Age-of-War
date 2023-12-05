@@ -1,19 +1,20 @@
 #include "../include/FileReader.h"
-#include <iostream>
 
-FileReader::FileReader(std::shared_ptr<sf::RenderWindow> window)
-    : windowScale {window->getSize().x/1920.f}, data{}
+
+FileReader::FileReader()
+    : data{}, fileContents{}
 //  -------------------------------------------------------
 {}
 
-FileReader::Data FileReader::returnData(const std::string& filename)
+void FileReader::readFile(const std::string& filename)
 //  -------------------------------------------------------
-//  Returns Data Struct Containing all Info from the String
-//  Starting with Argument Name. 
+//  Reads .txt Contents Into Strings and Adds them to 
+//  fileContents Vector and returns true if successful.
 //  -------------------------------------------------------
 {
     std::ifstream file(filename);
     std::string line;
+    fileContents.clear();
 
     if (!file.is_open()) {
         throw std::logic_error("\n  >> Error: Failed to open the file <" 
@@ -22,45 +23,36 @@ FileReader::Data FileReader::returnData(const std::string& filename)
 
     else
     {
-        Data data{};
-        std::string lastKey {};
-        while (std::getline(file, line))
-        {
-            std::istringstream dataline {line};
-            std::string tmp {};
-
-            dataline >> tmp;
-
-            if (tmp.empty())
-            {
-                continue;
-            }
-            if (dataline.str() == tmp)
-            {
-                data.stats[tmp];
-                data.files[tmp];
-                data.dimensions[tmp];
-                lastKey = tmp;
-            }
-            else if (tmp == "filename")
-            {
-                dataline >> data.files[lastKey];
-            }
-            else if (tmp == "boxSize" || tmp == "spriteDim")
-            {
-                dataline >> data.dimensions[lastKey][tmp].x >> data.dimensions[lastKey][tmp].y;
-            }
-            else
-            {
-                dataline >> data.stats[lastKey][tmp];
-            }
+        while (std::getline(file, line)) {
+            fileContents.push_back(line);
         }
         file.close();
+    }
+}
 
-        data.windowScale = {windowScale};
+FileReader::Data FileReader::returnData(const std::string& name, const std::string& filename)
+//  -------------------------------------------------------
+//  Returns Data Struct Containing all Info from the String
+//  Starting with Argument Name. 
+//  -------------------------------------------------------
+{
+    readFile(filename);
+    Data data{};
+    std::string tmp{};
 
-        return data;
+    for (const auto& element : fileContents)
+    {
+        std::istringstream dataline{element};
+        dataline >> tmp;
 
+        if (tmp == name)
+        {
+            dataline >> data.damage >> data.hp >> data.movementSpeed >> data.range
+                      >> data.attackSpeed >> data.boxSize >> data.filename;
+
+            break;
+        }
     }
 
+    return data;
 }

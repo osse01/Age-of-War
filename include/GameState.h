@@ -1,24 +1,18 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include "FileReader.h"
 #include "State.h"
 #include "Melee.h"
-#include "Ranged.h"
-#include "Tank.h"
 #include "Troop.h"
 #include "Dynamic.h"
 #include "Entity.h"
-#include "Projectile.h"
 #include "GUI.h"
-#include "Enemy.h"
-#include "Base.h"
 
 #include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
 
 #include <queue>
 #include <memory>
-#include <string>
 
 
 
@@ -28,51 +22,43 @@ class GameState : public State
 {
     public:
         // CONSTRUCTORS
-        GameState  (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+        GameState  (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
         ~GameState () override;
         GameState (const GameState&) = delete;
 
-        GameState& operator= (const GameState&) = delete;
-    
-    
-        // FUNCTIONS
-        void handleEvent      (sf::Event) override;
-        void updateLogic      ()          override;
-        void renderFrame      ()          override;
-        int  getNextState     ()          override;
-        void spawnFriendly    (std::string);
-        void spawnEnemy       (int);
-        void handleCollisions ();
-        void resetState       ()          override;
-        void updateStage      ();
-        void enemyPlay        ();
+            GameState& operator= (const GameState&) = delete;
+       
+       
+            // FUNCTIONS
+            void handleEvent      (sf::Event) override;
+            void updateLogic      ()          override;
+            void renderFrame      ()          override;
+            int  getNextState     ()          override;
+            void spawnFriendly    ();
+            void spawnEnemy       ();
+            void handleCollisions ();
+            void resetState       ()          override;
+            void updateStage      ();
 
     private:
-        //  FUNCTIONS
-        void windowPanning     (bool);
-
         // VARIABLES
+        FileReader::Data melee;
+        FileReader::Data ranged;
+        FileReader::Data tank;
 
-        std::vector<std::shared_ptr<Entity>> friendlyVector;
-        std::vector<std::shared_ptr<Entity>> enemyVector;
-        std::deque<std::shared_ptr<Projectile>> projectileQueue;
+        std::deque<std::shared_ptr<Entity>> friendlyQueue;
+        std::deque<std::shared_ptr<Entity>> enemyQueue;
+
+        std::string         backgroundFile;
 
         sf::Texture         backgroundTexture;
-        sf::Texture         groundTexture;
-        sf::Texture         woodsTexture;
         sf::Sprite          backgroundSprite;
-        sf::Sprite          groundSprite;
-        sf::Sprite          woodsSprite;
-        sf::View            view;
         
         sf::Vector2f        zoomFactor;
 
-        int nextState;
+        int nextstate;
         int stage;
-        int gold;
         GUI                 gui;
-        Enemy               enemy;
-        std::vector<int>    deleteEntities{};
 };
 
 #endif
