@@ -38,6 +38,6 @@ float Base::getRange()
 void Base::takeDamage(int otherDamage)
 //  ---------------------------------------------
 {
-    Entity::hp -= otherDamage * frameDuration->asSeconds();
+    Entity::hp -= otherDamage;
 }
 

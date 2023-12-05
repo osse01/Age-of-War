@@ -5,7 +5,7 @@
 // standard button rgb color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, dataMap{data}, heartFile{ "assets/health.png" },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, pausedButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
@@ -295,11 +295,6 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
     return 0;
 }
 
-void GUI::setBaseHP(int hp) // Change later when Data is implemented correctly
-{
-    originalBaseHP = hp;
-}
-
 void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)
 {
     enemyHealthBar.setPosition(groundSprite.getGlobalBounds().width/2 + buttonSize/2*1.5, 8*buttonSize);
@@ -312,7 +307,7 @@ void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& 
     healthBar.setScale(1/1.5, 1/1.5);
     healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
     healthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(friendlyHP)/static_cast<double>(originalBaseHP)/1.5));
-
+        
     window->draw(enemyHealthBar);
     window->draw(enemyHealthRec);
     window->draw(healthBar);
