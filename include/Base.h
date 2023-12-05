@@ -12,17 +12,19 @@ class Base : public Entity
 {
 public:
 //CONSTRUCTORS
-    Base(const FileReader::Data&, bool , sf::Vector2f);
+    Base(FileReader::Data&, bool , sf::Vector2f, std::shared_ptr<sf::Time>);
     ~Base() = default;
 
 //FUNCTIONS
-void    updateHp();
-void    getBaseStats();
+std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f);
+void      handleCollision(int, int) override;
+void      updatePos()               override;
+float     getRange() override;
+void      takeDamage(int);
+//void updateHp();
+//void getBaseStats();
 
 private:
-sf::RectangleShape base;
-
-
 };
 
 
