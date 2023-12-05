@@ -134,7 +134,7 @@ void GameState::windowPanning(bool direction)
 //  ---------------------------------------------
 {
     float   scale       { 100 };
-    float   distance    { groundSprite.getGlobalBounds().width/2 };
+    //float   distance    { groundSprite.getGlobalBounds().width/2 };
     float   bScale      { 0.9 };
     float   tScale      { 0.7 };
 

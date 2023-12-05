@@ -27,7 +27,7 @@ class Entity
         bool getIsFriendly();
         bool isDead();
 
-        const sf::Sprite &  getSprite       ()         ;
+        sf::Sprite &  getSprite       ();
         bool        collides( std::shared_ptr<Entity> );
 
     protected:
