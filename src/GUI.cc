@@ -133,7 +133,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
 
             goldText.setFont(font);
             goldText.setCharacterSize(buttonSize*0.4);
-            goldText.setColor(sf::Color::Yellow);
+            goldText.setFillColor(sf::Color::Yellow);
 
             for (int i{0} ; i < 6 ; i++)
             {
@@ -169,6 +169,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             break;
         }
         case GAME_STATE:
+        {
             window->draw(interface);
             window->draw(statsInterface);
             for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
@@ -186,6 +187,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
                 window->draw(gameButtons.at(i)->draw());
             }
             break;
+        }
         case PAUSE_STATE:
         {
 
@@ -233,6 +235,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                     gameButtons.at(i)->stopHover(); 
                 }
             }
+            break;
         case PAUSE_STATE:
             for (int i{0} ; i < static_cast<int>(pausedButtons.size()) ; i++)
             {

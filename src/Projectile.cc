@@ -5,7 +5,7 @@
 Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats[projectileType]["movementSpeed"] }, xpos { pos.x }, ypos { pos.y },
   hp { data.stats[projectileType]["hp"] }, isFriendly { friendly }, hasCollided { false }, texture {}, sprite {},
-  boundingbox { sf::RectangleShape(static_cast<sf::Vector2f>(data.dimensions[projectileType]["boxSize"])) },
+  boundingbox { data.boxSize[projectileType] },
   frameDuration { frameDuration }, counter { 0 }
 {
     if(!texture.loadFromFile(data.files[projectileType]))

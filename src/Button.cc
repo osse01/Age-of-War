@@ -4,7 +4,7 @@
 
 
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, sf::Color outlineColor, std::string buttonText, sf::Font& font)
-: i {0}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)},
+: i {0}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}
 {
     button.setFillColor(fillColor);
@@ -14,7 +14,7 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
     button.setPosition(buttonSize.x/2, buttonSize.y/2);
 
 
-    text->setColor(sf::Color::Black);
+    text->setFillColor(sf::Color::Black);
     text->setOrigin(text->getGlobalBounds().width/2+2, text->getGlobalBounds().height/2 - 2);
     text->setPosition(button.getPosition());
 

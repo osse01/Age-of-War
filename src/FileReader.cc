@@ -39,16 +39,19 @@ FileReader::Data FileReader::returnData(const std::string& filename)
             {
                 data.stats[tmp];
                 data.files[tmp];
-                data.dimensions[tmp];
                 lastKey = tmp;
             }
             else if (tmp == "filename")
             {
                 dataline >> data.files[lastKey];
             }
-            else if (tmp == "boxSize" || tmp == "spriteDim")
+            else if (tmp == "spriteDim")
             {
-                dataline >> data.dimensions[lastKey][tmp].x >> data.dimensions[lastKey][tmp].y;
+                dataline >> data.spriteDim[lastKey].x >> data.spriteDim[lastKey].y;
+            }
+            else if (tmp == "boxSize")
+            {
+                dataline >> data.boxSize[lastKey].x >> data.boxSize[lastKey].y;
             }
             else
             {

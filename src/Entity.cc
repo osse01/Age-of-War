@@ -6,8 +6,8 @@
 Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
     : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
-      texture{}, rectSourceSprite { sf::Vector2i(0,0),data.dimensions[troopType]["spriteDim"] }, sprite {texture, rectSourceSprite},
-      boundingbox { sf::RectangleShape(static_cast<sf::Vector2f>(data.dimensions[troopType]["boxSize"])) }, frameDuration {frameDuration}
+      texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] }, sprite {texture, rectSourceSprite},
+      boundingbox { (data.boxSize[troopType]) }, frameDuration {frameDuration}
 {
     std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
     if(!texture.loadFromFile("assets/" + friendOrFoe + data.files[troopType]))

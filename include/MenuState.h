@@ -35,8 +35,6 @@
     float   t;
     int     nextState;
 
-    std::string     backgroundFile;
-
     sf::Texture        texture;
     sf::Sprite         sprite;
     sf::Font           textFont;
