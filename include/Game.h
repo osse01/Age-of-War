@@ -34,16 +34,11 @@ class Game
     
 
     private:
-
-    //  Functions
-    void saveFrame();
-
     // Variables //
     std::shared_ptr<sf::RenderWindow> window;
     sf::Event event;
     sf::Clock clock;
     std::shared_ptr<sf::Time> frameDurationPtr;
-    sf::Texture     lastFrame;
     
     // States
     std::stack<std::unique_ptr<State>> states;

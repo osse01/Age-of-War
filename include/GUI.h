@@ -37,12 +37,8 @@ class GUI
         std::vector<std::shared_ptr<Button>> menuButtons;
         std::vector<std::shared_ptr<Button>> gameButtons;
         std::vector<std::shared_ptr<Button>> pausedButtons;
-        std::vector<std::shared_ptr<Button>> winButtons;
-        std::vector<std::shared_ptr<Button>> loseButtons;
         std::vector<std::string>             menuTexts;
         std::vector<std::string>             pausedTexts;
-        std::vector<std::string>             winTexts;
-        std::vector<std::string>             loseTexts;
         std::vector<sf::Texture>             gameTextures;
 
 

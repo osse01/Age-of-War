@@ -3,9 +3,9 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
+PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, sound, frameDuration), nextState{PAUSE_STATE},
-    textFont {}, pausedText {}, greyOut {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { PAUSE_STATE, screen, dataMap }
+    textFont {}, pausedText {}, greyOut {}, gui { PAUSE_STATE, screen, dataMap }
   
 //  -------------------------------------------------------
 //  PauseState constructor. Setup for pausedText and grayOut.
@@ -26,9 +26,6 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
     }
     greyOut.setSize(static_cast<sf::Vector2f>(window->getSize()));
     greyOut.setFillColor(sf::Color(115, 90, 100, 2));
-
-    //  Load Last GameState Frame
-    gamestateFrameSprite.setTexture(gamestateFrameTexture);
 }
 
 PauseState::~PauseState()
@@ -98,9 +95,6 @@ void PauseState::renderFrame()
 //  Draws next Frame.
 //  ---------------------------------------------
 {
-    window->clear(sf::Color(255, 0, 0));
-
-    window->draw(gamestateFrameSprite);
     window->draw(greyOut);
     window->draw(pausedText);
 

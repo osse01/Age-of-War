@@ -17,7 +17,7 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>, sf::Texture);
+    PauseState   (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~PauseState  () override;
     PauseState   (const PauseState&) = delete;
     PauseState& operator= ( const PauseState& ) = delete;
@@ -36,8 +36,6 @@ private:
     sf::Font            textFont;
     sf::Text            pausedText;
     sf::RectangleShape  greyOut;
-    sf::Texture         gamestateFrameTexture;
-    sf::Sprite          gamestateFrameSprite;
     
     GUI     gui;
 };

@@ -12,7 +12,7 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
-    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, lastFrame{}, states {}, currentState { MENU_STATE },
+    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, states {}, currentState { MENU_STATE },
     music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
 {
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -142,10 +142,8 @@ void Game::getNextState()
 
                 break;
             case PAUSE_STATE:
-                states.top()->renderFrame();
-                saveFrame();
                 states.top()->resetState();
-                ptr = std::make_unique<PauseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                ptr = std::make_unique<PauseState>(window, dataMap, music, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case GAME_STATE:
@@ -164,14 +162,12 @@ void Game::getNextState()
                 break;
             case WIN_STATE:
                 states.top()->resetState();
-                saveFrame();
-                ptr = std::make_unique<WinState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                ptr = std::make_unique<WinState>(window, dataMap, music, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case LOSE_STATE:
                 states.top()->resetState();
-                saveFrame();
-                ptr = std::make_unique<LoseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                ptr = std::make_unique<LoseState>(window, dataMap, music, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case CREDITS_STATE:
@@ -184,10 +180,4 @@ void Game::getNextState()
 
     }
 
-}
-
-void Game::saveFrame()
-//  ---------------------------------------------
-{
-    lastFrame.loadFromImage(window->capture());
 }

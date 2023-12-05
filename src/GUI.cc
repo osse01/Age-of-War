@@ -5,9 +5,9 @@
 // standard button rgb color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
-      winTexts{}, loseTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
+      menuButtons {}, gameButtons {}, pausedButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
+      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
       statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
       healthRec{ healthBar }, enemyHealthRec{ healthBar },
@@ -68,48 +68,6 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                                             sf::Vector2f(3*buttonSize, buttonSize), 
                                             sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize), 
                                             sf::Color(112, 58, 7), sf::Color::Black, pausedTexts.at(i), font));
-            }
-            break;
-        }
-    case WIN_STATE:
-        {
-            if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
-            {
-                throw std::logic_error("\n  >> Error. Could not load font file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
-            }
-
-            winTexts.push_back("Play again");
-            winTexts.push_back("Main Menu");
-            winTexts.push_back("Quit");
-    
-           for (int i{0} ; i < winTexts.size() ; i++)
-            {
-                winButtons.push_back(std::make_shared<Button>(
-                                            sf::Vector2f(3*buttonSize, buttonSize), 
-                                            sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize), 
-                                            sf::Color(112, 58, 7), sf::Color::Black, winTexts.at(i), font));
-            }
-            break;
-        }
-    case LOSE_STATE:
-        {
-            if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
-            {
-                throw std::logic_error("\n  >> Error. Could not load font file. "
-                "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
-            }
-
-            loseTexts.push_back("Resume Game");
-            loseTexts.push_back("Main Menu");
-            loseTexts.push_back("Quit");
-    
-           for (int i{0} ; i < loseTexts.size() ; i++)
-            {
-                loseButtons.push_back(std::make_shared<Button>(
-                                            sf::Vector2f(3*buttonSize, buttonSize), 
-                                            sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + i * 1.2*buttonSize), 
-                                            sf::Color(112, 58, 7), sf::Color::Black, loseTexts.at(i), font));
             }
             break;
         }
@@ -239,24 +197,6 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             }
             break;
         }
-        case WIN_STATE:
-        {
-
-            for (unsigned i{0} ; i < winButtons.size() ; i++)
-            {
-                window->draw(winButtons.at(i)->draw());
-            }
-            break;
-        }
-        case LOSE_STATE:
-        {
-
-            for (unsigned i{0} ; i < loseButtons.size() ; i++)
-            {
-                window->draw(loseButtons.at(i)->draw());
-            }
-            break;
-        }
         default:
             break; 
     }
@@ -309,32 +249,6 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                 }
             }
             break;
-        case WIN_STATE:
-            for (int i{0} ; i < winButtons.size() ; i++)
-            {
-                if (winButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
-                {
-                    winButtons.at(i)->hover();
-                }
-                else
-                {
-                    winButtons.at(i)->stopHover(); 
-                }
-            }
-            break;
-        case LOSE_STATE:
-            for (int i{0} ; i < loseButtons.size() ; i++)
-            {
-                if (loseButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
-                {
-                    loseButtons.at(i)->hover();
-                }
-                else
-                {
-                    loseButtons.at(i)->stopHover(); 
-                }
-            }
-            break;
         default:
             break;
     }
@@ -372,28 +286,6 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
             for (int i{0} ; i < static_cast<int>(pausedButtons.size()) ; i++)
                 {
                     if (pausedButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
-                    {
-                        return i+1;
-                    }
-                }
-            break;
-        }
-        case WIN_STATE:
-        {
-            for (int i{0} ; i < winButtons.size() ; i++)
-                {
-                    if (winButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
-                    {
-                        return i+1;
-                    }
-                }
-            break;
-        }
-        case LOSE_STATE:
-        {
-            for (int i{0} ; i < loseButtons.size() ; i++)
-                {
-                if (loseButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
                         return i+1;
                     }

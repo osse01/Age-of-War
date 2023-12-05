@@ -1,9 +1,9 @@
 #include "../include/WinState.h"
 
-WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
+WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
 : State(screen, dataMap, sound, frameDuration), nextState{WIN_STATE},
     textFont     { new sf::Font{} }, winText { new sf::Text {} }, 
-    greyOut      { new sf::RectangleShape{} }, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}
+    greyOut      { new sf::RectangleShape{} }
 {
     if(textFont->loadFromFile(dataMap.files["TitleFont"]))
     {
@@ -20,9 +20,6 @@ WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& d
     }
     greyOut->setSize(static_cast<sf::Vector2f>(window->getSize()));
     greyOut->setFillColor(sf::Color(115, 90, 100, 2));
-
-    //  Load Last GameState Frame
-    gamestateFrameSprite.setTexture(gamestateFrameTexture);
 }
 
 WinState::~WinState()
@@ -50,10 +47,8 @@ void WinState::updateLogic()
 
 void WinState::renderFrame()
 {
-    window->clear(sf::Color(255, 0, 0));
-
-    window->draw(gamestateFrameSprite);
     window->draw(*greyOut);
+
     window->draw(*winText);
 }
 
