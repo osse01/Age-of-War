@@ -1,5 +1,5 @@
 #include "../include/Melee.h"
 
-Melee::Melee(const FileReader::Data& stats, bool friendly, sf::Vector2f pos)
- : Troop::Troop(stats, friendly, pos)
+Melee::Melee(FileReader::Data& data, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+ : Troop::Troop(data, "Melee", friendly, pos, frameDuration)
 {}
