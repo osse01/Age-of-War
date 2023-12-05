@@ -10,7 +10,6 @@ class Troop : public Dynamic
         Troop(FileReader::Data&, std::string, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
         virtual ~Troop() = default;
 
-        virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f);
         float   getDamage()               override;
         void    handleCollision(int, int) override;
         void    updatePos()               override;

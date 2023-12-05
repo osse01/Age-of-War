@@ -65,3 +65,12 @@ float Entity::getHP()
 {
     return hp;
 }
+
+std::shared_ptr<Projectile> Entity::spawnProjectile(FileReader::Data& stats,
+                                                    std::shared_ptr<sf::Time> frameDuration,
+                                                    sf::Vector2f pos)
+{
+   std::shared_ptr<Projectile> projectile {};
+
+   return projectile;
+}

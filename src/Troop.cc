@@ -118,12 +118,3 @@ float Troop::getDamage()
     }
     return damage;
 }
-
-std::shared_ptr<Projectile> Troop::spawnProjectile(FileReader::Data& stats,
-                                                    std::shared_ptr<sf::Time> frameDuration,
-                                                    sf::Vector2f pos)
-{
-   std::shared_ptr<Projectile> projectile {};
-
-   return projectile;
-}

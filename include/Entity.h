@@ -15,7 +15,7 @@ class Entity
         
         virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                             std::shared_ptr<sf::Time>, 
-                                                            sf::Vector2f) = 0;
+                                                            sf::Vector2f);
         virtual void    handleCollision(int = 0, int = 0) = 0;
         virtual void    updatePos()       = 0;
         virtual float   getRange()        = 0;
