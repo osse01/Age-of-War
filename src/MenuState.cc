@@ -163,8 +163,8 @@ void MenuState::renderFrame()
     
     window->clear(sf::Color(255, 255, 255));
 
-    t = t + 0.0006;
-    scale = 1.0 + 0.1 * std::cos(t * M_PI * 2 * frameDuration->asSeconds());
+    t = t + frameDuration->asSeconds();
+    scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
     gameTitle.setScale(zoomFactor*scale);
