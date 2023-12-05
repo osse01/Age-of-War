@@ -64,6 +64,7 @@ class GameState : public State
         sf::Sprite          groundSprite;
         sf::Sprite          woodsSprite;
         sf::View            view;
+        
         sf::Vector2f        zoomFactor;
 
         int nextState;
@@ -72,7 +73,6 @@ class GameState : public State
         GUI                 gui;
         Enemy               enemy;
         std::vector<int>    deleteEntities{};
-
 };
 
 #endif

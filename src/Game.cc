@@ -12,8 +12,8 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
-    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, lastFrame{}, states {}, currentState { MENU_STATE },
-    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
+    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, states {}, currentState { MENU_STATE },
+    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, lastFrame{}, cursorSprite {}, mouse{}, dataMap {}
 {
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
     
@@ -183,7 +183,6 @@ void Game::getNextState()
                 break;
         }
         currentState = nextState;
-
     }
 
 }

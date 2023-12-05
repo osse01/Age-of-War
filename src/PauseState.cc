@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
+PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
 :   State(screen, dataMap, sound, frameDuration), nextState{PAUSE_STATE},
     textFont {}, pausedText {}, greyOut {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { PAUSE_STATE, screen, dataMap }
   
@@ -98,8 +98,7 @@ void PauseState::renderFrame()
 //  Draws next Frame.
 //  ---------------------------------------------
 {
-    window->clear(sf::Color(255, 0, 0));
-
+    window->clear(sf::Color(255, 255, 255));
     window->draw(gamestateFrameSprite);
     window->draw(greyOut);
     window->draw(pausedText);

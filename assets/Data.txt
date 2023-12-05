@@ -33,7 +33,7 @@ Tank
     filename      melee_sprite_sheet.png
 
 Base
-    hp            1
+    hp            1500
     boxSize       300 500
     spriteDim     249 323
     filename      cursor.png

@@ -240,7 +240,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case WIN_STATE:
         {
 
-            for (unsigned i{0} ; i < winButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(winButtons.size()) ; i++)
             {
                 window->draw(winButtons.at(i)->draw());
             }
@@ -249,7 +249,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case LOSE_STATE:
         {
 
-            for (unsigned i{0} ; i < loseButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
             {
                 window->draw(loseButtons.at(i)->draw());
             }
@@ -308,7 +308,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
             }
             break;
         case WIN_STATE:
-            for (int i{0} ; i < winButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(winButtons.size()) ; i++)
             {
                 if (winButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -321,7 +321,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
             }
             break;
         case LOSE_STATE:
-            for (int i{0} ; i < loseButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
             {
                 if (loseButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -378,7 +378,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         }
         case WIN_STATE:
         {
-            for (int i{0} ; i < winButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(winButtons.size()) ; i++)
                 {
                     if (winButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
@@ -389,9 +389,9 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         }
         case LOSE_STATE:
         {
-            for (int i{0} ; i < loseButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
                 {
-                if (loseButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
+                    if (loseButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
                         return i+1;
                     }
