@@ -110,6 +110,9 @@ void GameState::handleEvent(sf::Event event)
                     case 4:
                         spawnFriendly("Tank");
                         break;
+                    case 3:
+                        spawnFriendly("Turret");
+                        break;
                     case 1:
                         nextState = PAUSE_STATE;
                         break;
@@ -206,6 +209,7 @@ void GameState::updateLogic()
     i = 0;
 
 //----FRIENDS----
+    sf::Vector2f enemyPos {};
     for(auto &it: friendlyVector)
         {
             if ( it->isDead() )
@@ -214,10 +218,11 @@ void GameState::updateLogic()
             }
             i++;
             it->updatePos();
-            if (abs(it->getSprite().getPosition().x - enemyVector.at(0)->getSprite().getPosition().x) 
+            enemyPos = enemyVector.at(0)->getSprite().getPosition();
+            if (abs(it->getSprite().getPosition().x - enemyPos.x) 
                 <= it->getRange())
             {
-                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, sf::Vector2f(0,0))};
+                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, enemyPos)};
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
@@ -232,6 +237,7 @@ void GameState::updateLogic()
     i = 0;
 
 //----ENEMIES----   
+    sf::Vector2f friendlyPos {};
     for(auto &it: enemyVector)
         {
             if ( it->isDead() )
@@ -241,6 +247,16 @@ void GameState::updateLogic()
             }
             i++;
             it->updatePos();
+            friendlyPos = friendlyVector.at(0)->getSprite().getPosition();
+            if (abs(it->getSprite().getPosition().x - friendlyPos.x) 
+                <= it->getRange())
+            {
+                std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, friendlyPos)};
+                if ( tmpProjectile != nullptr)
+                {
+                    projectileQueue.push_back(tmpProjectile);
+                }
+            }
         }
     for (int j: deleteEntities)
     {
@@ -363,9 +379,9 @@ int GameState::getNextState()
 void GameState::spawnFriendly(std::string troop)
 //  ---------------------------------------------
 {
-    sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
+    sf::RectangleShape baseBounds {friendlyVector.back()->getBox()};
     sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().height/2.5};
 
     auto it = friendlyVector.end()-1;
     if (gold >= dataMap.stats[troop]["cost"])
@@ -388,6 +404,8 @@ void GameState::spawnFriendly(std::string troop)
             friendlyVector.insert(it, std::make_shared<Tank> 
              ( dataMap, true, spawnPoint, frameDuration ) );
         }
+        else if(troop == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, spawnPoint, frameDuration))
+        {}
         else
         {
             throw std::logic_error("\n  >> Error, Unidentified troop type. "

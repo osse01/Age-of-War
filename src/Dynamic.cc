@@ -7,7 +7,7 @@ Dynamic::Dynamic(FileReader::Data& data, std::string troopType, bool friendly, s
       RANGE { data.stats[troopType]["range"] }, DEATH_VALUE { data.stats[troopType]["deathValue"] }
 {}
 
-float Dynamic::getDamage()
+int Dynamic::getDamage()
 //  ---------------------------------------------
 //  Returns the Dynamic object DAMAGE variable.
 //  ---------------------------------------------
@@ -15,7 +15,7 @@ float Dynamic::getDamage()
     return DAMAGE;
 }
 
-float Dynamic::getDeathValue()
+int Dynamic::getDeathValue()
 //  ---------------------------------------------
 //  Returns the Dynamic object DEATH_VALUE variable.
 //  ---------------------------------------------

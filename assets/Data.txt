@@ -34,20 +34,21 @@ Tank
 
 Base
     hp            1500
-    boxSize       300 500
+    boxSize       249 323
     spriteDim     249 323
     filename      cursor.png
 
 Turret
-    range    600
-    cost     300
-    filename tree.png
+    range     1000
+    cost      200
+    spriteDim 249 323
+    filename cursor.png
 
 RangedProjectile
     damage        50
     hp            1
-    movementSpeed 100
-    boxSize       70 30
+    movementSpeed 1250
+    boxSize       20 20
     spriteDim     75 30
     filename      assets/arrow.png
 
@@ -55,7 +56,7 @@ TurretProjectile
     damage        50
     hp            1
     movementSpeed 1250
-    boxSize       70 30
+    boxSize       20 20
     spriteDim     75 30
     filename      assets/arrow.png 
 
