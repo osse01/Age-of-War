@@ -8,7 +8,7 @@
 class Projectile
 {
     public:
-    Projectile(FileReader::Data&, std::string, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+    Projectile(FileReader::Data&, std::string, bool, sf::Vector2f, float, std::shared_ptr<sf::Time>);
     virtual ~Projectile() = default;
 
     bool collides( sf::RectangleShape );
@@ -22,24 +22,30 @@ class Projectile
 
     bool isDead();
 
-    sf::Sprite  getSprite       ()         const &;
+    sf::Sprite & getSprite();
 
 
     // VARIABLES
     private:
     const int           DAMAGE;
     const float         MOVEMENTSPEED;
+    const float         INITIAL_ANGLE;
     double              xpos;
     double              ypos;
+    double              dx;
+    double              dy;
+    float               x0;
+    float               y0;
     int                 hp;
     bool                isFriendly;
     bool                hasCollided;
+    float               elapsedTime;
     sf::Texture         texture;
     sf::Sprite          sprite;
     sf::RectangleShape  boundingbox;
     std::shared_ptr<sf::Time> frameDuration;
 
-    const int g {10};
+    const int g {1000};
     float counter;
 };
 

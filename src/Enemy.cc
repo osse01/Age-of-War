@@ -3,10 +3,12 @@
 
 
 
-Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
-:delayCounter{100}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
+Enemy::Enemy(FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration)
+:listSize{data.stats["Enemy"]["listSize"]}, waveSize{data.stats["Enemy"]["waveSize"]}, waveLimit{data.stats["Enemy"]["waveLimit"]},
+ waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]}, turretTime{data.stats["Enemy"]["turretTime"]},
+delayCounter{delay}, totalTime{}, turret{true}, spawnList{}, frameDuration{frameDuration}
 {
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < listSize; i++)
     {
         spawnList.push_back(1);
     }
@@ -15,8 +17,14 @@ Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
 
 std::vector<int> Enemy::enemyPlay()
 {
+    totalTime += frameDuration->asSeconds();
     std::vector<int> play{};
-    if(delayCounter >= 100)
+    if(turret && (totalTime > turretTime));
+    {
+        play.push_back(4);
+        turret = false;
+    }
+    if(delayCounter >= delay)
     {
         delayCounter = 0;
         return spawnAlgo();
@@ -27,13 +35,13 @@ std::vector<int> Enemy::enemyPlay()
 
 std::vector<int> Enemy::spawnAlgo()
 {
-    int tmp{std::experimental::randint(1,3)};
+    int tmp{std::experimental::randint(1,waveSize)};
     std::vector<int> spawn{};
-    timeCounter++;
-    if(timeCounter == 5)
+    waveCounter++;
+    if(waveCounter == waveLimit)
     {
         spawnList.erase(spawnList.begin());
-        timeCounter = 0;
+        waveCounter = 0;
         spawnList.push_back(std::experimental::randint(1,3));
 
     }

@@ -9,7 +9,7 @@ std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& data,
                                                     sf::Vector2f pos)
 {
    std::shared_ptr<Projectile> projectile {};
-
+   float angle {10};
    if ( troopState == IDLE )
    {
       troopState = ATTACK;
@@ -18,7 +18,11 @@ std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& data,
    if ( (rectSourceSprite.left)%(12*128) == 4*128 && spriteCounter == 0 )
    {
       pos = sf::Vector2f(xpos, ypos);
-      projectile = std::make_shared<Projectile> (data, "RangedProjectile", Entity::isFriendly, pos, frameDuration);
+      if (!isFriendly)
+      {
+         angle = 180 - angle;
+      }
+      projectile = std::make_shared<Projectile> (data, "RangedProjectile", Entity::isFriendly, pos, 10, frameDuration);
    }
 
    return projectile;

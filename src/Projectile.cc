@@ -2,13 +2,13 @@
 #include "cmath"
 #include <iostream>
 
-Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats[projectileType]["movementSpeed"] }, xpos { pos.x }, ypos { pos.y },
-  hp { data.stats[projectileType]["hp"] }, isFriendly { friendly }, hasCollided { false }, texture {}, sprite {},
-  boundingbox { data.boxSize[projectileType] },
+Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool friendly, sf::Vector2f pos, float angle, std::shared_ptr<sf::Time> frameDuration)
+: DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats["TurretProjectile"]["movementSpeed"] }, 
+  INITIAL_ANGLE {angle}, xpos { pos.x }, ypos { pos.y }, dx {0}, dy {0}, x0 {xpos}, y0 {ypos}, hp { data.stats["TurretProjectile"]["hp"] }, 
+  isFriendly { friendly }, hasCollided { false }, elapsedTime { 0 }, texture {}, sprite {}, boundingbox { data.boxSize[projectileType] },
   frameDuration { frameDuration }, counter { 0 }
 {
-    if(!texture.loadFromFile(data.files[projectileType]))
+    if(!texture.loadFromFile(data.files["TurretProjectile"]))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find texture image. Error in Projectile::Projectile.");
@@ -41,14 +41,24 @@ void Projectile::handleCollision()
 
 void Projectile::updatePos()
 {
-    xpos += MOVEMENTSPEED * 3 * frameDuration->asSeconds();
-    ypos -= (MOVEMENTSPEED - 
-                        std::pow(counter,2)*g/2)*0.2 * frameDuration->asSeconds();
+
+    elapsedTime += frameDuration->asSeconds(); 
+
+    dx = MOVEMENTSPEED * cos(3.14*INITIAL_ANGLE/180) * frameDuration->asSeconds();
+    dy = -MOVEMENTSPEED * sin(3.14*INITIAL_ANGLE/180) * frameDuration->asSeconds() + g * elapsedTime * frameDuration->asSeconds();
+
+    if (!isFriendly)
+    {
+        dx = -dx;
+    }
+    xpos += dx;
+    ypos += dy;
                         
-    sprite.setRotation( atan2( (-MOVEMENTSPEED + std::pow(counter,2)*g/2) * 0.2,
-            MOVEMENTSPEED * 3 ) * 180/3.14);
-    counter += 0.1;
-    
+    sprite.setRotation( atan2(dy, dx) * 180/3.14);  
+    if (!isFriendly)
+    {
+        sprite.setRotation(180 - sprite.getRotation());
+    }  
     
     sprite.setPosition(xpos, ypos);
     boundingbox.setPosition(xpos, ypos);
@@ -85,7 +95,7 @@ bool Projectile::isDead()
 }
 
 
-sf::Sprite Projectile::getSprite() const &
+sf::Sprite & Projectile::getSprite()
 {
     return sprite;
 }

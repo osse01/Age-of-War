@@ -11,6 +11,8 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
 //  PauseState constructor. Setup for pausedText and grayOut.
 //  -------------------------------------------------------
 {
+    music->pause();
+
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         pausedText.setFont          (textFont);
@@ -36,8 +38,7 @@ PauseState::~PauseState()
 //  PausedState Destructor.
 //  ---------------------------------------------
 {
-    window = nullptr;
-    frameDuration = nullptr;
+    music->play();
 }
 
 void PauseState::handleEvent(sf::Event event)
@@ -57,7 +58,6 @@ void PauseState::handleEvent(sf::Event event)
             {
                 case 1:
                     nextState = GAME_STATE;
-                    music->play();      
                     break;
                 case 2:
                     break;

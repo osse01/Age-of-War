@@ -60,7 +60,7 @@ FileReader::Data FileReader::returnData(const std::string& filename)
         }
         file.close();
 
-        data.windowScale = {windowScale};
+        data.windowScale = windowScale;
 
         return data;
 

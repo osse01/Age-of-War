@@ -27,7 +27,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     {
         std::cout << "  >> Error: Could Not Find Audio File. Error in Game::Game()." << std::endl;
     }
-    music->setVolume(50);
+    music->setVolume(0);
     music->setLoop(true);
     
     // Place Possible Game States in States Vector

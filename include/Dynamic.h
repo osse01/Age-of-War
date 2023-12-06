@@ -14,8 +14,8 @@ class Dynamic : public Entity
         virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()                 = 0;
 
-        virtual float     getDamage()     override;
-        float             getDeathValue() override;
+        virtual int     getDamage()     override;
+        int             getDeathValue() override;
         float             getRange()      override;
 
     protected:

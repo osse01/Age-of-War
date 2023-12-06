@@ -18,17 +18,18 @@ class Entity
                                                             sf::Vector2f);
         virtual void    handleCollision(int = 0, int = 0) = 0;
         virtual void    updatePos()       = 0;
-        virtual float   getRange()        = 0;
-        virtual float   getDamage()       {return 0;};
-        virtual float   getDeathValue()   {return 0;};
-        float     getHP();
+        virtual int     getDamage()     {return 0;};
+        virtual int     getDeathValue() {return 0;};
+        virtual float   getRange()          = 0;
+        int     getHP();
         sf::RectangleShape getBox();
 
         bool getIsFriendly();
         bool isDead();
 
-        sf::Sprite &  getSprite       ();
+        virtual sf::Sprite& getSprite();
         bool        collides( std::shared_ptr<Entity> );
+        virtual bool buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>){return true;};
 
     protected:
         double              xpos;

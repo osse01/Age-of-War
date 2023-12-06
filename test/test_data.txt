@@ -62,10 +62,10 @@ TurretProjectile
 GameMusic
     filename assets/Age-of-War-Theme-Song.ogg
 
-TitleFont
+GameFont
     filename assets/coolFont.ttf
 
-GameFont
+NumberFont
     filename assets/newFont.ttf
 
 CreditFont
