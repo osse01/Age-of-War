@@ -18,6 +18,7 @@ public:
     void handleCollision(int, int) override;
     void updatePos()               override;
     void aim1(int, sf::Vector2f);
+    void changeSprite();
     void aim2(int, sf::Vector2f);
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                 std::shared_ptr<sf::Time>,
@@ -27,10 +28,13 @@ public:
 
 private:
     float angle;
-    int counter;
     float g;
     float r;
+    int   spriteCounter;
+    int   actionState;
 
+    const static int IDLE { 0 };
+    const static int SHOOT { 1 };
 
 };
 
