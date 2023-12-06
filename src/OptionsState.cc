@@ -40,25 +40,37 @@ void OptionsState::handleEvent(sf::Event event)
         switch(buttonNumber)
         {
             case 1:
-            musicVolume = gui.buttonPosition(1, xpos);
+            musicVolume = gui.sliderPosition(1, xpos);
+            data.stats["GameMusic"]["volume"] = musicVolume;
+            musicEnabled = true;
             break;
             case 2:
-            musicVolume = gui.buttonPosition(1, xpos);
+            musicVolume = gui.sliderPosition(1, xpos);
+            data.stats["GameMusic"]["volume"] = musicVolume;
+            musicEnabled = true;
             break;
 
             case 3:
             musicEnabled = (musicEnabled) ? false: true;
+            data.stats["GameMusic"]["volume"] = musicEnabled ? musicVolume : 0;
+
             break;
 
             case 4:
-            soundVolume = gui.buttonPosition(4, xpos);
+            soundVolume = gui.sliderPosition(4, xpos);
+            data.stats["GameSound"]["volume"] = soundVolume;
+            soundEnabled = true;
             break;
             case 5:
-            soundVolume = gui.buttonPosition(4, xpos);
+            soundVolume = gui.sliderPosition(4, xpos);
+            data.stats["GameSound"]["volume"] = soundVolume;
+            soundEnabled = true;
             break;
 
             case 6:
             soundEnabled = (soundEnabled) ? false: true;
+            data.stats["GameSound"]["volume"] = soundEnabled ? soundVolume : 0;
+
             break;
 
             case 7:
@@ -69,8 +81,6 @@ void OptionsState::handleEvent(sf::Event event)
             break;
         }
         music->setVolume(musicEnabled ? musicVolume : 0);
-        data.stats["GameMusic"]["volume"] = musicVolume;
-        data.stats["GameSound"]["volume"] = soundVolume;
 
     }
 

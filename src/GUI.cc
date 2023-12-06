@@ -174,9 +174,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                                     sf::Color(112, 58, 7) ));
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameMusic"]["volume"]/20 - 2.5), window->getSize().y/2), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameMusic"]["volume"]/12.5 - 4), window->getSize().y/2), 
                                     sf::Color::Green));
-        std::cout << "GameMusic: " << data.stats["GameMusic"]["volume"] << std::endl;
         //Music Enabled
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
@@ -189,9 +188,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                                     sf::Color(112, 58, 7)));
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameSound"]["volume"]/20 - 2.5), window->getSize().y/2 + 1.2*buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameSound"]["volume"]/12.5 - 4), window->getSize().y/2 + 1.2*buttonSize), 
                                     sf::Color::Green));
-        std::cout << "GameSound: " << data.stats["GameSound"]["volume"] << std::endl;
         //Sound Enabled
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
@@ -375,23 +373,23 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         case OPTIONS_STATE:
         {
             for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                if (optionsButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                 {
-                    if (optionsButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
+                    if ( i == 2 || i == 5 )
                     {
-                        if ( i == 2 || i == 5 )
+                        if(optionsButtons.at(i)->click())
                         {
-                            if(optionsButtons.at(i)->click())
-                            {
-                                optionsButtons.at(i)->hover();
-                            }
-                            else
-                            {
-                                optionsButtons.at(i)->stopHover();
-                            }
+                            optionsButtons.at(i)->hover();
                         }
-                        return i+1;
+                        else
+                        {
+                            optionsButtons.at(i)->stopHover();
+                        }
                     }
+                    return i+1;
                 }
+            }
             break;
         }
         default:
@@ -399,20 +397,39 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
     }
     return 0;
 }
-unsigned int GUI::buttonPosition(int buttonNmbr, float mouseX, float mouseY)
+unsigned int GUI::sliderPosition(int buttonNmbr, float mouseX)
 // Function to return where the slider is currently being dragged
 {
     optionsButtons.at(buttonNmbr)->setPosition(mouseX);
 
-    if ( optionsButtons.at(buttonNmbr)->getPosition().x < 
+    if ( optionsButtons.at(buttonNmbr)->getPosition().x <= 
          optionsButtons.at(0)->getGlobalBounds().left )
     {
         optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left);
+        if(buttonNmbr == 1)
+        {
+        optionsButtons.at(2)->hover();
+        }
+        else if (buttonNmbr == 4)
+        {
+            optionsButtons.at(5)->hover();
+        }
     }
     else if ( optionsButtons.at(buttonNmbr)->getPosition().x >= 
               optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width )
     {
         optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width);
+    }
+    else
+    {
+        if(buttonNmbr == 1)
+        {
+        optionsButtons.at(2)->stopHover();
+        }
+        else if (buttonNmbr == 4)
+        {
+            optionsButtons.at(5)->stopHover();
+        }
     }
     return std::round(100 * ( optionsButtons.at(buttonNmbr)->getPosition().x - optionsButtons.at(0)->getGlobalBounds().left ) / 
                             ( optionsButtons.at(0)->getGlobalBounds().width ));

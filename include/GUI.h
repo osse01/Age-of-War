@@ -25,7 +25,7 @@ class GUI
         void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
         void drawHPBar(std::shared_ptr<sf::RenderWindow>, const sf::Sprite&,  int, int);
         int buttonClicked(int, float, float);
-        unsigned int buttonPosition(int, float, float=0);
+        unsigned int sliderPosition(int, float);
 
 
     protected:
