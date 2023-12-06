@@ -74,7 +74,6 @@ void GameState::handleEvent(sf::Event event)
 
                 case sf::Keyboard::Escape:
                     nextState = PAUSE_STATE;
-                    music->pause();
                     break;
 
                 default:
