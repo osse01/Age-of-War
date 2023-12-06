@@ -3,11 +3,10 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
-    fontFile{"assets/coolFont.ttf"}, backgroundFile{"assets/background.jpeg"},
+MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, dataMap, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
-    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { 0, screen}
+    zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { MENU_STATE, screen, dataMap }
 //  -------------------------------------------------------
 //  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
 //  are Saved in the fontFile and backgroundFile Variables.
@@ -15,7 +14,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<s
 //  For Now File Names are Hardcoded Values. This must Change!!!
 //  -------------------------------------------------------
 {
-    if(texture.loadFromFile(backgroundFile))
+    if(texture.loadFromFile(dataMap.files["Background"]))
     {
         sprite.setTexture(texture);
         //sprite.setScale(zoomFactor);
@@ -26,7 +25,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, std::shared_ptr<s
         throw std::logic_error("    >> Error: Could Not Find background image. Error in MenuState::MenuState().");
     }
 
-    if(textFont.loadFromFile(fontFile))
+    if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         gameTitle.setFont(textFont);
         gameTitle.setString("AGE OF WAR");
@@ -68,6 +67,9 @@ void MenuState::handleEvent(sf::Event event)
                     case 3:
                         nextState = CREDITS_STATE;
                         break;
+                    case 4:
+                        window->close();
+                        break;
                     default:
                         break;
                 }
@@ -100,7 +102,7 @@ void MenuState::updateLogic()
 //  an Event.
 //  ---------------------------------------------
 {
-        gui.updateLogic(window);
+        gui.updateLogic(window, MENU_STATE);
 }
 
 void MenuState::startAnimation()
@@ -161,7 +163,7 @@ void MenuState::renderFrame()
     
     window->clear(sf::Color(255, 255, 255));
 
-    t = t + 0.0003;
+    t = t + 0.25*frameDuration->asSeconds();
     scale = 1.0 + 0.1 * std::cos(t * M_PI * 2);
 
     gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);

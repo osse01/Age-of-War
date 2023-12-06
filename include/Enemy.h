@@ -4,12 +4,11 @@
 #include <experimental/random>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "FileReader.h"
 
 class Enemy
 {
     public:
-        Enemy(std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Time>);
+        Enemy(std::shared_ptr<sf::Time>);
         ~Enemy() = default;
 
         std::vector<int> enemyPlay();
@@ -18,10 +17,10 @@ class Enemy
         std::vector<int> spawnAlgo();
 
         float delayCounter;
-        float spawnCounter;
+        float timeCounter;
         std::vector<int> spawnList;
         std::shared_ptr<sf::Time> frameDuration;
-        FileReader::Enemy stats;
+
 
 
 };

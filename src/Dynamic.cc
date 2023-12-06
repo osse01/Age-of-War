@@ -1,13 +1,13 @@
 #include "../include/Dynamic.h"
 
 
-Dynamic::Dynamic(const FileReader::Data& stats, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-    : Entity::Entity(stats, friendly, pos, frameDuration),
-      DAMAGE { stats.damage }, MOVEMENTSPEED { stats.movementSpeed }, RANGE { stats.range },
-      ATTACK_SPEED { stats.attackSpeed }, DEATH_VALUE { stats.deathValue }, BUY_VALUE {/*fix later*/}
+Dynamic::Dynamic(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+    : Entity::Entity(data, troopType, friendly, pos, frameDuration),
+      DAMAGE { data.stats[troopType]["damage"] }, ATTACK_SPEED { data.stats[troopType]["attackSpeed"] },
+      RANGE { data.stats[troopType]["range"] }, DEATH_VALUE { data.stats[troopType]["deathValue"] }
 {}
 
-int Dynamic::getDamage()
+float Dynamic::getDamage()
 //  ---------------------------------------------
 //  Returns the Dynamic object DAMAGE variable.
 //  ---------------------------------------------
@@ -15,7 +15,7 @@ int Dynamic::getDamage()
     return DAMAGE;
 }
 
-int Dynamic::getDeathValue()
+float Dynamic::getDeathValue()
 //  ---------------------------------------------
 //  Returns the Dynamic object DEATH_VALUE variable.
 //  ---------------------------------------------
@@ -25,7 +25,7 @@ int Dynamic::getDeathValue()
 
 float Dynamic::getRange()
 //  ---------------------------------------------
-//  Returns the Dynamic object RANGE variable.
+//  Returns the Ranged object RANGE variable.
 //  ---------------------------------------------
 {
   return RANGE;

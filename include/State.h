@@ -6,6 +6,8 @@
 #include <iostream>
 #include <memory>
 
+#include "FileReader.h"
+
 
 
 int const MENU_STATE    { 0 };
@@ -20,7 +22,7 @@ class State
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State(std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+    State(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     virtual ~State();
     State(const State&) = delete;
     State& operator= (const State&) = delete;
@@ -36,6 +38,7 @@ protected:
     std::shared_ptr<sf::RenderWindow>   window;
     std::shared_ptr<sf::Music> music{};
     std::shared_ptr<sf::Time> frameDuration{};
+    FileReader::Data& dataMap;
 };
 
 #endif

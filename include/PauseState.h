@@ -2,6 +2,8 @@
 #define PauseState_H
 
 #include "State.h"
+#include "GUI.h"
+
 
 #include <string>
 #include <memory>
@@ -15,27 +17,29 @@ class PauseState : public State
 {
 public:
     // CONSTRUCTORS
-    PauseState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+    PauseState   (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>, sf::Texture&);
     ~PauseState  () override;
     PauseState   (const PauseState&) = delete;
     PauseState& operator= ( const PauseState& ) = delete;
 
 private:
     // FUNCTIONS
-    void    handleEvent     (sf::Event)                         override;
-    void    renderFrame     ()                                  override;
-    int     getNextState    ()                                  override;
-    void    updateLogic     ()    override;
-    void    startAnimation  ();
-    void    resetState()     override;
-
+    void    handleEvent     (sf::Event) override;
+    void    renderFrame     ()          override;
+    int     getNextState    ()          override;
+    void    updateLogic     ()          override;
+    void    resetState      ()          override;
+    
     // VARIABLES
-    int nextstate;
-    std::string fontFile;
+    int nextState;
 
-    sf::Font*           textFont;
-    sf::Text*           pausedText;
-    sf::RectangleShape* greyOut;
+    sf::Font            textFont;
+    sf::Text            pausedText;
+    sf::RectangleShape  greyOut;
+    sf::Texture         gamestateFrameTexture;
+    sf::Sprite          gamestateFrameSprite;
+    
+    GUI     gui;
 };
 
 #endif

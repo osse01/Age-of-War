@@ -1,13 +1,13 @@
 #include "../include/CreditsState.h"
 
-CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window,
+CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& dataMap,
      std::shared_ptr<sf::Music> gameMusic, std::shared_ptr<sf::Time> frameDuration)
 //  ---------------------------------------------
-:   State(window, gameMusic, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
+:   State(window, dataMap, gameMusic, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
     nameList{}, nameFont{}, textFont{}, backgroundTexture{}, backgroundSprite{}, canvas{}, canvasSprite{}
 {
     //  Load background image
-    if(!backgroundTexture.loadFromFile("assets/background.jpeg"))
+    if(!backgroundTexture.loadFromFile(dataMap.files["Background"]))
     {
         throw std::logic_error("    >> Error: Could Not Find credits image."
          "Error in CreditsState::CreditsState().");
@@ -17,7 +17,7 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window,
     window->getSize().y /backgroundSprite.getGlobalBounds().height);
     
     //  Load fonts
-    if(!(nameFont.loadFromFile("assets/royalFont.ttf") && textFont.loadFromFile("assets/newFont.ttf")))
+    if(!(nameFont.loadFromFile(dataMap.files["CreditFont"]) && textFont.loadFromFile(dataMap.files["GameFont"])))
     {
         throw std::logic_error("    >> Error: Could Not Find font file(s)."
          "Error in CreditsState::CreditsState().");
@@ -50,7 +50,7 @@ void CreditsState::setupCanvas()
 {
     sf::Text header{"Credits", textFont, 150};
     header.setPosition(canvas.getSize().x/2, window->getSize().y);
-    header.setColor(sf::Color(255, 255, 255));
+    header.setFillColor(sf::Color(255, 255, 255));
     header.setOrigin(header.getGlobalBounds().width/2, header.getGlobalBounds().height/2 );
 
     canvas.draw(header);
@@ -58,7 +58,7 @@ void CreditsState::setupCanvas()
     for (unsigned i{}; i < nameList.size(); i++)
     {
         nameList.at(i).setPosition(canvas.getSize().x/2, window->getSize().y *(1.5 + 0.3*i));
-        nameList.at(i).setColor(sf::Color(255, 255, 255));
+        nameList.at(i).setFillColor(sf::Color(255, 255, 255));
         nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2, nameList.at(i).getGlobalBounds().height/2 );
 
         canvas.draw(nameList.at(i));

@@ -16,7 +16,7 @@
     {
     public:
     // CONSTRUCTORS
-    MenuState   (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+    MenuState   (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
     ~MenuState  () override;
     MenuState   (const MenuState&) = delete;
     MenuState& operator= ( const MenuState& ) = delete;
@@ -35,16 +35,13 @@
     float   t;
     int     nextState;
 
-    std::string     fontFile;
-    std::string     backgroundFile;
-
     sf::Texture        texture;
     sf::Sprite         sprite;
     sf::Font           textFont;
     sf::Text           gameTitle;
     sf::Text           instructionText;
-    sf::Vector2f        zoomFactor;
-    GUI                 gui;
+    sf::Vector2f       zoomFactor;
+    GUI                gui;
     
     };
 

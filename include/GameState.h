@@ -1,7 +1,6 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
-#include "FileReader.h"
 #include "State.h"
 #include "Melee.h"
 #include "Ranged.h"
@@ -29,7 +28,7 @@ class GameState : public State
 {
     public:
         // CONSTRUCTORS
-        GameState  (std::shared_ptr<sf::RenderWindow>, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+        GameState  (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
         ~GameState () override;
         GameState (const GameState&) = delete;
 
@@ -49,25 +48,21 @@ class GameState : public State
         void enemyPlay        ();
 
     private:
-        // VARIABLES
-        FileReader::Data meleeF;
-        FileReader::Data rangedF;
-        FileReader::Data meleeE;
-        FileReader::Data rangedE;
-        FileReader::Data tankF;
-        FileReader::Data tankE;
-        FileReader::Data projectile;
+        //  FUNCTIONS
+        void windowPanning     (bool);
 
-        FileReader::Data baseStats;
+        // VARIABLES
 
         std::vector<std::shared_ptr<Entity>> friendlyVector;
         std::vector<std::shared_ptr<Entity>> enemyVector;
         std::deque<std::shared_ptr<Projectile>> projectileQueue;
 
-        std::string         backgroundFile;
-
         sf::Texture         backgroundTexture;
+        sf::Texture         groundTexture;
+        sf::Texture         woodsTexture;
         sf::Sprite          backgroundSprite;
+        sf::Sprite          groundSprite;
+        sf::Sprite          woodsSprite;
         sf::View            view;
         
         sf::Vector2f        zoomFactor;
@@ -77,7 +72,7 @@ class GameState : public State
         int gold;
         GUI                 gui;
         Enemy               enemy;
-        std::vector<int> deleteEntities{};
+        std::vector<int>    deleteEntities{};
 };
 
 #endif
