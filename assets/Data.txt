@@ -5,19 +5,19 @@ Melee
     attackSpeed   70
     cost          50
     deathValue    75
-    boxSize       70 70
+    boxSize       64 64
     spriteDim     128 128
     filename      melee_sprite_sheet.png
 
 Ranged
-    damage        25
+    damage        0
     hp            150
     movementSpeed 70
     range         300
     attackSpeed   70
     cost          75
     deathValue    100
-    boxSize       70 70
+    boxSize       96 64
     spriteDim     128 128
     filename      ranged_sprite_sheet.png
 
@@ -28,7 +28,7 @@ Tank
     attackSpeed   70
     cost          150
     deathValue    200
-    boxSize       70 70
+    boxSize       64 64
     spriteDim     128 128
     filename      melee_sprite_sheet.png
 
