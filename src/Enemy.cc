@@ -10,11 +10,12 @@ delayCounter{delay}, totalTime{0}, turret{true}, spawnList{}, frameDuration{fram
 {
     for(int i = 0; i < listSize; i++)
     {
-        spawnList.push_back(1);
+        spawnList.push_back(6);
     }
-    
 }
 
+
+// Melee:6 Ranged:5 Tank:4 Turret:3
 std::vector<int> Enemy::enemyPlay()
 {
     totalTime += frameDuration->asSeconds();
@@ -26,7 +27,7 @@ std::vector<int> Enemy::enemyPlay()
     }
     if(turret && (totalTime > turretTime))
     {
-        play.push_back(4);
+        play.push_back(3);
         turret = false;
     }
     delayCounter += std::experimental::randint(1,10)*(frameDuration->asSeconds());
@@ -42,7 +43,7 @@ std::vector<int> Enemy::spawnAlgo()
     {
         spawnList.erase(spawnList.begin());
         waveCounter = 0;
-        spawnList.push_back(std::experimental::randint(1,3));
+        spawnList.push_back(std::experimental::randint(4,6));
 
     }
     for(int i = 0; i <= tmp; i++)

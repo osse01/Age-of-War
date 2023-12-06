@@ -7,7 +7,7 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
     
     : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
       texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] }, sprite {texture, rectSourceSprite},
-      boundingbox { (data.boxSize[troopType]) }, frameDuration {frameDuration}
+      boundingbox { sf::Vector2f(data.boxSize[troopType].x * data.windowScale, data.boxSize[troopType].y * data.windowScale) }, frameDuration {frameDuration}
 {
     std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
     if(!texture.loadFromFile("assets/" + friendOrFoe + data.files[troopType]))
@@ -32,10 +32,14 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
 }
 
 bool Entity::collides( std::shared_ptr<Entity> other )
+//  ---------------------------------------------
+//  Checks if Unit has Collided and if we have lag.
+//  ---------------------------------------------
 {
     // Check whether this collides with other
-    hasCollided = boundingbox.getGlobalBounds().intersects(
-            ( other->boundingbox.getGlobalBounds() ) );
+    hasCollided = 
+    boundingbox.getGlobalBounds().intersects(( other->boundingbox.getGlobalBounds()))
+    || ( ((isFriendly ? 1 : -1)*(boundingbox.getGlobalBounds().left - other->boundingbox.getGlobalBounds().left)) > 0 ) ;
     other->hasCollided = hasCollided;
 
     return hasCollided;
