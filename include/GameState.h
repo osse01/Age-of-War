@@ -50,7 +50,6 @@ class GameState : public State
     private:
         //  FUNCTIONS
         void windowPanning    (bool);
-        void specialAttack    ();
 
         // VARIABLES
 

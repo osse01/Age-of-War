@@ -85,3 +85,14 @@ void Base::takeDamage(int otherDamage)
 {
     Entity::hp -= otherDamage;
 }
+
+void Base::specialAttack(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration)
+//  ---------------------------------------------
+//  If we have a Turret, Call the Turrets special attack!!
+//  ---------------------------------------------
+{
+    if (turret)
+    {
+        turret->specialAttack(dataMap, frameDuration);
+    }
+}

@@ -13,11 +13,12 @@ class Dynamic : public Entity
 
         virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()                 = 0;
+        virtual void specialAttack(FileReader::Data&, std::shared_ptr<sf::Time>)  = 0;
 
         virtual int     getDamage()     override;
         int             getDeathValue() override;
-        float             getRange()      override;
-
+        float           getRange()      override;
+        
     protected:
         const float   DAMAGE;
         const float   ATTACK_SPEED;

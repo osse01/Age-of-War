@@ -36,6 +36,12 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
     return projectile;
 }
 
+void Turret::specialAttack(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration)
+//  ---------------------------------------------
+{
+    std::cout << "Special attack!!!" << std::endl;
+}
+
 sf::Sprite & Turret::getSprite()
 {
     return sprite;

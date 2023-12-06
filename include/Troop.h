@@ -11,9 +11,11 @@ class Troop : public Dynamic
         virtual ~Troop() = default;
 
         
-        int   getDamage()               override;
+        int     getDamage()               override;
         void    handleCollision(int, int) override;
         void    updatePos()               override;
+        void    specialAttack(FileReader::Data&, std::shared_ptr<sf::Time>)  override {};
+
 
 
     protected:

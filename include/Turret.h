@@ -10,13 +10,14 @@ class Turret : public Dynamic
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    Turret(FileReader::Data&, bool, sf::Vector2f, 
-           std::shared_ptr<sf::Time>);
+    Turret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
     virtual ~Turret() = default;
 
     // FUNCTIONS
-    void handleCollision(int, int) override;
-    void updatePos()               override;
+    void  handleCollision  (int, int)  override;
+    void  updatePos        ()          override;
+    void  specialAttack    (FileReader::Data&, std::shared_ptr<sf::Time>)  override;
+
     void aim1(int, sf::Vector2f);
     void changeSprite();
     void aim2(int, sf::Vector2f);
@@ -25,7 +26,6 @@ public:
                                                 sf::Vector2f);
                                 
     sf::Sprite& getSprite();
-
 private:
     float angle;
     float g;
@@ -35,7 +35,6 @@ private:
 
     const static int IDLE { 0 };
     const static int SHOOT { 1 };
-
 };
 
 #endif

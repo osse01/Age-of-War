@@ -21,6 +21,8 @@ class Entity
         virtual int     getDamage()     {return 0;};
         virtual int     getDeathValue() {return 0;};
         virtual float   getRange()          = 0;
+        virtual void    specialAttack(FileReader::Data&, std::shared_ptr<sf::Time>)  = 0;
+
         int     getHP();
         sf::RectangleShape getBox();
 
