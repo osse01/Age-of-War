@@ -1,4 +1,4 @@
-To compile the test file. Write "make test" in the terminal. 
-This will make a file called test. 
+To compile the test file. Write "make testFile" in the terminal. 
+This will make a file called testFile. 
 
-Run with ./test
+Run with ./testFile
