@@ -114,6 +114,9 @@ void GameState::handleEvent(sf::Event event)
                     case 3:
                         spawnFriendly("Turret");
                         break;
+                    case 2:
+                        specialAttack();
+                        break;
                     case 1:
                         nextState = PAUSE_STATE;
                         break;
@@ -456,5 +459,21 @@ void GameState::enemyPlay()
     for(int type : play)
     {
         spawnEnemy(type);
+    }
+}
+void GameState::specialAttack()
+//  ---------------------------------------------
+//  Spawns a lot of Friendly Projectlies From the
+//  top of the Screen.
+//  ---------------------------------------------
+{
+    std::cout << "Special attack!!!" << std::endl;
+    unsigned tot{10};
+    sf::Vector2f position{enemyVector.at(0)->getSprite().getGlobalBounds().left, 0};    //enemyVector.at(0)->getSprite().getGlobalBounds().left, 0
+    std::shared_ptr<Projectile> tmp{};
+
+    for (unsigned i{0}; i < tot; i++)
+    {                                       
+        projectileQueue.push_back(std::make_shared<Projectile>(dataMap, "SpecialProjectile", true, position, -90, frameDuration));
     }
 }
