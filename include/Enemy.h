@@ -16,6 +16,7 @@ class Enemy
 
     private:
         std::vector<int> spawnAlgo();
+        void             updateTroop();
 
         int listSize;
         int waveSize;
@@ -26,11 +27,14 @@ class Enemy
 
         float delayCounter;
         double totalTime;
+        int lastTime;
 
         bool turret;
+        bool HP;
         std::vector<int> spawnList;
         std::shared_ptr<sf::Time> frameDuration;
 
+        FileReader::Data& data;
 
 
 };

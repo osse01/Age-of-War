@@ -9,7 +9,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 :   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemy{dataMap, frameDuration}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
 {
     music->play();      
 
@@ -286,6 +286,7 @@ void GameState::updateLogic()
     
     // Update Logic for Graphics
     gui.updateLogic(window, GAME_STATE);
+        
 }
 
 void GameState::handleCollisions()
@@ -457,15 +458,15 @@ void GameState::spawnEnemy(int type)
         // Spawn Correct Troop Type
         case SPAWN_MELEE:
             enemyVector.insert(it, std::make_shared<Melee> 
-                ( dataMap, false, spawnPoint, frameDuration) );
+                ( enemyStats, false, spawnPoint, frameDuration) );
             break;
         case SPAWN_RANGED:
             enemyVector.insert(it, std::make_shared<Ranged> 
-                ( dataMap, false, spawnPoint, frameDuration ) );
+                ( enemyStats, false, spawnPoint, frameDuration ) );
             break;
         case SPAWN_TANK:
             enemyVector.insert(it, std::make_shared<Tank> 
-                ( dataMap, false, spawnPoint, frameDuration ) );
+                ( enemyStats, false, spawnPoint, frameDuration ) );
             break;
 
         // Spawn Turret if None Exist

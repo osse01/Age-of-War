@@ -5,8 +5,8 @@
 
 Enemy::Enemy(FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration)
 :listSize{data.stats["Enemy"]["listSize"]}, waveSize{data.stats["Enemy"]["waveSize"]}, waveLimit{data.stats["Enemy"]["waveLimit"]},
- waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]}, turretTime{data.stats["Enemy"]["turretTime"]},
- delayCounter{delay}, totalTime{0}, turret{true}, spawnList{}, frameDuration{frameDuration}
+ waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]}, turretTime{data.stats["Enemy"]["turretTime"]}, 
+ delayCounter{delay}, totalTime{}, lastTime{totalTime + 1}, turret{true}, HP{false}, spawnList{}, frameDuration{frameDuration}, data{data}
 {
     for(int i = 0; i < listSize; i++)
     {
@@ -30,6 +30,11 @@ std::vector<int> Enemy::enemyPlay()
         play.push_back(3);
         turret = false;
     }
+    if(totalTime / 15 > lastTime)
+    {
+        lastTime++;
+        updateTroop();
+    }
     delayCounter += std::experimental::randint(1,10)*(frameDuration->asSeconds());
     return play;
 }
@@ -51,4 +56,14 @@ std::vector<int> Enemy::spawnAlgo()
         spawn.push_back(spawnList.at(std::experimental::randint(0, static_cast<int>(spawnList.size()-1))));
     }
     return spawn;
+}
+
+void Enemy::updateTroop()
+{
+    std::string tmp {HP ? "hp" : "damage"};
+    int value {HP ? 3 : 1};
+    data.stats["Melee"][tmp] += value;
+    data.stats["Ranged"][tmp] += value;
+    data.stats["Tank"][tmp] += value;
+    HP = !HP;
 }

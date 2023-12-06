@@ -75,6 +75,7 @@ class GameState : public State
         int nextState;
         int gold;
         GUI                 gui;
+        FileReader::Data    enemyStats;
         Enemy               enemy;
         std::vector<int>    deleteEntities{};
 };
