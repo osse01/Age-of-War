@@ -41,7 +41,7 @@ Base
 Turret
     range        800
     cost         200
-    attackSpeed  70
+    attackSpeed  1000
     originX       96
     originY       32
     spriteDim    128 64

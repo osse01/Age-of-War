@@ -407,11 +407,6 @@ void GameState::spawnFriendly(std::string troop)
         }
         else if(troop == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, spawnPoint, frameDuration))
         {}
-        else
-        {
-            throw std::logic_error("\n  >> Error, Unidentified troop type. "
-            "Error in GameState::spawnFriendly(std::string). \n");
-        }
     }    
 }
 
