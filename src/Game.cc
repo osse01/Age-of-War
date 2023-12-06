@@ -44,6 +44,8 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     cursorSprite.setTexture(cursor);
     cursorSprite.setScale(window->getSize().y / cursorSprite.getGlobalBounds().height / 20,
                           window->getSize().y / cursorSprite.getGlobalBounds().height / 20);
+
+
 }
 
 Game::~Game()

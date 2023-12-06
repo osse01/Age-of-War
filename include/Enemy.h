@@ -16,20 +16,18 @@ class Enemy
 
     private:
         std::vector<int> spawnAlgo();
-        
 
         int listSize;
         int waveSize;
         int waveLimit;
         int waveCounter;
-        int delay;
+        int delay; 
         int turretTime;
 
         float delayCounter;
         double totalTime;
 
         bool turret;
-
         std::vector<int> spawnList;
         std::shared_ptr<sf::Time> frameDuration;
 
