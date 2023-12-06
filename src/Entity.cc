@@ -32,10 +32,14 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
 }
 
 bool Entity::collides( std::shared_ptr<Entity> other )
+//  ---------------------------------------------
+//  Checks if Unit has Collided and if we have lag.
+//  ---------------------------------------------
 {
     // Check whether this collides with other
-    hasCollided = boundingbox.getGlobalBounds().intersects(
-            ( other->boundingbox.getGlobalBounds() ) );
+    hasCollided = 
+    boundingbox.getGlobalBounds().intersects(( other->boundingbox.getGlobalBounds()))
+    || ( ((isFriendly ? 1 : -1)*(boundingbox.getGlobalBounds().left - other->boundingbox.getGlobalBounds().left)) > 0 ) ;
     other->hasCollided = hasCollided;
 
     return hasCollided;
