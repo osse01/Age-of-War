@@ -49,12 +49,6 @@ void Turret::aim1(int projectileSpeed, sf::Vector2f enemyPos)
         x = -x;
         angle = 180 - angle;
     }
-    // float v = projectileSpeed;
-// 
-    // float root = v*v*v*v - g*g*x*x - 2*g*y*v*v; 
-    // std::cout << x << std::endl;
-    // std::cout << y << std::endl;
-    // angle = 180/3.14 * ( (atan(v*v + sqrt(root)) / (g*x)) );
     
 }
 
