@@ -43,14 +43,7 @@ bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, sf::Vector2f pos,
     {
         return false;
     }
-    //if (isFriendly)
-    //{
-    //    pos.x += 100;
-    //}
-    //else
-    //{
-    //    pos.x -= 100;
-    //}
+
     turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f(pos.x, pos.y - 200), frameDuration);
     return true;
 }
