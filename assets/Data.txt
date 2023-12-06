@@ -39,9 +39,12 @@ Base
     filename      cursor.png
 
 Turret
-    range     800
-    cost      200
-    spriteDim 128 64
+    range        800
+    cost         200
+    attackSpeed  70
+    originX       96
+    originY       32
+    spriteDim    128 64
     filename canon_sprite_sheet.png
 
 RangedProjectile
