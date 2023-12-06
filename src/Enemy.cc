@@ -8,11 +8,13 @@ Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
 {
     for(int i = 0; i < 10; i++)
     {
-        spawnList.push_back(1);
+        spawnList.push_back(6);
     }
     
 }
 
+
+// Melee:6 Ranged:5 Tank:4 Turret:3
 std::vector<int> Enemy::enemyPlay()
 {
     std::vector<int> play{};
@@ -30,12 +32,11 @@ std::vector<int> Enemy::spawnAlgo()
     int tmp{std::experimental::randint(1,3)};
     std::vector<int> spawn{};
     timeCounter++;
-    spawn.push_back(2);
     if(timeCounter == 5)
     {
         spawnList.erase(spawnList.begin());
         timeCounter = 0;
-        spawnList.push_back(std::experimental::randint(1,3));
+        spawnList.push_back(std::experimental::randint(4,6));
 
     }
     for(int i = 0; i <= tmp; i++)

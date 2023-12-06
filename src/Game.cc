@@ -15,6 +15,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, states {}, currentState { MENU_STATE },
     music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, lastFrame{}, cursorSprite {}, mouse{}, dataMap {}
 {
+    // Create Fullscreen Window
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
     
     // Load required data
@@ -34,6 +35,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, dataMap, music, frameDurationPtr);
     states.push(std::move(ptr));
 
+    // Create Custom Cursor
     if(!cursor.loadFromFile(dataMap.files["Cursor"]))
     {
         throw std::logic_error(
@@ -96,12 +98,12 @@ void Game::handleEvents()
                 window->close();    
                 break;
             }
-            // Let Current Game State Handle Event
+            // Let Current State Handle Event
             states.top()->handleEvent(event);
             break;
             
         default:
-            // Let Current Game State Handle Event
+            // Let Current State Handle Event
             states.top()->handleEvent(event);
             break;
         }
@@ -111,7 +113,9 @@ void Game::handleEvents()
 // Update Game Logic
 void Game::updateLogic()
 {
+    // Set Custom Cursor Position to Mouse Position
     cursorSprite.setPosition(mouse.getPosition(*window).x, mouse.getPosition(*window).y);
+    // Let Curent State Update Logic
     states.top()->updateLogic();
 }
 
@@ -119,13 +123,14 @@ void Game::updateLogic()
 // Render Frame
 void Game::renderFrame()
 {
+    // Let Curent State Render Frame
     states.top()->renderFrame();
     window->draw(cursorSprite);
 }
 
 void Game::getNextState()
 {
-    
+    // Let Curent State get Next State
     nextState = states.top()->getNextState();
 
     if ( currentState != nextState)
@@ -133,26 +138,20 @@ void Game::getNextState()
         std::unique_ptr<State> ptr {};
         switch (nextState)
         {
+            // Remove all States Except Menu State
             case MENU_STATE:
                 do
                 {
                     states.pop();
                 }
                 while(states.size() > 1);
+                break;
 
-                break;
-            case PAUSE_STATE:
-                states.top()->renderFrame();
-                saveFrame();
-                states.top()->resetState();
-                ptr = std::make_unique<PauseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
-                states.push(std::move(ptr));
-                break;
+            // Remove Pause State or Create Game State
             case GAME_STATE:
                 if(currentState == PAUSE_STATE)
                 {
                     states.pop();
-                    
                 }
                 else if(currentState == MENU_STATE) 
                 {
@@ -160,8 +159,18 @@ void Game::getNextState()
                     ptr = std::make_unique<GameState>(window, dataMap, music, frameDurationPtr);
                     states.push(std::move(ptr));
                 }
-
                 break;
+
+            // Save Current Graphics and Create Pause State
+            case PAUSE_STATE:
+                states.top()->renderFrame();
+                saveFrame();
+                states.top()->resetState();
+                ptr = std::make_unique<PauseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                states.push(std::move(ptr));
+                break;
+
+            // Create Win State
             case WIN_STATE:
                 states.top()->renderFrame();
                 saveFrame();
@@ -169,6 +178,8 @@ void Game::getNextState()
                 ptr = std::make_unique<WinState>(window, dataMap, music, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
                 break;
+
+            // Create Lose State
             case LOSE_STATE:
                 states.top()->renderFrame();
                 saveFrame();
@@ -176,6 +187,8 @@ void Game::getNextState()
                 ptr = std::make_unique<LoseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
                 break;
+
+            // Create Credits State
             case CREDITS_STATE:
                 states.top()->resetState();
                 ptr = std::make_unique<CreditsState>(window, dataMap, music, frameDurationPtr);            
