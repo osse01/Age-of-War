@@ -63,6 +63,7 @@ void MenuState::handleEvent(sf::Event event)
                         music->play();      
                         break;
                     case 2:
+                        nextState = OPTIONS_STATE;
                         break;
                     case 3:
                         nextState = CREDITS_STATE;

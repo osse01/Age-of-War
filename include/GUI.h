@@ -25,6 +25,7 @@ class GUI
         void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
         void drawHPBar(std::shared_ptr<sf::RenderWindow>, const sf::Sprite&,  int, int);
         int buttonClicked(int, float, float);
+        unsigned int buttonPosition(int, float, float);
 
 
     protected:
@@ -37,6 +38,7 @@ class GUI
         std::vector<std::shared_ptr<Button>> menuButtons;
         std::vector<std::shared_ptr<Button>> gameButtons;
         std::vector<std::shared_ptr<Button>> pausedButtons;
+        std::vector<std::shared_ptr<Button>> optionsButtons;
         std::vector<std::string>             menuTexts;
         std::vector<std::string>             pausedTexts;
         std::vector<sf::Texture>             gameTextures;
@@ -52,8 +54,10 @@ class GUI
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;
+        sf::Texture         sliderTexture;
         sf::Sprite          coinSprite;
         sf::Sprite          heartSprite;
+        sf::Sprite          sliderSprite;
         sf::Font            font;
         sf::Text            goldText;
 
