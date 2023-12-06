@@ -30,6 +30,7 @@ std::vector<int> Enemy::spawnAlgo()
     int tmp{std::experimental::randint(1,3)};
     std::vector<int> spawn{};
     timeCounter++;
+    spawn.push_back(2);
     if(timeCounter == 5)
     {
         spawnList.erase(spawnList.begin());
