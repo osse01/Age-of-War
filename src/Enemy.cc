@@ -6,6 +6,7 @@
 Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
 :delayCounter{100}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
 {
+    // 
     for(int i = 0; i < 10; i++)
     {
         spawnList.push_back(6);

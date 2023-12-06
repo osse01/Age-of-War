@@ -7,18 +7,20 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
     renderTexture->create(texture.getSize().x, texture.getSize().y);
 } 
 
+// Call Turrets spawnProjectile
 std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
     std::shared_ptr<sf::Time> frameDuration, sf::Vector2f enemyPos)
 {
     return turret->spawnProjectile(stats, frameDuration, enemyPos);
 }
 
+// Call takeDamage when Enemy Attacks
 void Base::handleCollision(__attribute__((unused)) int, int otherDamage)
 {
     takeDamage(otherDamage);
-
 }
 
+// Call Turrets updatePos
 void Base::updatePos()
 {
     if (turret)
@@ -27,7 +29,7 @@ void Base::updatePos()
     }
 }
 
-
+// Call Turrets getRange
 float Base::getRange()
 {
     if (turret)
@@ -37,13 +39,13 @@ float Base::getRange()
     return 0;
 }
 
+// Create Turret if None Exists
 bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 {
     if (turret)
     {
         return false;
     }
-
     turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f(pos.x, pos.y - 200), frameDuration);
     return true;
 }
@@ -74,7 +76,8 @@ sf::Sprite & Base::getSprite()
 }
 
 void Base::takeDamage(int otherDamage)
-//  ---------------------------------------------
+// Remove HP when Enemy Attacks
+// otherDamage is Zero when Enemy is not Attacking
 {
     Entity::hp -= otherDamage;
 }

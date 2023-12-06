@@ -8,25 +8,22 @@ Dynamic::Dynamic(FileReader::Data& data, std::string troopType, bool friendly, s
 {}
 
 int Dynamic::getDamage()
-//  ---------------------------------------------
-//  Returns the Dynamic object DAMAGE variable.
-//  ---------------------------------------------
+// ---------------------------------------------
+// Return the Dynamic object DAMAGE variable
 {
     return DAMAGE;
 }
 
 int Dynamic::getDeathValue()
-//  ---------------------------------------------
-//  Returns the Dynamic object DEATH_VALUE variable.
-//  ---------------------------------------------
+// ---------------------------------------------
+// Return the Dynamic object DEATH_VALUE variable
 {
     return DEATH_VALUE;
 }
 
 float Dynamic::getRange()
-//  ---------------------------------------------
-//  Returns the Ranged object RANGE variable.
-//  ---------------------------------------------
+// ---------------------------------------------
+// Return the Ranged object RANGE variable
 {
   return RANGE;
 }

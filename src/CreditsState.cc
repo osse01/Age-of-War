@@ -6,7 +6,7 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader:
 :   State(window, dataMap, gameMusic, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
     nameList{}, nameFont{}, textFont{}, backgroundTexture{}, backgroundSprite{}, canvas{}, canvasSprite{}
 {
-    //  Load background image
+    // Load Background Image
     if(!backgroundTexture.loadFromFile(dataMap.files["Background"]))
     {
         throw std::logic_error("    >> Error: Could Not Find credits image."
@@ -16,14 +16,14 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader:
     backgroundSprite.setScale(window->getSize().x /backgroundSprite.getGlobalBounds().width,
     window->getSize().y /backgroundSprite.getGlobalBounds().height);
     
-    //  Load fonts
+    // Load Fonts
     if(!(nameFont.loadFromFile(dataMap.files["CreditFont"]) && textFont.loadFromFile(dataMap.files["GameFont"])))
     {
         throw std::logic_error("    >> Error: Could Not Find font file(s)."
          "Error in CreditsState::CreditsState().");
     }
     
-    //  Set up Vector of Contributors
+    // Setup Vector of Contributors
     const std::vector<std::string> stringList {"Oskar Bollner", "Logan Eriksson", 
     "Adam Hallberg", "Oscar Jemsson", "Johanna Nilsson", "Filip Ripstrand"};
     for ( auto &name : stringList)
@@ -31,7 +31,7 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader:
         nameList.push_back(sf::Text{name, nameFont, 50});
     }
 
-    //  Setup canvas
+    // Setup Canvas
     if(!canvas.create(window->getSize().x, window->getSize().y*12))
     {
         throw std::logic_error("    >> Error: Could not create sf::RenderTexture canvas."
@@ -48,6 +48,7 @@ CreditsState::~CreditsState()
 void CreditsState::setupCanvas()
 //  ---------------------------------------------
 {
+    // Set Header Appearance and Position
     sf::Text header{"Credits", textFont, 150};
     header.setPosition(canvas.getSize().x/2, window->getSize().y);
     header.setFillColor(sf::Color(255, 255, 255));
@@ -55,6 +56,7 @@ void CreditsState::setupCanvas()
 
     canvas.draw(header);
 
+    // Set Position and Color for Names
     for (unsigned i{}; i < nameList.size(); i++)
     {
         nameList.at(i).setPosition(canvas.getSize().x/2, window->getSize().y *(1.5 + 0.3*i));
@@ -69,7 +71,8 @@ void CreditsState::setupCanvas()
 }
 
 int CreditsState::getNextState()
-//  ---------------------------------------------
+// ---------------------------------------------
+// Return Next State
 {
     return nextState;
 }
@@ -80,6 +83,7 @@ void CreditsState::updateLogic()
 
 void CreditsState::resetState()
 //  ---------------------------------------------
+// Reset nextState variable to Credits State
 {
     elapsedTime = 0;
     nextState   = CREDITS_STATE;
@@ -93,6 +97,7 @@ void CreditsState::handleEvent(sf::Event event)
         case sf::Event::KeyPressed:
             switch (event.key.code)
             {
+                //Change State to Menu State
                 case sf::Keyboard::F10:
                     nextState = MENU_STATE;
                     break;
@@ -111,13 +116,15 @@ void CreditsState::renderFrame()
     elapsedTime += frameDuration->asSeconds();
     window->clear(sf::Color(5, 0, 43));
 
+    //Set Background Position 
     backgroundSprite.setPosition(backgroundSprite.getGlobalBounds().left,
-        backgroundSprite.getGlobalBounds().top - 40 * frameDuration->asSeconds()); // Make slower later
+    backgroundSprite.getGlobalBounds().top - 40 * frameDuration->asSeconds()); // Make slower later
     
+    // Set Canvas Position
     canvasSprite.setPosition(backgroundSprite.getGlobalBounds().left,
-        backgroundSprite.getGlobalBounds().top - 30 * frameDuration->asSeconds());
+    backgroundSprite.getGlobalBounds().top - 30 * frameDuration->asSeconds());
 
-
+    // Draw Sprites
     window->draw(backgroundSprite);
     window->draw(canvasSprite);
 }
