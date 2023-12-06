@@ -17,9 +17,8 @@ public:
     // FUNCTIONS
     void handleCollision(int, int) override;
     void updatePos()               override;
-    void aim1(int, sf::Vector2f);
+    void aim(sf::Vector2f);
     void changeSprite();
-    void aim2(int, sf::Vector2f);
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                 std::shared_ptr<sf::Time>,
                                                 sf::Vector2f);

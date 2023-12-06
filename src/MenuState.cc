@@ -45,8 +45,6 @@ MenuState::~MenuState()
 
 void MenuState::handleEvent(sf::Event event)
 //  ---------------------------------------------
-//  Handle Event, For Now We Can Only Start Game.
-//  ---------------------------------------------
 {
     switch (event.type)
     {

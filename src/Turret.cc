@@ -22,7 +22,7 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
                                                     std::shared_ptr<sf::Time> frameDuration,
                                                     sf::Vector2f enemyPos)
 {
-    aim1(dataMap.stats["TurretProjectile"]["movementSpeed"], enemyPos);
+    aim(enemyPos);
     std::shared_ptr<Projectile> projectile {};
     if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
    {
@@ -41,7 +41,7 @@ sf::Sprite & Turret::getSprite()
     return sprite;
 }
 
-void Turret::aim1(int projectileSpeed, sf::Vector2f enemyPos)
+void Turret::aim(sf::Vector2f enemyPos)
 {
     actionState = SHOOT;
     float x = enemyPos.x - xpos;
@@ -93,10 +93,4 @@ void Turret::changeSprite()
         Entity::sprite.setTextureRect(Entity::rectSourceSprite);
         spriteCounter = 0;
     }
-}
-
-void Turret::aim2(int projectileSpeed, sf::Vector2f enemyPos)
-{
-    r = sqrt(pow(xpos-enemyPos.x, 2) + pow(ypos-enemyPos.y, 2));
-    angle = 180/3.14 * (1/2 * acos(( g/pow(projectileSpeed, 2) * pow(xpos-enemyPos.x, 2) - (ypos - enemyPos.y)) / r) + 1/2 * atan((xpos-enemyPos.x) / r));
 }

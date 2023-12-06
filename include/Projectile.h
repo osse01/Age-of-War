@@ -30,10 +30,10 @@ class Projectile
     const int           DAMAGE;
     const float         MOVEMENTSPEED;
     const float         INITIAL_ANGLE;
-    double              xpos;
-    double              ypos;
-    double              dx;
-    double              dy;
+    float               xpos;
+    float               ypos;
+    float               dx;
+    float               dy;
     float               x0;
     float               y0;
     int                 hp;
@@ -46,7 +46,6 @@ class Projectile
     std::shared_ptr<sf::Time> frameDuration;
 
     const int g {1000};
-    float counter;
 };
 
 #endif
