@@ -26,9 +26,7 @@ WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& d
 }
 
 WinState::~WinState()
-{
-    
-}
+{}
 
 void WinState::handleEvent(sf::Event event)
 {

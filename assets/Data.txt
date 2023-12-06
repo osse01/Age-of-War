@@ -39,9 +39,10 @@ Base
     filename      cursor.png
 
 Turret
-    range    600
-    cost     300
-    filename tree.png
+    range     600
+    cost      300
+    spriteDim 128 64
+    filename canon_sprite_sheet.png
 
 RangedProjectile
     damage        50
@@ -49,7 +50,7 @@ RangedProjectile
     movementSpeed 100
     boxSize       70 30
     spriteDim     75 30
-    filename      assets/arrow.png
+    filename      assets/musketBall.png
 
 TurretProjectile
     damage        50
@@ -57,7 +58,7 @@ TurretProjectile
     movementSpeed 1250
     boxSize       70 30
     spriteDim     75 30
-    filename      assets/arrow.png 
+    filename      assets/cannonBall.png 
 
 GameMusic
     filename assets/Age-of-War-Theme-Song.ogg

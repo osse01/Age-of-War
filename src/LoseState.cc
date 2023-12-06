@@ -5,6 +5,7 @@ LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     textFont     {}, loseText {}, 
     greyOut      {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { LOSE_STATE, screen, dataMap }
 {
+    music->pause();
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         loseText.setFont          (textFont);
@@ -26,8 +27,7 @@ LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 }
 
 LoseState::~LoseState()
-{
-}
+{}
 
 void LoseState::handleEvent(sf::Event event)
 {

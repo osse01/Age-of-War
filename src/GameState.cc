@@ -10,6 +10,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemy{frameDuration}
 {
+    music->play();      
 
     //  Load in Background Image
     if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]) && woodsTexture.loadFromFile(dataMap.files["Trees"])))
@@ -47,7 +48,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 }
 
 GameState::~GameState()
-{}
+{music->stop();}
 
 void GameState::handleEvent(sf::Event event)
 //  ---------------------------------------------
