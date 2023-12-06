@@ -23,16 +23,18 @@ class Button
     //  FUNCTIONS
     sf::FloatRect getGlobalBounds();
     sf::Vector2f  getPosition();
+    bool          click();
     sf::Sprite&   draw();
     void          hover();
     void          stopHover();
-    void          updatePosition( float );
+    void          setPosition( float , float = 0.0f );
 
 
 
     private:
     //  VARIABLES
     int i;
+    bool clicked;
     sf::RectangleShape                   button;
     std::shared_ptr<sf::Text>            text;
     sf::Sprite                           sprite;

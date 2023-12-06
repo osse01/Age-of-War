@@ -10,7 +10,7 @@ class OptionsState : public State
 {
     public:
     OptionsState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
-    ~OptionsState() = default;
+    ~OptionsState();
     OptionsState(const OptionsState&) = delete;
     OptionsState(OptionsState&&) = delete;
 

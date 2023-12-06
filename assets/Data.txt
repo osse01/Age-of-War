@@ -65,7 +65,7 @@ GameMusic
 
 GameSound
     volume 50
-    filename 
+    filename TheFileContaningTheSounds.ogg
 
 TitleFont
     filename assets/coolFont.ttf

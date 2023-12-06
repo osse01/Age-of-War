@@ -5,7 +5,7 @@
 
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, sf::Color outlineColor, std::string buttonText, sf::Font& font)
 //This is a button with text
-: i {0}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
+: i {0}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {sf::Color(112, 58, 7)}
 {
     button.setFillColor(fillColor);
@@ -32,7 +32,7 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor)
 // This is a button with a sprite
-: i {1}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
+: i {1}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor { fillColor }
 {
     renderButton->create(buttonSize.x + 4, buttonSize.y + 4);
@@ -60,7 +60,7 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& spri
 
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor)
 // This is a button with no sprite
-: i {2}, button { sf::RectangleShape(buttonSize) }, text {}, sprite {},
+: i {2}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {}, sprite {},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {fillColor}
 {
     renderButton->create(buttonSize.x, buttonSize.y);
@@ -89,6 +89,11 @@ sf::Vector2f Button::getPosition()
     return buttonSprite.getPosition();
 }
 
+bool Button::click()
+{
+    clicked = (clicked) ? false : true;
+    return clicked;
+}
 sf::Sprite& Button::draw()
 {
     renderButton->clear(sf::Color::White);
@@ -125,7 +130,7 @@ void Button::stopHover()
     button.setFillColor(fillColor); 
 }
 
-void Button::updatePosition(float xpos)
+void Button::setPosition(float xpos, float)
 // Update position
 {
     buttonSprite.setPosition(xpos, buttonSprite.getPosition().y);
