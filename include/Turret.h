@@ -16,22 +16,26 @@ public:
     // FUNCTIONS
     void  handleCollision  (int, int)  override;
     void  updatePos        ()          override;
-    void  specialAttack    (FileReader::Data&, std::shared_ptr<sf::Time>)  override;
 
-    void aim1(int, sf::Vector2f);
-    void changeSprite();
-    void aim2(int, sf::Vector2f);
+    void  aim1            (int, sf::Vector2f);
+    void  aim2            (int, sf::Vector2f);
+    void  changeSprite    ();
+    void  updateCooldown  (std::shared_ptr<sf::Time>);  
+    std::vector<std::shared_ptr<Projectile>>  specialAttack    (FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f, float);
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                 std::shared_ptr<sf::Time>,
                                                 sf::Vector2f);
                                 
     sf::Sprite& getSprite();
+
 private:
-    float angle;
-    float g;
-    float r;
-    int   spriteCounter;
-    int   actionState;
+    float   angle;
+    float   g;
+    float   r;
+    int     spriteCounter;
+    int     actionState;
+    const float   Cooldown;
+    float   specialAttackCooldown;
 
     const static int IDLE { 0 };
     const static int SHOOT { 1 };

@@ -17,7 +17,6 @@ public:
     ~Base() = default;
 
 //FUNCTIONS
-    void    specialAttack   (FileReader::Data&, std::shared_ptr<sf::Time>);
     void    handleCollision (int, int)  override;
     void    updatePos       ()          override;
     float   getRange        ()          override;
@@ -25,6 +24,8 @@ public:
     bool    buyTurret       (FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>) override;
 
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f) override;
+    std::vector<std::shared_ptr<Projectile>> special(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f, float) override;
+
 
     sf::Sprite & getSprite()  override;
 

@@ -14,9 +14,6 @@ class Troop : public Dynamic
         int     getDamage()               override;
         void    handleCollision(int, int) override;
         void    updatePos()               override;
-        void    specialAttack(FileReader::Data&, std::shared_ptr<sf::Time>)  override {};
-
-
 
     protected:
         void changeSprite();

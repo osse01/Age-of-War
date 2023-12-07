@@ -24,6 +24,7 @@ void Base::updatePos()
     if (turret)
     {
         turret->updatePos();
+        turret->updateCooldown(frameDuration);
     }
 }
 
@@ -86,13 +87,15 @@ void Base::takeDamage(int otherDamage)
     Entity::hp -= otherDamage;
 }
 
-void Base::specialAttack(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration)
+std::vector<std::shared_ptr<Projectile>> Base::special(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration, sf::Vector2f startPos, float distance)
 //  ---------------------------------------------
 //  If we have a Turret, Call the Turrets special attack!!
 //  ---------------------------------------------
 {
+    std::vector<std::shared_ptr<Projectile>> tmp{};
     if (turret)
     {
-        turret->specialAttack(dataMap, frameDuration);
+        tmp = turret->specialAttack(dataMap, frameDuration, startPos, distance);
     }
+    return tmp;
 }

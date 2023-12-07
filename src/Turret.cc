@@ -3,7 +3,8 @@
 #include <cmath>
 
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 }, g {1000}, r {0}, spriteCounter {}, actionState { IDLE }
+: Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
+  g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, Cooldown { data.stats["Turret"]["Cooldown"] }, specialAttackCooldown { Cooldown }
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
 }
@@ -34,12 +35,6 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
    }
 
     return projectile;
-}
-
-void Turret::specialAttack(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration)
-//  ---------------------------------------------
-{
-    std::cout << "Special attack!!!" << std::endl;
 }
 
 sf::Sprite & Turret::getSprite()
@@ -105,4 +100,32 @@ void Turret::aim2(int projectileSpeed, sf::Vector2f enemyPos)
 {
     r = sqrt(pow(xpos-enemyPos.x, 2) + pow(ypos-enemyPos.y, 2));
     angle = 180/3.14 * (1/2 * acos(( g/pow(projectileSpeed, 2) * pow(xpos-enemyPos.x, 2) - (ypos - enemyPos.y)) / r) + 1/2 * atan((xpos-enemyPos.x) / r));
+}
+
+std::vector<std::shared_ptr<Projectile>> Turret::specialAttack(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration, sf::Vector2f startPos, float distance)
+//  ---------------------------------------------
+{
+    std::vector<std::shared_ptr<Projectile>> projectileVector{};
+    if ( specialAttackCooldown == 0)
+    {
+        //  Fill vector with projectiles
+        for ( float step{startPos.x}; step < distance ; step +=50 )
+        {
+            startPos.x += step;
+            projectileVector.push_back(spawnProjectile(dataMap, frameDuration, startPos));
+        }
+
+        //  Set Cooldown
+        specialAttackCooldown = Cooldown;
+    }
+    return projectileVector;
+}
+
+void Turret::updateCooldown(std::shared_ptr<sf::Time> frameDuration)
+//  ---------------------------------------------
+//  Reduce specialAttackCooldown.
+//  ---------------------------------------------
+{
+    (specialAttackCooldown <= 0) ? specialAttackCooldown = 0 : specialAttackCooldown -= frameDuration->asSeconds();
+    std::cout << "Cooldown " << specialAttackCooldown << std::endl;
 }

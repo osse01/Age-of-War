@@ -115,12 +115,18 @@ void GameState::handleEvent(sf::Event event)
                         spawnFriendly("Turret");
                         break;
                     case 2:
-                        //float max_distance{enemyVector.back()->getSprite().getPosition().x - enemyVector.back()->getSprite().getGlobalBounds().width};
-                        //float start_distance{friendlyVector.back()->getSprite().getGlobalBounds().left + 1.5*friendlyVector.back()->getSprite().getGlobalBounds().width};
-                        //  Will crash if no turret
-                        
-                        friendlyVector.back()->specialAttack(dataMap, frameDuration);
+                        {
+                        std::vector<std::shared_ptr<Projectile>> tmpVector {friendlyVector.back()->special(dataMap, frameDuration,
+                        friendlyVector.back()->getSprite().getPosition(), (groundSprite.getGlobalBounds().width/2) - 2*friendlyVector.back()->getSprite().getGlobalBounds().width)};
+                        if ( !tmpVector.empty())
+                        {
+                            for ( auto tmpProjectile : tmpVector)
+                            {
+                                projectileQueue.push_back(tmpProjectile);
+                            }
+                        }
                         break;
+                        }
                     case 1:
                         nextState = PAUSE_STATE;
                         break;
