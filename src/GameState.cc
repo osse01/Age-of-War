@@ -44,7 +44,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 
     // Create Enemy Base
     enemyVector.push_back(std::make_shared<Base>(dataMap, false,
-    sf::Vector2f(groundSprite.getGlobalBounds().width/2, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
+    sf::Vector2f(window->getSize().x - window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
 }
 
@@ -411,7 +411,6 @@ void GameState::spawnFriendly(std::string troopType)
 
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = friendlyVector.end()-1;
-
     // Check if Player Gold is Greater Than Troop Cost
     if (gold >= dataMap.stats[troopType]["cost"])
     {
@@ -446,10 +445,9 @@ void GameState::spawnEnemy(int type)
 //  ---------------------------------------------
 {
     // Set Spawn Point for Troops
-    sf::Sprite baseBounds {enemyVector.back()->getSprite()};
+    sf::RectangleShape baseBounds {enemyVector.back()->getBox()};
     sf::Vector2f spawnPoint { baseBounds.getPosition().x - baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().width/2 };
-
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().height/2.5f };
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = enemyVector.end()-1;
 
@@ -485,9 +483,11 @@ void GameState::enemyPlay()
 //  ---------------------------------------------
 // Update Enemy Spawn Vector
 {
+    
     std::vector<int> play = enemy.enemyPlay();
     for(int type : play)
     {
         spawnEnemy(type);
     }
+    
 }

@@ -24,6 +24,7 @@ class Enemy
         int waveCounter;
         int delay; 
         int turretTime;
+        int upgradeTime;
 
         float delayCounter;
         double totalTime;

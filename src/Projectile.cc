@@ -51,9 +51,10 @@ void Projectile::updatePos()
     {
         dx = -dx;
     }
+
     xpos += dx;
     ypos += dy;
-                        
+           
     sprite.setRotation( atan2(dy, dx) * 180/3.14);  
     if (!isFriendly)
     {

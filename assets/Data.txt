@@ -98,5 +98,6 @@ Enemy
     waveSize    4
     waveLimit   5
     timeDelay   100
-    turretTime  60
+    turretTime  30
+    upgradeTime 15
 

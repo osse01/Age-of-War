@@ -18,10 +18,6 @@ std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& data,
    if ( (rectSourceSprite.left)%(12*128) == 4*128 && spriteCounter == 0 )
    {
       pos = sf::Vector2f(xpos + sprite.getGlobalBounds().width/2, ypos);
-      if (!isFriendly)
-      {
-         angle = 180 - angle;
-      }
       projectile = std::make_shared<Projectile> (data, "RangedProjectile", Entity::isFriendly, pos, angle, frameDuration);
    }
 
