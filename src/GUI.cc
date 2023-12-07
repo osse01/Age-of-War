@@ -6,9 +6,9 @@
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
     : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
-      winTexts{}, loseTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
-      statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
+      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{},
+      menuTexts{}, pausedTexts{}, winTexts{}, loseTexts{}, gameTextures {},
+      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
       healthRec{ healthBar }, enemyHealthRec{ healthBar },
       interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{}
@@ -62,7 +62,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             pausedTexts.push_back("Main Menu");
     
 
-           for (int i{0} ; i < static_cast<int>(pausedTexts.size()) ; i++)
+           for (long unsigned int i{0} ; i < pausedTexts.size() ; i++)
             {
                 pausedButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 
@@ -82,7 +82,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             winTexts.push_back("Main Menu");
             winTexts.push_back("Quit");
     
-           for (int i{0} ; i < winTexts.size() ; i++)
+           for (long unsigned int i{0} ; i < winTexts.size() ; i++)
             {
                 winButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 
@@ -102,7 +102,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             loseTexts.push_back("Main Menu");
             loseTexts.push_back("Quit");
     
-           for (int i{0} ; i < loseTexts.size() ; i++)
+           for (long unsigned int i{0} ; i < loseTexts.size() ; i++)
             {
                 loseButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 

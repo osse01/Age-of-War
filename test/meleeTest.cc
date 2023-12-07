@@ -19,6 +19,7 @@ TEST_CASE ("CONSTRUCTORS AND GETTERS")
     }
     
     FileReader::Data data = filereader.returnData("test/test_data.txt"); 
+    data.windowScale = 1;
     
     
     SECTION ("GETTERS")
@@ -55,14 +56,18 @@ TEST_CASE ("CONSTRUCTORS AND GETTERS")
         
         CHECK (  meleeTroop.getIsFriendly() );
         CHECK_FALSE ( enemy.getIsFriendly() );
-        
-        CHECK ( meleeTroop.getSprite().getGlobalBounds().left ==  meleeTroop.getSprite().getPosition().x);
-        meleeTroop.updatePos();          // Move forward
-        CHECK ( meleeTroop.getSprite().getGlobalBounds().left == 
-                meleeTroop.getSprite().getPosition().x + 
-                data.stats["Melee"]["movementSpeed"]  * meleeTroop.getSprite().getScale().x * frameDuration->asSeconds());
-        meleeTroop.handleCollision(1,0); // Reset movement
-        CHECK ( meleeTroop.getSprite().getGlobalBounds().left == meleeTroop.getSprite().getPosition().x );
+
+
+        sf::Vector2f pos = sf::Vector2f(0,0);
+        Melee meleeTroop1 {data, true, pos, frameDuration};
+
+
+        CHECK ( meleeTroop1.getSprite().getPosition().x ==  pos.x);
+        meleeTroop1.updatePos();          // Move forward
+        CHECK ( meleeTroop1.getSprite().getPosition().x ==
+                pos.x + data.stats["Melee"]["movementSpeed"]  * abs(meleeTroop1.getSprite().getScale().x) * frameDuration->asSeconds()); //scale is negative for friendlies
+        meleeTroop1.handleCollision(1,0); // Reset movement
+        CHECK ( meleeTroop1.getSprite().getPosition().x == pos.x);
     }
 
     SECTION ("COLLISION")

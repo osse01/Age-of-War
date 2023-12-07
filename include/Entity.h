@@ -32,8 +32,8 @@ class Entity
         virtual bool buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>){return true;};
 
     protected:
-        double              xpos;
-        double              ypos;
+        float              xpos;
+        float              ypos;
         float                 hp;
         bool                isFriendly;
         bool                hasCollided;

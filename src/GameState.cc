@@ -407,7 +407,7 @@ void GameState::spawnFriendly(std::string troopType)
     // Set Spawn Point for Troops
     sf::RectangleShape baseBounds {friendlyVector.back()->getBox()};
     sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().height/2.5};
+                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().height/2.5f};
 
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = friendlyVector.end()-1;

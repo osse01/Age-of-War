@@ -4,9 +4,9 @@
 
 Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool friendly, sf::Vector2f pos, float angle, std::shared_ptr<sf::Time> frameDuration)
 : DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats["TurretProjectile"]["movementSpeed"] }, 
-  INITIAL_ANGLE {angle}, xpos { pos.x }, ypos { pos.y }, dx {0}, dy {0}, x0 {xpos}, y0 {ypos}, hp { data.stats["TurretProjectile"]["hp"] }, 
-  isFriendly { friendly }, hasCollided { false }, elapsedTime { 0 }, texture {}, sprite {}, boundingbox { data.boxSize[projectileType] },
-  frameDuration { frameDuration }, counter { 0 }
+  INITIAL_ANGLE {angle}, xpos { pos.x }, ypos { pos.y }, dx {0.f}, dy {0.f}, x0 {xpos}, y0 {ypos}, hp { data.stats["TurretProjectile"]["hp"] }, 
+  isFriendly { friendly }, hasCollided { false }, elapsedTime { 0.f }, texture {}, sprite {}, boundingbox { data.boxSize[projectileType] },
+  frameDuration { frameDuration }
 {
     if(!texture.loadFromFile(data.files["TurretProjectile"]))
     {
@@ -14,8 +14,8 @@ Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool 
         "    >> Error: Could Not Find texture image. Error in Projectile::Projectile.");
     }
     sprite.setTexture(texture);
-    sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
-    boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
+    sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2.f,sprite.getGlobalBounds().height/2.f));
+    boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2.f,sprite.getGlobalBounds().height/2.f));
 
     sprite.setPosition( xpos, ypos );
     boundingbox.setPosition( xpos, ypos );
@@ -23,7 +23,7 @@ Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool 
     {
         sprite.setScale(sf::Vector2f(-0.8f,0.8f));
     }
-    sprite.setRotation( -45 );
+    sprite.setRotation( -45.f );
 }
 
 bool Projectile::collides( sf::RectangleShape other )
@@ -44,8 +44,8 @@ void Projectile::updatePos()
 
     elapsedTime += frameDuration->asSeconds(); 
 
-    dx = MOVEMENTSPEED * cos(3.14*INITIAL_ANGLE/180) * frameDuration->asSeconds();
-    dy = -MOVEMENTSPEED * sin(3.14*INITIAL_ANGLE/180) * frameDuration->asSeconds() + g * elapsedTime * frameDuration->asSeconds();
+    dx = MOVEMENTSPEED * cos(3.14*INITIAL_ANGLE/180.f) * frameDuration->asSeconds();
+    dy = -MOVEMENTSPEED * sin(3.14*INITIAL_ANGLE/180.f) * frameDuration->asSeconds() + g * elapsedTime * frameDuration->asSeconds();
 
     if (!isFriendly)
     {

@@ -41,7 +41,6 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     boundingbox.getGlobalBounds().intersects(( other->boundingbox.getGlobalBounds()))
     || ( ((isFriendly ? 1 : -1)*(boundingbox.getGlobalBounds().left - other->boundingbox.getGlobalBounds().left)) > 0 ) ;
     other->hasCollided = hasCollided;
-
     return hasCollided;
 }
 
@@ -70,9 +69,10 @@ int Entity::getHP()
     return hp;
 }
 
-std::shared_ptr<Projectile> Entity::spawnProjectile(FileReader::Data& stats,
-                                                    std::shared_ptr<sf::Time> frameDuration,
-                                                    sf::Vector2f pos)
+std::shared_ptr<Projectile> Entity::spawnProjectile(
+    __attribute__((unused)) FileReader::Data&,
+    __attribute__((unused)) std::shared_ptr<sf::Time>,
+    __attribute__((unused)) sf::Vector2f)
 {
    std::shared_ptr<Projectile> projectile {};
 
