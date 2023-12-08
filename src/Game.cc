@@ -203,5 +203,7 @@ void Game::getNextState()
 void Game::saveFrame()
 //  ---------------------------------------------
 {
-    lastFrame.loadFromImage(window->capture());
+    //sf::Texture previousFrame {};
+    lastFrame.update(*window);
+    //lastFrame.loadFromImage(window->capture());
 }
