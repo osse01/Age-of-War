@@ -9,18 +9,22 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
       texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] }, sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f(data.boxSize[troopType].x * data.windowScale, data.boxSize[troopType].y * data.windowScale) }, frameDuration {frameDuration}
 {
+    // Load Friendly or Enemy Image
     std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
     if(!texture.loadFromFile("assets/" + friendOrFoe + data.files[troopType]))
     {
         throw std::logic_error(
-        "    >> Error: Could Not Find background image. Error in Entity::Entity().");
+        "    >> Error: Could Not Find Image. Error in Entity::Entity().");
     }
+
+    // Set Sprite Position
     sprite.setTextureRect(rectSourceSprite);
     sprite.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
     boundingbox.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width/2,sprite.getGlobalBounds().height/2));
-
     sprite.setPosition( xpos, ypos );
     boundingbox.setPosition( xpos, ypos );
+
+    // Mirror Friendly Sprite
     if(isFriendly)
     {
         sprite.setScale(sf::Vector2f(-data.windowScale,data.windowScale));
@@ -32,11 +36,9 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
 }
 
 bool Entity::collides( std::shared_ptr<Entity> other )
-//  ---------------------------------------------
-//  Checks if Unit has Collided and if we have lag.
-//  ---------------------------------------------
+//  Check if Unit has Collided and if we have Lag
 {
-    // Check whether this collides with other
+    // Check whether this Collides with Other
     hasCollided = 
     boundingbox.getGlobalBounds().intersects(( other->boundingbox.getGlobalBounds()))
     || ( ((isFriendly ? 1 : -1)*(boundingbox.getGlobalBounds().left - other->boundingbox.getGlobalBounds().left)) > 0 ) ;
@@ -44,31 +46,37 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     return hasCollided;
 }
 
+// Return Entity Sprite
 sf::Sprite& Entity::getSprite()
 {
     return sprite;
 }
 
+// Check if Entity is Dead
 bool Entity::isDead()
 {
     return hp <= 0;
 }
 
+// Return True if Friendly
 bool Entity::getIsFriendly()
 {
     return isFriendly;
 }
 
+// Return Entity Bounding Box
 sf::RectangleShape Entity::getBox() 
 {
     return boundingbox;
 }
 
+// Return Entity HP
 int Entity::getHP()
 {
     return hp;
 }
 
+// Virtual Function for spawnProjectile 
 std::shared_ptr<Projectile> Entity::spawnProjectile(
     __attribute__((unused)) FileReader::Data&,
     __attribute__((unused)) std::shared_ptr<sf::Time>,
