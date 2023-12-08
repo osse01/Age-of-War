@@ -8,14 +8,15 @@ Enemy::Enemy(FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration)
  waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]}, turretTime{data.stats["Enemy"]["turretTime"]}, upgradeTime{data.stats["Enemy"]["upgradeTime"]},  
  delayCounter{delay}, totalTime{}, lastTime{totalTime + 1}, turret{true}, HP{true}, spawnList{}, frameDuration{frameDuration}, data{data}
 {
+    // Create List with Troops
     for(int i = 0; i < listSize; i++)
     {
         spawnList.push_back(6);
     }
 }
 
-
 // Melee:6 Ranged:5 Tank:4 Turret:3
+// Spawn Enemies after Certain Time
 std::vector<int> Enemy::enemyPlay()
 {
     totalTime += frameDuration->asSeconds();
@@ -39,6 +40,7 @@ std::vector<int> Enemy::enemyPlay()
     return play;
 }
 
+// Return Vector with Enemies
 std::vector<int> Enemy::spawnAlgo()
 {
     int tmp{std::experimental::randint(1,waveSize)};
