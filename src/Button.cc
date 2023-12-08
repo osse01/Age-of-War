@@ -43,12 +43,12 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& spri
     button.setFillColor(fillColor);
     button.setOutlineColor(sf::Color::Black);
     button.setOutlineThickness(2.0f);
-    button.setOrigin(button.getSize().x/2-2, button.getSize().y/2-2);
-    button.setPosition(buttonSize.x/2, buttonSize.y/2);
+    button.setOrigin(button.getSize().x/2, button.getSize().y/2);
+    button.setPosition(buttonSize.x/2 + 2, buttonSize.y/2 + 2);
 
     // Set Sprite Position
-    Button::sprite.setOrigin(sprite.getGlobalBounds().width/2 + 4, sprite.getGlobalBounds().height/2 + 2);
-    Button::sprite.setPosition(button.getPosition());
+    Button::sprite.setOrigin(sprite.getGlobalBounds().width/2, sprite.getGlobalBounds().height/2);
+    Button::sprite.setPosition(buttonSize.x/2 + 2, buttonSize.y/2 + 2);
     Button::sprite.scale(renderButton->getSize().x/Button::sprite.getGlobalBounds().width, renderButton->getSize().y/Button::sprite.getGlobalBounds().height);
 
     // Create Button

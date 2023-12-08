@@ -14,13 +14,13 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
       interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{}
 {
     sf::Texture tmpText {};
-    tmpText.loadFromFile(dataMap.files["Cursor"]);
+    tmpText.loadFromFile(dataMap.files["settingsIcon"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile(dataMap.files["GameCoin"]);
+    tmpText.loadFromFile(dataMap.files["specialAttack"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile("assets/health.png");
+    tmpText.loadFromFile("assets/friendly_" + dataMap.files["Turret"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile(dataMap.files["Trees"]);
+    tmpText.loadFromFile("assets/friendly_" + dataMap.files["Tank"]);
         gameTextures.push_back(tmpText);
     tmpText.loadFromFile("assets/friendly_" + dataMap.files["Ranged"]);
         gameTextures.push_back(tmpText);
@@ -175,13 +175,27 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             goldText.setCharacterSize(buttonSize*0.4);
             goldText.setFillColor(sf::Color::Yellow);
 
-            for (int i{0} ; i < 6 ; i++)
+            for (unsigned i{0} ; i < gameTextures.size() ; i++)
             {
                 sf::Sprite sprite {gameTextures.at(i)};
-                if (i>3)
+                if (i>2)    //  Meelee, Ranged, Tank
                 {
-                    sprite.setTextureRect(sf::IntRect(0,0,128,128));
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128)); 
                 }
+                else if ( i == 2 )  // Canon
+                {
+                    sprite.setTextureRect(sf::IntRect(16,-32,128,128)); 
+                }
+                else if ( i == 1)   //  Special icon
+                {
+                    sprite.setTextureRect(sf::IntRect(-10,0,256,256)); 
+                    
+                }
+                else if ( i == 0)   //  Special icon
+                {
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128)); 
+                }
+
                 gameButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(buttonSize, buttonSize), 
                                             sf::Vector2f(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2), 

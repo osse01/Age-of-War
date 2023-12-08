@@ -92,3 +92,9 @@ GameCoin
 
 GUITexture
     filename assets/interfaceBackground.jpeg
+
+settingsIcon
+    filename assets/settings.png
+
+specialAttack
+    filename assets/special.png
