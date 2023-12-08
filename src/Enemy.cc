@@ -6,16 +6,15 @@
 Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
 :delayCounter{100}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
 {
-    // 
+    // Create List with Troops 
     for(int i = 0; i < 10; i++)
     {
         spawnList.push_back(6);
     }
-    
 }
 
-
 // Melee:6 Ranged:5 Tank:4 Turret:3
+// Spawn Enemies after Certain Time
 std::vector<int> Enemy::enemyPlay()
 {
     std::vector<int> play{};
@@ -28,6 +27,7 @@ std::vector<int> Enemy::enemyPlay()
     return play;
 }
 
+// Return Vector with Enemies
 std::vector<int> Enemy::spawnAlgo()
 {
     int tmp{std::experimental::randint(1,3)};
