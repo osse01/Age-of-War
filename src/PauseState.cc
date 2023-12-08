@@ -6,13 +6,10 @@
 PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
 :   State(screen, dataMap, sound, frameDuration), nextState{PAUSE_STATE},
     textFont {}, pausedText {}, greyOut {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { PAUSE_STATE, screen, dataMap }
-  
-//  -------------------------------------------------------
-//  PauseState constructor. Setup for pausedText and grayOut.
-//  -------------------------------------------------------
 {
     music->pause();
 
+    // Set Appearance and Position for Pause Text
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         pausedText.setFont          (textFont);
@@ -34,18 +31,11 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
 }
 
 PauseState::~PauseState()
-//  ---------------------------------------------
-//  PausedState Destructor.
-//  ---------------------------------------------
 {
     music->play();
 }
 
 void PauseState::handleEvent(sf::Event event)
-//  ---------------------------------------------
-//  Handle Event, When any Key is Pressed the Game
-//  is Resumed.
-//  ---------------------------------------------
 {
     switch (event.type)
     {
@@ -56,11 +46,13 @@ void PauseState::handleEvent(sf::Event event)
         {
             switch (gui.buttonClicked(PAUSE_STATE, mouse.x, mouse.y))
             {
+                // Change to Game State
                 case 1:
                     nextState = GAME_STATE;
                     break;
                 case 2:
                     break;
+                // Change to Menu State
                 case 3:
                     nextState = MENU_STATE;
                     break;
@@ -70,33 +62,25 @@ void PauseState::handleEvent(sf::Event event)
         }
         break;
     }
-
     default:
         break;
     }
 }
 
+// Return next State
 int PauseState::getNextState()
-//  ---------------------------------------------
-//  Returns Wich State is The Next State.
-//  ---------------------------------------------
 {
     return  nextState;
 }
 
+// Handle User Input that Triggers an Event
 void PauseState::updateLogic()
-//  ---------------------------------------------
-//  Function to Handle User Input. User Input Triggers
-//  an Event.
-//  ---------------------------------------------
 {
     gui.updateLogic(window, PAUSE_STATE);
 }
 
+// Draw Next Frame
 void PauseState::renderFrame()
-//  ---------------------------------------------
-//  Draws next Frame.
-//  ---------------------------------------------
 {
     window->clear(sf::Color(255, 255, 255));
     window->draw(gamestateFrameSprite);
@@ -106,10 +90,8 @@ void PauseState::renderFrame()
     gui.draw(PAUSE_STATE, window, 0);
 }
 
+// Reset nextState Variable to Pause State
 void PauseState::resetState()
-//  ---------------------------------------------
-//  Sets Next State to PAUSED_STATE.
-//  ---------------------------------------------
 {
     nextState = PAUSE_STATE;
 }
