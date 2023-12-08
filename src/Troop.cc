@@ -47,7 +47,6 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
 void Troop::updatePos()
 {
     collisionCounter += frameDuration->asSeconds();
-
     if (!Entity::isFriendly)    
     {
         Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());

@@ -41,7 +41,6 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     boundingbox.getGlobalBounds().intersects(( other->boundingbox.getGlobalBounds()))
     || ( ((isFriendly ? 1 : -1)*(boundingbox.getGlobalBounds().left - other->boundingbox.getGlobalBounds().left)) > 0 ) ;
     other->hasCollided = hasCollided;
-
     return hasCollided;
 }
 
