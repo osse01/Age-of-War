@@ -14,8 +14,8 @@ void Turret::handleCollision(__attribute__((unused)) int,
 
 void Turret::updatePos()
 {
-    float tmp = isFriendly ? -angle : angle;
-    sprite.setRotation(tmp);
+    int tmp = isFriendly ? -1 : 1;
+    sprite.setRotation( angle * tmp );
     changeSprite();
 }
 

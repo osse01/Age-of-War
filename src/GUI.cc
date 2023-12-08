@@ -406,7 +406,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
 
 void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)
 {
-    enemyHealthBar.setPosition(groundSprite.getGlobalBounds().width/2 + buttonSize/2*1.5, 8*buttonSize);
+    enemyHealthBar.setPosition(19*window->getSize().x/20 - buttonSize/2*1.5, 8*buttonSize);
     enemyHealthBar.setScale(1/1.5, 1/1.5);
 
     enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);

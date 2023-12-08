@@ -32,7 +32,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     woodsSprite.setScale(1, 1);
     woodsTexture.setRepeated(true);
     woodsSprite.setTexture(woodsTexture);
-    woodsSprite.setTextureRect(sf::Rect(0,0,
+    woodsSprite.setTextureRect(sf::IntRect(0,0,
      static_cast<int>(8*woodsSprite.getGlobalBounds().width),static_cast<int>(woodsSprite.getGlobalBounds().height)));
     woodsSprite.setOrigin(woodsSprite.getGlobalBounds().width/2, woodsSprite.getGlobalBounds().height);
     woodsSprite.setPosition(groundSprite.getPosition().x, groundSprite.getPosition().y  ); 
