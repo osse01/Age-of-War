@@ -470,7 +470,7 @@ void GameState::spawnEnemy(int type)
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
         case BUY_TURRET:
-            if(enemyVector.back()->buyTurret(dataMap, false, spawnPoint, frameDuration))
+            if(enemyVector.back()->buyTurret(enemyStats, false, spawnPoint, frameDuration))
             {}
             break;
         default:
