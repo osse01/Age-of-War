@@ -25,6 +25,7 @@ class GUI
         void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
         void drawHPBar(std::shared_ptr<sf::RenderWindow>, const sf::Sprite&,  int, int);
         int buttonClicked(int, float, float);
+        unsigned int sliderPosition(int, float);
 
 
     protected:
@@ -37,6 +38,7 @@ class GUI
         std::vector<std::shared_ptr<Button>> menuButtons;
         std::vector<std::shared_ptr<Button>> gameButtons;
         std::vector<std::shared_ptr<Button>> pausedButtons;
+        std::vector<std::shared_ptr<Button>> optionsButtons;
         std::vector<std::shared_ptr<Button>> winButtons;
         std::vector<std::shared_ptr<Button>> loseButtons;
 

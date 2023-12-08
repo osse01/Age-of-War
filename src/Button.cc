@@ -4,8 +4,9 @@
 
 // Constructor for Button without Sprite
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, sf::Color outlineColor, std::string buttonText, sf::Font& font)
-: i {0}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
-  renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}
+//This is a button with text
+: i {0}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
+  renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {sf::Color(112, 58, 7)}
 {
     // Set Button Appearance and Position
     button.setFillColor(fillColor);
@@ -34,9 +35,10 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 
 // Constructor for Button with Sprite
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor)
-: i {1}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
-  renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}
-  {
+// This is a button with a sprite
+: i {1}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
+  renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor { fillColor }
+{
     renderButton->create(buttonSize.x + 4, buttonSize.y + 4);
 
     // Set Button Appearance and Position
@@ -61,27 +63,57 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& spri
     buttonSprite.setTexture(renderButton->getTexture());
     buttonSprite.setOrigin(0,0);
     buttonSprite.setPosition(pos);
-  }
+}
 
-// Return Global Bounds for Sprite
+Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor)
+// This is a button with no sprite
+: i {2}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {}, sprite {},
+  renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {fillColor}
+{
+    renderButton->create(buttonSize.x, buttonSize.y);
+
+    button.setFillColor(fillColor);
+    button.setOrigin(button.getSize().x/2, button.getSize().y/2);
+    button.setPosition(buttonSize.x/2, buttonSize.y/2);
+
+    renderButton->clear(sf::Color::White);
+    renderButton->draw(button);
+    renderButton->display();
+
+    buttonSprite.setTexture(renderButton->getTexture());
+    buttonSprite.setOrigin(button.getOrigin());
+    buttonSprite.setPosition(pos);
+}
+
+
 sf::FloatRect Button::getGlobalBounds()
 {
     return buttonSprite.getGlobalBounds();
 }
 
-// Draw and Return Button Sprite
+sf::Vector2f Button::getPosition()
+{
+    return buttonSprite.getPosition();
+}
+
+bool Button::click()
+{
+    clicked = !clicked;
+    return clicked;
+}
 sf::Sprite& Button::draw()
 {
     renderButton->clear(sf::Color::White);
     renderButton->draw(button);
     
-    if (i)
+    if (i==1)
     {
     renderButton->draw(sprite);
     }
-    else
+    else if (i==0)
     {
-    renderButton->draw(*text);
+        renderButton->draw(*text);
+
     }
 
     renderButton->display();
@@ -98,5 +130,11 @@ void Button::hover()
 // Change Back to the Original Color
 void Button::stopHover()
 {
-    button.setFillColor(sf::Color(112, 58, 7)); 
+    button.setFillColor(fillColor); 
+}
+
+void Button::setPosition(float xpos, float)
+// Update position
+{
+    buttonSprite.setPosition(xpos, buttonSprite.getPosition().y);
 }

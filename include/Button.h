@@ -15,25 +15,31 @@ class Button
     //  CONSTRUCTORS
         Button(sf::Vector2f const, sf::Vector2f const, sf::Color const, sf::Color const, std::string const, sf::Font&);
         Button(sf::Vector2f const, sf::Vector2f const, sf::Sprite& , sf::Color const);
-
+        Button(sf::Vector2f const, sf::Vector2f const, sf::Color const);
 
         //Button(sf::RectangleShape, sf::Sprite, std::string="");
         ~Button() = default;
 
     //  FUNCTIONS
     sf::FloatRect getGlobalBounds();
-    sf::Sprite&  draw();
-    void         hover();
-    void         stopHover();
+    sf::Vector2f  getPosition();
+    bool          click();
+    sf::Sprite&   draw();
+    void          hover();
+    void          stopHover();
+    void          setPosition( float , float = 0.0f );
+
 
 
     private:
     //  VARIABLES
     int i;
+    bool clicked;
     sf::RectangleShape                   button;
     std::shared_ptr<sf::Text>            text;
     sf::Sprite                           sprite;
     std::shared_ptr<sf::RenderTexture>   renderButton;
     sf::Sprite                           buttonSprite;
+    sf::Color                            fillColor;
 };
 #endif

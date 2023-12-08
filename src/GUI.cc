@@ -1,11 +1,12 @@
 #include "../include/GUI.h"
 #include <iostream>
+#include <cmath>
 
 // Standard Button RGB Color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
     : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{},
+      menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{},
       menuTexts{}, pausedTexts{}, winTexts{}, loseTexts{}, gameTextures {},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
@@ -204,6 +205,58 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             }
             break;
         }
+    
+    case OPTIONS_STATE:
+        {
+        if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
+        {
+            throw std::logic_error("\n  >> Error. Could not load font file. "
+            "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
+        }
+        if ( !interfaceTexture.loadFromFile(dataMap.files["GUITexture"]) )
+        {
+            throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
+            "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
+        }
+        interface.setSize(sf::Vector2f(10*buttonSize, 10*buttonSize));
+        interface.setOrigin(interface.getSize().x/2, interface.getSize().y/2);
+        interface.setPosition(window->getSize().x/2, window->getSize().y/2);
+        interface.setTexture(&interfaceTexture);
+    
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(8*buttonSize, buttonSize/4), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2), 
+                                    sf::Color(112, 58, 7) ));
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameMusic"]["volume"]/12.5 - 4), window->getSize().y/2), 
+                                    sf::Color::Green));
+        //Music Enabled
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2), 
+                                    (static_cast<bool>(dataMap.stats["GameMusic"]["enabled"])) ? sf::Color(112, 58, 7) : sf::Color(204, 107, 16)));
+        std::cout << dataMap.stats["GameMusic"]["enabled"] << std::endl;
+        //Second Slider
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(8*buttonSize, buttonSize/4), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + 1.2*buttonSize),
+                                    sf::Color(112, 58, 7)));
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameSound"]["volume"]/12.5 - 4), window->getSize().y/2 + 1.2*buttonSize), 
+                                    sf::Color::Green));
+        //Sound Enabled
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2 + 1.2*buttonSize), 
+                                    (static_cast<bool>(dataMap.stats["GameSound"]["enabled"])) ? sf::Color(112, 58, 7) : sf::Color(204, 107, 16)));
+        //MenuButton
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(3*buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + 2 * 1.2*buttonSize), 
+                                    sf::Color(112, 58, 7), sf::Color::Black, "Main Menu", font));
+        }
     default:
         break;
     }
@@ -266,6 +319,17 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
             {
                 window->draw(loseButtons.at(i)->draw());
+            }
+            break;
+        }
+        // Draw Buttons in Options State
+
+        case OPTIONS_STATE:
+        {
+            window->draw(interface);
+            for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                window->draw(optionsButtons.at(i)->draw());
             }
             break;
         }
@@ -351,6 +415,23 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                 }
             }
             break;
+            case OPTIONS_STATE:
+            for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                if ( i == 0 || i == 2 || i == 3 || i == 5 )
+                {
+                    continue;
+                }
+                if (optionsButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+                {
+                    optionsButtons.at(i)->hover();
+                }
+                else
+                {
+                    optionsButtons.at(i)->stopHover(); 
+                }
+            }
+            break;
         default:
             break;
     }
@@ -420,10 +501,82 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                 }
             break;
         }
+        case OPTIONS_STATE:
+        {
+            for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                if (optionsButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
+                {
+                    if ( i == 2 )
+                    {
+                        dataMap.stats["GameMusic"]["enabled"] = optionsButtons.at(i)->click();
+                        if(dataMap.stats["GameMusic"]["enabled"])
+                        {
+                            optionsButtons.at(i)->hover();
+                        }
+                        else
+                        {
+                            optionsButtons.at(i)->stopHover();
+                        }
+                    }
+                    else if ( i == 5 )
+                    {
+                        dataMap.stats["GameSound"]["enabled"] = optionsButtons.at(i)->click();
+                        if(dataMap.stats["GameSound"]["enabled"])
+                        {
+                            optionsButtons.at(i)->hover();
+                        }
+                        else
+                        {
+                            optionsButtons.at(i)->stopHover();
+                        }
+                    }
+                    return i+1;
+                }
+            }
+            break;
+        }
         default:
             break;
     }
     return 0;
+}
+unsigned int GUI::sliderPosition(int buttonNmbr, float mouseX)
+// Function to return where the slider is currently being dragged
+{
+    optionsButtons.at(buttonNmbr)->setPosition(mouseX);
+
+    if ( optionsButtons.at(buttonNmbr)->getPosition().x <= 
+         optionsButtons.at(0)->getGlobalBounds().left )
+    {
+        optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left);
+        if(buttonNmbr == 1)
+        {
+            optionsButtons.at(2)->hover();
+        }
+        else if (buttonNmbr == 4)
+        {
+            optionsButtons.at(5)->hover();
+        }
+    }
+    else if ( optionsButtons.at(buttonNmbr)->getPosition().x >= 
+              optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width )
+    {
+        optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width);
+    }
+    else
+    {
+        if(buttonNmbr == 1)
+        {
+        optionsButtons.at(2)->stopHover();
+        }
+        else if (buttonNmbr == 4)
+        {
+            optionsButtons.at(5)->stopHover();
+        }
+    }
+    return std::round(100 * ( optionsButtons.at(buttonNmbr)->getPosition().x - optionsButtons.at(0)->getGlobalBounds().left ) / 
+                            ( optionsButtons.at(0)->getGlobalBounds().width ));
 }
 
 void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)

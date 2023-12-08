@@ -5,6 +5,8 @@
 #include "../include/WinState.h"
 #include "../include/LoseState.h"
 #include "../include/CreditsState.h"
+#include "../include/OptionsState.h"
+
 
 #include <utility>
 #include <iostream>
@@ -12,8 +14,8 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
-    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, states {}, currentState { MENU_STATE },
-    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, lastFrame{}, cursorSprite {}, mouse{}, dataMap {}
+    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, lastFrame{}, states {}, currentState { MENU_STATE },
+    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
 {
     // Create Fullscreen Window
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -28,7 +30,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     {
         std::cout << "  >> Error: Could Not Find Audio File. Error in Game::Game()." << std::endl;
     }
-    music->setVolume(0);
+    music->setVolume(dataMap.stats["GameMusic"]["volume"]);
     music->setLoop(true);
     
     // Place Possible Game States in States Vector
@@ -193,6 +195,17 @@ void Game::getNextState()
                 states.top()->resetState();
                 ptr = std::make_unique<CreditsState>(window, dataMap, music, frameDurationPtr);            
                 states.push(std::move(ptr));
+                break;
+            case OPTIONS_STATE:
+                if(currentState == MENU_STATE) 
+                {
+                    states.top()->resetState();
+                    saveFrame();
+                    ptr = std::make_unique<OptionsState>(window, dataMap, music, frameDurationPtr, lastFrame); 
+                    states.push(std::move(ptr));
+                }
+                break;
+            default:
                 break;
         }
         currentState = nextState;

@@ -16,6 +16,7 @@ int const PAUSE_STATE   { 2 };
 int const WIN_STATE     { 3 };
 int const LOSE_STATE    { 4 };
 int const CREDITS_STATE { 5 }; 
+int const OPTIONS_STATE { 6 };
 
 class State
 //  =============   State CLASS    ===============
