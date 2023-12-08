@@ -60,6 +60,7 @@ void MenuState::handleEvent(sf::Event event)
                         startAnimation();
                         break;
                     case 2:
+                        nextState = OPTIONS_STATE;
                         break;
                     case 3:
                         nextState = CREDITS_STATE;
