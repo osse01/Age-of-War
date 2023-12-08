@@ -20,6 +20,12 @@
 #include <memory>
 #include <string>
 
+int const PAUSE             { 1 };
+int const SPECIAL_ABILITY   { 2 };
+int const BUY_TURRET        { 3 };
+int const SPAWN_TANK        { 4 };
+int const SPAWN_RANGED      { 5 }; 
+int const SPAWN_MELEE       { 6 };
 
 
 
@@ -44,7 +50,6 @@ class GameState : public State
         void spawnEnemy       (int);
         void handleCollisions ();
         void resetState       ()          override;
-        void updateStage      ();
         void enemyPlay        ();
 
     private:
@@ -64,15 +69,14 @@ class GameState : public State
         sf::Sprite          groundSprite;
         sf::Sprite          woodsSprite;
         sf::View            view;
+        
         sf::Vector2f        zoomFactor;
 
         int nextState;
-        int stage;
         int gold;
         GUI                 gui;
         Enemy               enemy;
         std::vector<int>    deleteEntities{};
-
 };
 
 #endif

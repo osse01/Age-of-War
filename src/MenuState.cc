@@ -45,8 +45,6 @@ MenuState::~MenuState()
 
 void MenuState::handleEvent(sf::Event event)
 //  ---------------------------------------------
-//  Handle Event, For Now We Can Only Start Game.
-//  ---------------------------------------------
 {
     switch (event.type)
     {
@@ -60,7 +58,6 @@ void MenuState::handleEvent(sf::Event event)
                     case 1:
                         nextState = GAME_STATE;
                         startAnimation();
-                        music->play();      
                         break;
                     case 2:
                         break;

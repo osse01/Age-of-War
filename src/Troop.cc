@@ -109,7 +109,7 @@ void Troop::takeDamage(int otherDamage)
         Entity::hp -= otherDamage;
 }
 
-float Troop::getDamage()
+int Troop::getDamage()
 {
     int damage {};
     if ( (rectSourceSprite.left)%(12*128) == 4*128 && spriteCounter == 0 )
@@ -117,13 +117,4 @@ float Troop::getDamage()
         damage = DAMAGE;
     }
     return damage;
-}
-
-std::shared_ptr<Projectile> Troop::spawnProjectile(FileReader::Data& stats,
-                                                    std::shared_ptr<sf::Time> frameDuration,
-                                                    sf::Vector2f pos)
-{
-   std::shared_ptr<Projectile> projectile {};
-
-   return projectile;
 }

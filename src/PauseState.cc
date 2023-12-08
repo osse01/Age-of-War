@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 
-PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
+PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
 :   State(screen, dataMap, sound, frameDuration), nextState{PAUSE_STATE},
     textFont {}, pausedText {}, greyOut {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { PAUSE_STATE, screen, dataMap }
   
@@ -11,6 +11,8 @@ PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Dat
 //  PauseState constructor. Setup for pausedText and grayOut.
 //  -------------------------------------------------------
 {
+    music->pause();
+
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         pausedText.setFont          (textFont);
@@ -36,8 +38,7 @@ PauseState::~PauseState()
 //  PausedState Destructor.
 //  ---------------------------------------------
 {
-    window = nullptr;
-    frameDuration = nullptr;
+    music->play();
 }
 
 void PauseState::handleEvent(sf::Event event)
@@ -57,7 +58,6 @@ void PauseState::handleEvent(sf::Event event)
             {
                 case 1:
                     nextState = GAME_STATE;
-                    music->play();      
                     break;
                 case 2:
                     break;
@@ -98,8 +98,7 @@ void PauseState::renderFrame()
 //  Draws next Frame.
 //  ---------------------------------------------
 {
-    window->clear(sf::Color(255, 0, 0));
-
+    window->clear(sf::Color(255, 255, 255));
     window->draw(gamestateFrameSprite);
     window->draw(greyOut);
     window->draw(pausedText);

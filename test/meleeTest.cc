@@ -47,9 +47,9 @@ TEST_CASE ("CONSTRUCTORS AND GETTERS")
         CHECK ( meleeTroop.getHP() == data.stats["Melee"]["hp"] );
         
         CHECK ( meleeTroop.getBox().getGlobalBounds().width == 
-                                data.dimensions["Melee"]["boxSize"].x );
+                                data.boxSize["Melee"].x );
         CHECK ( meleeTroop.getBox().getGlobalBounds().height == 
-                                data.dimensions["Melee"]["boxSize"].y );
+                                data.boxSize["Melee"].y );
 
         // Rest of the tests are only visuals.
         

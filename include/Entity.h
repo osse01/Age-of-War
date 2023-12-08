@@ -15,24 +15,25 @@ class Entity
         
         virtual std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                             std::shared_ptr<sf::Time>, 
-                                                            sf::Vector2f) = 0;
+                                                            sf::Vector2f);
         virtual void    handleCollision(int = 0, int = 0) = 0;
         virtual void    updatePos()       = 0;
-        virtual float   getRange()        = 0;
-        virtual float   getDamage()       {return 0;};
-        virtual float   getDeathValue()   {return 0;};
-        float     getHP();
+        virtual int     getDamage()     {return 0;};
+        virtual int     getDeathValue() {return 0;};
+        virtual float   getRange()          = 0;
+        int     getHP();
         sf::RectangleShape getBox();
 
         bool getIsFriendly();
         bool isDead();
 
-        const sf::Sprite &  getSprite       ()         ;
+        virtual sf::Sprite& getSprite();
         bool        collides( std::shared_ptr<Entity> );
+        virtual bool buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>){return true;};
 
     protected:
-        double              xpos;
-        double              ypos;
+        float              xpos;
+        float              ypos;
         float                 hp;
         bool                isFriendly;
         bool                hasCollided;

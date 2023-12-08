@@ -25,7 +25,6 @@ class GUI
         void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
         void drawHPBar(std::shared_ptr<sf::RenderWindow>, const sf::Sprite&,  int, int);
         int buttonClicked(int, float, float);
-        void setBaseHP(int);
 
 
     protected:
@@ -40,13 +39,12 @@ class GUI
         std::vector<std::shared_ptr<Button>> pausedButtons;
         std::vector<std::shared_ptr<Button>> winButtons;
         std::vector<std::shared_ptr<Button>> loseButtons;
+
         std::vector<std::string>             menuTexts;
         std::vector<std::string>             pausedTexts;
         std::vector<std::string>             winTexts;
         std::vector<std::string>             loseTexts;
         std::vector<sf::Texture>             gameTextures;
-
-
 
         sf::RectangleShape  interface;
         sf::RectangleShape  statsInterface;
@@ -54,6 +52,7 @@ class GUI
         sf::RectangleShape  enemyHealthBar;
         sf::RectangleShape  healthRec;
         sf::RectangleShape  enemyHealthRec;
+
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;

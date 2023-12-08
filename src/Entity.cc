@@ -6,8 +6,8 @@
 Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
     : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
-      texture{}, rectSourceSprite { sf::Vector2i(0,0),data.dimensions[troopType]["spriteDim"] }, sprite {texture, rectSourceSprite},
-      boundingbox { sf::RectangleShape(static_cast<sf::Vector2f>(data.dimensions[troopType]["boxSize"])) }, frameDuration {frameDuration}
+      texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] }, sprite {texture, rectSourceSprite},
+      boundingbox { sf::Vector2f(data.boxSize[troopType].x * data.windowScale, data.boxSize[troopType].y * data.windowScale) }, frameDuration {frameDuration}
 {
     std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
     if(!texture.loadFromFile("assets/" + friendOrFoe + data.files[troopType]))
@@ -32,16 +32,20 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
 }
 
 bool Entity::collides( std::shared_ptr<Entity> other )
+//  ---------------------------------------------
+//  Checks if Unit has Collided and if we have lag.
+//  ---------------------------------------------
 {
     // Check whether this collides with other
-    hasCollided = boundingbox.getGlobalBounds().intersects(
-            ( other->boundingbox.getGlobalBounds() ) );
+    hasCollided = 
+    boundingbox.getGlobalBounds().intersects(( other->boundingbox.getGlobalBounds()))
+    || ( ((isFriendly ? 1 : -1)*(boundingbox.getGlobalBounds().left - other->boundingbox.getGlobalBounds().left)) > 0 ) ;
     other->hasCollided = hasCollided;
 
     return hasCollided;
 }
 
-const sf::Sprite& Entity::getSprite()  
+sf::Sprite& Entity::getSprite()
 {
     return sprite;
 }
@@ -61,7 +65,17 @@ sf::RectangleShape Entity::getBox()
     return boundingbox;
 }
 
-float Entity::getHP()
+int Entity::getHP()
 {
     return hp;
+}
+
+std::shared_ptr<Projectile> Entity::spawnProjectile(
+    __attribute__((unused)) FileReader::Data&,
+    __attribute__((unused)) std::shared_ptr<sf::Time>,
+    __attribute__((unused)) sf::Vector2f)
+{
+   std::shared_ptr<Projectile> projectile {};
+
+   return projectile;
 }

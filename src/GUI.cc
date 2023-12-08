@@ -5,10 +5,10 @@
 // standard button rgb color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/30 }, originalBaseHP{}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{}, menuTexts{}, pausedTexts{}, gameTextures {}, 
-      winTexts{}, loseTexts{}, interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) },
-      statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
+    : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
+      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{},
+      menuTexts{}, pausedTexts{}, winTexts{}, loseTexts{}, gameTextures {},
+      interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
       healthRec{ healthBar }, enemyHealthRec{ healthBar },
       interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{}
@@ -41,7 +41,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             menuTexts.push_back("Quit");
 
 
-           for (int i{0} ; i < menuTexts.size() ; i++)
+           for (int i{0} ; i < static_cast<int>(menuTexts.size()) ; i++)
             {
                 menuButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 
@@ -62,7 +62,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             pausedTexts.push_back("Main Menu");
     
 
-           for (int i{0} ; i < pausedTexts.size() ; i++)
+           for (long unsigned int i{0} ; i < pausedTexts.size() ; i++)
             {
                 pausedButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 
@@ -79,11 +79,10 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
             }
 
-            winTexts.push_back("Play again");
             winTexts.push_back("Main Menu");
             winTexts.push_back("Quit");
     
-           for (int i{0} ; i < winTexts.size() ; i++)
+           for (long unsigned int i{0} ; i < winTexts.size() ; i++)
             {
                 winButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 
@@ -100,11 +99,10 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSED_STATE");
             }
 
-            loseTexts.push_back("Resume Game");
             loseTexts.push_back("Main Menu");
             loseTexts.push_back("Quit");
     
-           for (int i{0} ; i < loseTexts.size() ; i++)
+           for (long unsigned int i{0} ; i < loseTexts.size() ; i++)
             {
                 loseButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(3*buttonSize, buttonSize), 
@@ -175,7 +173,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
 
             goldText.setFont(font);
             goldText.setCharacterSize(buttonSize*0.4);
-            goldText.setColor(sf::Color::Yellow);
+            goldText.setFillColor(sf::Color::Yellow);
 
             for (int i{0} ; i < 6 ; i++)
             {
@@ -204,16 +202,17 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case MENU_STATE:
         {
 
-            for (unsigned i{0} ; i < menuButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(menuButtons.size()) ; i++)
             {
                 window->draw(menuButtons.at(i)->draw());
             }
             break;
         }
         case GAME_STATE:
+        {
             window->draw(interface);
             window->draw(statsInterface);
-            for (unsigned i{0} ; i < 6 ; i++)
+            for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
             {
                 coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
                 heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
@@ -228,10 +227,11 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
                 window->draw(gameButtons.at(i)->draw());
             }
             break;
+        }
         case PAUSE_STATE:
         {
 
-            for (unsigned i{0} ; i < pausedButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(pausedButtons.size()) ; i++)
             {
                 window->draw(pausedButtons.at(i)->draw());
             }
@@ -240,7 +240,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case WIN_STATE:
         {
 
-            for (unsigned i{0} ; i < winButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(winButtons.size()) ; i++)
             {
                 window->draw(winButtons.at(i)->draw());
             }
@@ -249,7 +249,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
         case LOSE_STATE:
         {
 
-            for (unsigned i{0} ; i < loseButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
             {
                 window->draw(loseButtons.at(i)->draw());
             }
@@ -269,7 +269,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
     switch ( currentState )
     {
         case MENU_STATE:
-            for (int i{0} ; i < menuButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(menuButtons.size()) ; i++)
             {
                 if (menuButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -282,7 +282,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
             }
             break;
         case GAME_STATE:
-            for (int i{0} ; i < gameButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
             {
                 if (gameButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -293,8 +293,9 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                     gameButtons.at(i)->stopHover(); 
                 }
             }
+            break;
         case PAUSE_STATE:
-            for (int i{0} ; i < pausedButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(pausedButtons.size()) ; i++)
             {
                 if (pausedButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -307,7 +308,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
             }
             break;
         case WIN_STATE:
-            for (int i{0} ; i < winButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(winButtons.size()) ; i++)
             {
                 if (winButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -320,7 +321,7 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
             }
             break;
         case LOSE_STATE:
-            for (int i{0} ; i < loseButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
             {
                 if (loseButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
                 {
@@ -344,7 +345,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
     {
         case MENU_STATE:
         {
-            for (int i{0} ; i < menuButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(menuButtons.size()) ; i++)
                 {
                     if (menuButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
@@ -355,7 +356,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         }
         case GAME_STATE:
         {
-            for (int i{0} ; i < 6 ; i++)
+            for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
                 {
                     if (gameButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
@@ -366,7 +367,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         }
         case PAUSE_STATE:
         {
-            for (int i{0} ; i < pausedButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(pausedButtons.size()) ; i++)
                 {
                     if (pausedButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
@@ -377,7 +378,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         }
         case WIN_STATE:
         {
-            for (int i{0} ; i < winButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(winButtons.size()) ; i++)
                 {
                     if (winButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
@@ -388,9 +389,9 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
         }
         case LOSE_STATE:
         {
-            for (int i{0} ; i < loseButtons.size() ; i++)
+            for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
                 {
-                if (loseButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
+                    if (loseButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
                         return i+1;
                     }
@@ -401,11 +402,6 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
             break;
     }
     return 0;
-}
-
-void GUI::setBaseHP(int hp) // Change later when Data is implemented correctly
-{
-    originalBaseHP = hp;
 }
 
 void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)
@@ -420,7 +416,7 @@ void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& 
     healthBar.setScale(1/1.5, 1/1.5);
     healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
     healthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(friendlyHP)/static_cast<double>(originalBaseHP)/1.5));
-
+        
     window->draw(enemyHealthBar);
     window->draw(enemyHealthRec);
     window->draw(healthBar);

@@ -34,7 +34,8 @@ public:
     struct Data
     {
         std::map<std::string, std::map<std::string, float>> stats;
-        std::map<std::string, std::map<std::string, sf::Vector2i>> dimensions;
+        std::map<std::string, sf::Vector2i> spriteDim;
+        std::map<std::string, sf::Vector2f> boxSize;
         std::map<std::string, std::string> files;
         float windowScale;
     };
