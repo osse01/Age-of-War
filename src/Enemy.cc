@@ -46,7 +46,6 @@ std::vector<int> Enemy::spawnAlgo()
     int tmp{std::experimental::randint(1,waveSize)};
     std::vector<int> spawn{};
     waveCounter++;
-    spawn.push_back(5);
     if(waveCounter == waveLimit)
     {
         spawnList.erase(spawnList.begin());
