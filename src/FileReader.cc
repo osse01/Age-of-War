@@ -3,13 +3,12 @@
 
 FileReader::FileReader(std::shared_ptr<sf::RenderWindow> window)
     : windowScale {window->getSize().x/1920.f}, data{}
-//  -------------------------------------------------------
 {}
 
 FileReader::Data FileReader::returnData(const std::string& filename)
 //  -------------------------------------------------------
-//  Returns Data Struct Containing all Info from the String
-//  Starting with Argument Name. 
+//  Returns Data Struct Containing all Information from the String
+//  Starting with Argument Name
 //  -------------------------------------------------------
 {
     std::ifstream file(filename);
@@ -63,7 +62,5 @@ FileReader::Data FileReader::returnData(const std::string& filename)
         data.windowScale = windowScale;
 
         return data;
-
     }
-
 }
