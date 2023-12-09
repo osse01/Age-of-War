@@ -62,6 +62,9 @@ class GUI
         sf::Sprite          heartSprite;
         sf::Font            font;
         sf::Text            goldText;
+        sf::Text            optionsText;
+        sf::Text            musicText;
+        sf::Text            soundText;
 
 };
 

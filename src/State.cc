@@ -6,3 +6,7 @@ State::State(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& dataMap
 
 State::~State()
 {}
+void State::prevState(int __attribute__((unused)))
+{
+    return;
+}

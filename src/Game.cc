@@ -165,11 +165,18 @@ void Game::getNextState()
 
             // Save Current Graphics and Create Pause State
             case PAUSE_STATE:
+            if (currentState == GAME_STATE)
+            {
                 states.top()->renderFrame();
                 saveFrame();
                 states.top()->resetState();
                 ptr = std::make_unique<PauseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
+            }
+            else if (currentState == OPTIONS_STATE)
+            {
+                states.pop();   
+            }
                 break;
 
             // Create Win State
@@ -201,7 +208,16 @@ void Game::getNextState()
                 {
                     states.top()->resetState();
                     saveFrame();
-                    ptr = std::make_unique<OptionsState>(window, dataMap, music, frameDurationPtr, lastFrame); 
+                    ptr = std::make_unique<OptionsState>(window, dataMap, music, frameDurationPtr, lastFrame);
+                    ptr->prevState(MENU_STATE);
+                    states.push(std::move(ptr));
+                }
+                else if (currentState == PAUSE_STATE)
+                {
+                    states.top()->resetState();
+                    saveFrame();
+                    ptr = std::make_unique<OptionsState>(window, dataMap, music, frameDurationPtr, lastFrame);
+                    ptr->prevState(PAUSE_STATE);
                     states.push(std::move(ptr));
                 }
                 break;

@@ -34,6 +34,7 @@ public:
     virtual void renderFrame  ()          = 0;
     virtual int  getNextState ()          = 0;
     virtual void resetState   ()          = 0;
+    virtual void prevState    (int);
 
 protected:
     std::shared_ptr<sf::RenderWindow>   window;

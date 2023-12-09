@@ -60,6 +60,7 @@ void PauseState::handleEvent(sf::Event event)
                     nextState = GAME_STATE;
                     break;
                 case 2:
+                nextState = OPTIONS_STATE;
                     break;
                 case 3:
                     nextState = MENU_STATE;

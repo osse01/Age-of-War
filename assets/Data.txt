@@ -34,9 +34,9 @@ Tank
 
 Base
     hp            1500
-    boxSize       249 323
-    spriteDim     249 323
-    filename      cursor.png
+    boxSize       512 256
+    spriteDim     512 256
+    filename      base_spritesheet.png
 
 Turret
     range        800

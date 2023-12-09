@@ -20,6 +20,7 @@ class OptionsState : public State
     int getNextState() override;
     void updateLogic() override;
     void resetState() override;
+    void prevState(int) override;
 
     private:
     GUI       gui;
@@ -33,6 +34,7 @@ class OptionsState : public State
     bool      musicEnabled;
     bool      buttonPressed;
     int       buttonNumber;
+    int       previousState;
 
 
 

@@ -2,11 +2,11 @@
 
 OptionsState::OptionsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data, std::shared_ptr<sf::Music> music, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
 : State{window, data, music, frameDuration}, 
-  gui{OPTIONS_STATE, window, data}, data { data }, lastFrameTexture { lastFrame },
+  gui{OPTIONS_STATE, window, data}, data { data }, lastFrameTexture { lastFrame }, lastFrameSprite {},
   nextState {OPTIONS_STATE},
   soundVolume {data.stats["GameSound"]["volume"]}, musicVolume {data.stats["GameMusic"]["volume"]}, 
   soundEnabled { data.stats["GameSound"]["enabled"] }, musicEnabled { data.stats["GameMusic"]["enabled"] },
-  buttonPressed { false }, buttonNumber { 0 }
+  buttonPressed { false }, buttonNumber { 0 }, previousState {}
 {
     music->play();
     lastFrameSprite.setTexture(lastFrameTexture);
@@ -16,6 +16,7 @@ OptionsState::~OptionsState()
 {
     music->stop();
 }
+
 void OptionsState::handleEvent(sf::Event event)
 // A function to handle Option events 
 // such as Sound Volume, Music Volume, and Sound Enabled
@@ -70,11 +71,10 @@ void OptionsState::handleEvent(sf::Event event)
 
             case 6:
             soundEnabled = !soundEnabled;
-
             break;
 
             case 7:
-            nextState = MENU_STATE;
+            nextState = previousState;
             break;
 
             default:
@@ -86,6 +86,7 @@ void OptionsState::handleEvent(sf::Event event)
     }
 
 }
+
 void OptionsState::renderFrame()
 // A function to render the Options State
 {
@@ -112,4 +113,9 @@ void OptionsState::resetState()
 //  ---------------------------------------------
 {
     nextState = OPTIONS_STATE;
+}
+
+void OptionsState::prevState(int previousState)
+{
+    OptionsState::previousState = previousState;
 }
