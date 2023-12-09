@@ -36,7 +36,7 @@ Base
     hp            1500
     boxSize       512 256
     spriteDim     512 256
-    filename      base_spritesheet.png
+    filename      base_sprite_sheet.png
 
 Turret
     range        800
