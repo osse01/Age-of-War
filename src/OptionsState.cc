@@ -56,6 +56,7 @@ void OptionsState::handleEvent(sf::Event event)
 
             case 3:
             musicEnabled = !musicEnabled;
+            data.stats["GameMusic"]["enabled"] = musicEnabled;
             break;
 
             case 4:
@@ -71,6 +72,7 @@ void OptionsState::handleEvent(sf::Event event)
 
             case 6:
             soundEnabled = !soundEnabled;
+            data.stats["GameSound"]["enabled"] = soundEnabled;
             break;
 
             case 7:
@@ -80,8 +82,6 @@ void OptionsState::handleEvent(sf::Event event)
             default:
             break;
         }
-        //data.stats["GameMusic"]["enabled"] = musicEnabled ? 1.f : 0.f;
-        //data.stats["GameSound"]["enabled"] = soundEnabled ? 1.f : 0.f;
         music->setVolume(musicEnabled ? musicVolume : 0);
     }
 

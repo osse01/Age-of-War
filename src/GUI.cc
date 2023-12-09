@@ -11,7 +11,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
       healthRec{ healthBar }, enemyHealthRec{ healthBar },
-      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{}, optionsText{}
+      interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{}, font{}, goldText{}, optionsText{}
 {
     // Add Textures to gameTextures
     sf::Texture tmpText {};
@@ -218,6 +218,12 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
             "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
         }
+        if ( !checkTexture.loadFromFile(dataMap.files["check"]) )
+        {
+            throw std::logic_error("\n  >> Error. Could not load checkTexture file. "
+            "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
+        }
+
         interface.setSize(sf::Vector2f(15*buttonSize, 8*buttonSize));
         interface.setOrigin(interface.getSize().x/2, interface.getSize().y/2);
         interface.setPosition(window->getSize().x/2, window->getSize().y/2 + buttonSize);
@@ -247,6 +253,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         soundText.setOrigin(musicText.getGlobalBounds().width/2, musicText.getGlobalBounds().height);
         soundText.setPosition(sf::Vector2f(window->getSize().x/2 - 5.5*buttonSize, window->getSize().y/2 + 1.2*buttonSize));
     
+        checkSprite.setTexture(checkTexture);
 
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(8*buttonSize, buttonSize/4), 
@@ -259,8 +266,9 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         //Music Enabled
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2), 
-                                    (static_cast<bool>(dataMap.stats["GameMusic"]["enabled"])) ? sf::Color(112, 58, 7) : sf::Color(204, 107, 16)));
+                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2 - 0.4*buttonSize), 
+                                    checkSprite, (static_cast<bool>(dataMap.stats["GameMusic"]["enabled"])) ? sf::Color(204, 107, 16) : sf::Color(112, 58, 7),
+                                    (static_cast<bool>(dataMap.stats["GameMusic"]["enabled"])) ));
         //std::cout << dataMap.stats["GameMusic"]["enabled"] << std::endl;
         //Second Slider
         optionsButtons.push_back(std::make_shared<Button>(
@@ -274,12 +282,13 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         //Sound Enabled
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2 + 1.2*buttonSize), 
-                                    (static_cast<bool>(dataMap.stats["GameSound"]["enabled"])) ? sf::Color(112, 58, 7) : sf::Color(204, 107, 16)));
+                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2 + 0.8*buttonSize), 
+                                    checkSprite, (static_cast<bool>(dataMap.stats["GameSound"]["enabled"])) ? sf::Color(204, 107, 16) : sf::Color(112, 58, 7),
+                                    (static_cast<bool>(dataMap.stats["GameSound"]["enabled"])) ));
         //MenuButton
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(3*buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + 2 * 1.2*buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + 2.6*buttonSize), 
                                     sf::Color(112, 58, 7), sf::Color::Black, "Back", font));
         }
     default:
@@ -537,27 +546,11 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                 {
                     if ( i == 2 )
                     {
-                        dataMap.stats["GameMusic"]["enabled"] = optionsButtons.at(i)->click();
-                        if(dataMap.stats["GameMusic"]["enabled"])
-                        {
-                            optionsButtons.at(i)->hover();
-                        }
-                        else
-                        {
-                            optionsButtons.at(i)->stopHover();
-                        }
+                        optionsButtons.at(i)->click();
                     }
                     else if ( i == 5 )
                     {
-                        dataMap.stats["GameSound"]["enabled"] = optionsButtons.at(i)->click();
-                        if(dataMap.stats["GameSound"]["enabled"])
-                        {
-                            optionsButtons.at(i)->hover();
-                        }
-                        else
-                        {
-                            optionsButtons.at(i)->stopHover();
-                        }
+                        optionsButtons.at(i)->click();
                     }
                     return i+1;
                 }

@@ -58,8 +58,10 @@ class GUI
         sf::Texture         interfaceTexture;
         sf::Texture         coinTexture;
         sf::Texture         heartTexture;
+        sf::Texture         checkTexture;
         sf::Sprite          coinSprite;
         sf::Sprite          heartSprite;
+        sf::Sprite          checkSprite;
         sf::Font            font;
         sf::Text            goldText;
         sf::Text            optionsText;

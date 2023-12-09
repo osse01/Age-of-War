@@ -34,9 +34,9 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 }
 
 // Constructor for Button with Sprite
-Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor)
+Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor, bool clicked)
 // This is a button with a sprite
-: i {1}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
+: i {1}, clicked {clicked}, button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor { fillColor }
 {
     renderButton->create(buttonSize.x + 4, buttonSize.y + 4);
@@ -70,11 +70,13 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 : i {2}, clicked {false}, button { sf::RectangleShape(buttonSize) }, text {}, sprite {},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {fillColor}
 {
-    renderButton->create(buttonSize.x, buttonSize.y);
+    renderButton->create(buttonSize.x+4, buttonSize.y+4);
 
     button.setFillColor(fillColor);
+    button.setOutlineColor(sf::Color::Black);
+    button.setOutlineThickness(2.0f);
     button.setOrigin(button.getSize().x/2, button.getSize().y/2);
-    button.setPosition(buttonSize.x/2, buttonSize.y/2);
+    button.setPosition(buttonSize.x/2+2, buttonSize.y/2+2);
 
     renderButton->clear(sf::Color::White);
     renderButton->draw(button);
@@ -99,6 +101,14 @@ sf::Vector2f Button::getPosition()
 bool Button::click()
 {
     clicked = !clicked;
+    if (clicked)
+    {
+        button.setFillColor(sf::Color(204, 107, 16));
+    }
+    else
+    {
+        button.setFillColor(sf::Color(112, 58, 7));
+    }
     return clicked;
 }
 sf::Sprite& Button::draw()
@@ -106,7 +116,7 @@ sf::Sprite& Button::draw()
     renderButton->clear(sf::Color::White);
     renderButton->draw(button);
     
-    if (i==1)
+    if (i==1 && clicked)
     {
     renderButton->draw(sprite);
     }
