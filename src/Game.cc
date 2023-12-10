@@ -10,12 +10,13 @@
 
 #include <utility>
 #include <iostream>
+#include <vector>
 
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
     event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, lastFrame{}, states {}, currentState { MENU_STATE },
-    music { std::make_shared<sf::Music> () }, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
+    music {std::make_shared<sf::Music>()}, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
 {
     // Create Fullscreen Window
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -23,18 +24,32 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     // Load required data
     FileReader reader {window};
     dataMap = reader.returnData("assets/Data.txt");
+    
 
-    // Open Audio File
-    std::string file{dataMap.files["GameMusic"]};
-    if (!music->openFromFile(file))
+    // Open Music File
+    if (!music->openFromFile(dataMap.files["GameMusic"]))
     {
-        std::cout << "  >> Error: Could Not Find Audio File. Error in Game::Game()." << std::endl;
+        std::cout << "  >> Error: Could Not Find Music File. Error in Game::Game()." << std::endl;
     }
     music->setVolume(dataMap.stats["GameMusic"]["volume"]);
     music->setLoop(true);
     
+    // Adds all SFX to map with sf::Music 
+    std::vector<std::string> strings {"button", "buyTurret", "toggle"};
+    for ( const std::string & soundString : strings)
+    {
+        sound[soundString] = std::make_shared<sf::Music>();
+        if ( !sound[soundString]->openFromFile( dataMap.files[soundString + "SFX"] ) )
+        {
+            std::cout << " >> Error: Could Not Find Sound File. Error in Game::Game()." << std::endl;
+        }
+        sound[soundString]->setVolume(50);
+    }
+    // Load Sound Files
+    
+
     // Place Possible Game States in States Vector
-    std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, dataMap, music, frameDurationPtr);
+    std::unique_ptr<State> ptr = std::make_unique<MenuState>(window, dataMap, music, sound, frameDurationPtr);
     states.push(std::move(ptr));
 
     // Create Custom Cursor
@@ -158,7 +173,7 @@ void Game::getNextState()
                 else if(currentState == MENU_STATE) 
                 {
                     states.top()->resetState();
-                    ptr = std::make_unique<GameState>(window, dataMap, music, frameDurationPtr);
+                    ptr = std::make_unique<GameState>(window, dataMap, music, sound, frameDurationPtr);
                     states.push(std::move(ptr));
                 }
                 break;
@@ -170,7 +185,7 @@ void Game::getNextState()
                 states.top()->renderFrame();
                 saveFrame();
                 states.top()->resetState();
-                ptr = std::make_unique<PauseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                ptr = std::make_unique<PauseState>(window, dataMap, music, sound, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
             }
             else if (currentState == OPTIONS_STATE)
@@ -184,7 +199,7 @@ void Game::getNextState()
                 states.top()->renderFrame();
                 saveFrame();
                 states.top()->resetState();
-                ptr = std::make_unique<WinState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                ptr = std::make_unique<WinState>(window, dataMap, music, sound, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
                 break;
 
@@ -193,14 +208,14 @@ void Game::getNextState()
                 states.top()->renderFrame();
                 saveFrame();
                 states.top()->resetState();
-                ptr = std::make_unique<LoseState>(window, dataMap, music, frameDurationPtr, lastFrame);            
+                ptr = std::make_unique<LoseState>(window, dataMap, music, sound, frameDurationPtr, lastFrame);            
                 states.push(std::move(ptr));
                 break;
 
             // Create Credits State
             case CREDITS_STATE:
                 states.top()->resetState();
-                ptr = std::make_unique<CreditsState>(window, dataMap, music, frameDurationPtr);            
+                ptr = std::make_unique<CreditsState>(window, dataMap, music, sound, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case OPTIONS_STATE:
@@ -208,7 +223,7 @@ void Game::getNextState()
                 {
                     states.top()->resetState();
                     saveFrame();
-                    ptr = std::make_unique<OptionsState>(window, dataMap, music, frameDurationPtr, lastFrame);
+                    ptr = std::make_unique<OptionsState>(window, dataMap, music, sound, frameDurationPtr, lastFrame);
                     ptr->prevState(MENU_STATE);
                     states.push(std::move(ptr));
                 }
@@ -216,7 +231,7 @@ void Game::getNextState()
                 {
                     states.top()->resetState();
                     saveFrame();
-                    ptr = std::make_unique<OptionsState>(window, dataMap, music, frameDurationPtr, lastFrame);
+                    ptr = std::make_unique<OptionsState>(window, dataMap, music, sound, frameDurationPtr, lastFrame);
                     ptr->prevState(PAUSE_STATE);
                     states.push(std::move(ptr));
                 }

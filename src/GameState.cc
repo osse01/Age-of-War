@@ -5,8 +5,8 @@
 #include <cmath>
 
 
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
@@ -87,22 +87,28 @@ void GameState::handleEvent(sf::Event event)
             sf::Event::MouseButtonEvent mouse { event.mouseButton };
             if (mouse.button == sf::Mouse::Button::Left)
             {
+                sound["button"]->stop();
                 switch (gui.buttonClicked(GAME_STATE, mouse.x, mouse.y))
                 {
                     case SPAWN_MELEE:
                         spawnFriendly("Melee");
+                        sound["button"]->play();
                         break;
                     case SPAWN_RANGED:
                         spawnFriendly("Ranged");
+                        sound["button"]->play();
                         break;
                     case SPAWN_TANK:
                         spawnFriendly("Tank");
+                        sound["button"]->play();
                         break;
                     case BUY_TURRET:
                         spawnFriendly("Turret");
+                        sound["button"]->play();
                         break;
                     case PAUSE:
                         nextState = PAUSE_STATE;
+                        sound["button"]->play();
                         break;
                     default:
                         break;

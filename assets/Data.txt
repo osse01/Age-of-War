@@ -71,7 +71,6 @@ GameMusic
 GameSound
     volume 50
     enabled 1
-    filename TheFileContaningTheSounds.ogg
 
 TitleFont
     filename assets/coolFont.ttf
@@ -102,6 +101,15 @@ GUITexture
 
 check
     filename assets/check.png
+
+buttonSFX
+    filename assets/SFX/button.ogg
+
+buyTurretSFX
+    filename assets/SFX/buyTurret.ogg
+
+toggleSFX
+    filename assets/SFX/toggle.ogg
 
 Enemy
     listSize    10

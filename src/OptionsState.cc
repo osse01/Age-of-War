@@ -1,7 +1,8 @@
 #include "../include/OptionsState.h"
 
-OptionsState::OptionsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data, std::shared_ptr<sf::Music> music, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
-: State{window, data, music, frameDuration}, 
+OptionsState::OptionsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data, std::shared_ptr<sf::Music> music, 
+                           std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
+: State{window, data, music, sound, frameDuration}, 
   gui{OPTIONS_STATE, window, data}, data { data }, lastFrameTexture { lastFrame }, lastFrameSprite {},
   nextState {OPTIONS_STATE},
   soundVolume {data.stats["GameSound"]["volume"]}, musicVolume {data.stats["GameMusic"]["volume"]}, 
@@ -55,6 +56,8 @@ void OptionsState::handleEvent(sf::Event event)
             case 3:
             musicEnabled = !musicEnabled;
             data.stats["GameMusic"]["enabled"] = musicEnabled;
+            sound["toggle"]->stop();
+            sound["toggle"]->play();
             break;
 
             case 4:
@@ -69,6 +72,8 @@ void OptionsState::handleEvent(sf::Event event)
             case 6:
             soundEnabled = !soundEnabled;
             data.stats["GameSound"]["enabled"] = soundEnabled;
+            sound["toggle"]->stop();
+            sound["toggle"]->play();
             break;
 
             case 7:
@@ -79,6 +84,9 @@ void OptionsState::handleEvent(sf::Event event)
             break;
         }
         music->setVolume(musicEnabled ? musicVolume : 0);
+        sound["button"]->setVolume(soundEnabled ? soundVolume : 0);
+        sound["toggle"]->setVolume(soundEnabled ? soundVolume : 0);
+        sound["buyTurret"]->setVolume(soundEnabled ? soundVolume : 0);
     }
 
 }
