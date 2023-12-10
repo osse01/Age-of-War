@@ -571,14 +571,6 @@ unsigned int GUI::sliderPosition(int buttonNmbr, float mouseX)
          optionsButtons.at(0)->getGlobalBounds().left )
     {
         optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left);
-        if(buttonNmbr == 1)
-        {
-            optionsButtons.at(2)->hover();
-        }
-        else if (buttonNmbr == 4)
-        {
-            optionsButtons.at(5)->hover();
-        }
     }
     else if ( optionsButtons.at(buttonNmbr)->getPosition().x >= 
               optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width )
@@ -587,14 +579,6 @@ unsigned int GUI::sliderPosition(int buttonNmbr, float mouseX)
     }
     else
     {
-        if(buttonNmbr == 1)
-        {
-        optionsButtons.at(2)->stopHover();
-        }
-        else if (buttonNmbr == 4)
-        {
-            optionsButtons.at(5)->stopHover();
-        }
     }
     return std::round(100 * ( optionsButtons.at(buttonNmbr)->getPosition().x - optionsButtons.at(0)->getGlobalBounds().left ) / 
                             ( optionsButtons.at(0)->getGlobalBounds().width ));

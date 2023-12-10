@@ -46,12 +46,10 @@ void OptionsState::handleEvent(sf::Event event)
             case 1:
             musicVolume = gui.sliderPosition(1, xpos);
             data.stats["GameMusic"]["volume"] = musicVolume;
-            musicEnabled = true;
             break;
             case 2:
             musicVolume = gui.sliderPosition(1, xpos);
             data.stats["GameMusic"]["volume"] = musicVolume;
-            musicEnabled = true;
             break;
 
             case 3:
@@ -62,12 +60,10 @@ void OptionsState::handleEvent(sf::Event event)
             case 4:
             soundVolume = gui.sliderPosition(4, xpos);
             data.stats["GameSound"]["volume"] = soundVolume;
-            soundEnabled = true;
             break;
             case 5:
             soundVolume = gui.sliderPosition(4, xpos);
             data.stats["GameSound"]["volume"] = soundVolume;
-            soundEnabled = true;
             break;
 
             case 6:
