@@ -11,7 +11,8 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
 {
-    music->play();      
+    music->play();
+    sound["sword"]->setLoop(true); 
 
     //  Load in Background Image
     if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]) && woodsTexture.loadFromFile(dataMap.files["Trees"])))
@@ -222,6 +223,7 @@ void GameState::updateLogic()
             if ( it->isDead() )
             {
                 deleteEntities.push_back(i);
+                sound["sword"]->pause();
             }
             i++;
 
@@ -238,6 +240,8 @@ void GameState::updateLogic()
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
+                    sound["gunshot"]->stop();
+                    sound["gunshot"]->play();
                 }
             }
         }
@@ -258,6 +262,7 @@ void GameState::updateLogic()
             {
                 deleteEntities.push_back(i);
                 gold += it->getDeathValue();
+                sound["sword"]->pause();
             }
             i++;
 
@@ -274,6 +279,8 @@ void GameState::updateLogic()
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
+                    sound["gunshot"]->stop();
+                    sound["gunshot"]->play();
                 }
             }
         }
@@ -303,6 +310,10 @@ void GameState::handleCollisions()
     {
         if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
         {
+            if ( sound["sword"]->getStatus() != sf::SoundSource::Playing)
+            {
+                sound["sword"]->play();
+            }
             friendlyVector.at(0) ->handleCollision(2, enemyVector.at(0)->getDamage());
             enemyVector.at(0)    ->handleCollision(2, friendlyVector.at(0)->getDamage());
         }

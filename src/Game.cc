@@ -35,7 +35,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     music->setLoop(true);
     
     // Adds all SFX to map with sf::Music 
-    std::vector<std::string> strings {"button", "buyTurret", "toggle"};
+    std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot", "sword"};
     for ( const std::string & soundString : strings)
     {
         sound[soundString] = std::make_shared<sf::Music>();

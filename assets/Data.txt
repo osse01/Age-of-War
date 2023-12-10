@@ -111,6 +111,12 @@ buyTurretSFX
 toggleSFX
     filename assets/SFX/toggle.ogg
 
+gunshotSFX
+    filename assets/SFX/gunshot.ogg
+
+swordSFX
+    filename assets/SFX/sword.ogg
+
 Enemy
     listSize    10
     waveSize    4
