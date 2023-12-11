@@ -19,8 +19,8 @@ OptionsState::~OptionsState()
 }
 
 void OptionsState::handleEvent(sf::Event event)
-// A function to handle Option events 
-// such as Sound Volume, Music Volume, and Sound Enabled
+// Handle Option Events 
+// such as Sound Volume, Music Volume and Sound Enabled
 {
     sf::Event::MouseButtonEvent mouse = event.mouseButton;
     switch (event.type)
@@ -42,6 +42,7 @@ void OptionsState::handleEvent(sf::Event event)
     {
         float xpos = sf::Mouse::getPosition().x;
         
+        // Set Music and Volume from Mouse Input
         switch(buttonNumber)
         {
             case 1:
