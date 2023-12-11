@@ -30,8 +30,7 @@ class Game
     void handleEvents ();
     void updateLogic  ();
     void renderFrame  ();
-    void getNextState ();
-    
+    void getNextState ();    
 
     private:
     //  FUNCTIONS

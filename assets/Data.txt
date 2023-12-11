@@ -42,8 +42,10 @@ Turret
     range        800
     cost         200
     attackSpeed  70
-    originX       96
-    originY       32
+    specialAttackSpeed 1100
+    cooldown     5
+    originX      96
+    originY      32
     spriteDim    128 64
     filename canon_sprite_sheet.png
 
@@ -62,6 +64,14 @@ TurretProjectile
     boxSize       20 20
     spriteDim     32 32
     filename      assets/canonBall.png 
+
+SpecialProjectile
+    damage        1000
+    hp            1
+    movementSpeed 2000
+    boxSize       20 20
+    spriteDim     32 32
+    filename      assets/canonBall.png
 
 GameMusic
     volume 50

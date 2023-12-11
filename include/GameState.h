@@ -54,13 +54,13 @@ class GameState : public State
 
     private:
         //  FUNCTIONS
-        void windowPanning     (bool);
+        void windowPanning    (bool);
 
         // VARIABLES
 
         std::vector<std::shared_ptr<Entity>> friendlyVector;
         std::vector<std::shared_ptr<Entity>> enemyVector;
-        std::deque<std::shared_ptr<Projectile>> projectileQueue;
+        std::vector<std::shared_ptr<Projectile>> projectileVector;
 
         sf::Texture         backgroundTexture;
         sf::Texture         groundTexture;

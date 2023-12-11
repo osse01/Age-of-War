@@ -16,8 +16,8 @@ class Dynamic : public Entity
 
         virtual int     getDamage()     override;
         int             getDeathValue() override;
-        float             getRange()      override;
-
+        virtual float           getRange()      override;
+        
     protected:
         const float   DAMAGE;
         const float   ATTACK_SPEED;

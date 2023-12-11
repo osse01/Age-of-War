@@ -4,9 +4,8 @@
 #include <utility>
 #include <cmath>
 
-
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
@@ -47,6 +46,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     enemyVector.push_back(std::make_shared<Base>(dataMap, false,
     sf::Vector2f(window->getSize().x - window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
+    projectileVector.reserve(500);
 }
 
 GameState::~GameState()
@@ -108,7 +108,7 @@ void GameState::handleEvent(sf::Event event)
                         sound["button"]->play();
                         break;
                     case SPECIAL_ABILITY:
-                        // special ability
+                        friendlyVector.back()->specialAttack();
                         break;
                     case PAUSE:
                         nextState = PAUSE_STATE;
@@ -197,7 +197,6 @@ void GameState::updateLogic()
     }
     
     int i { 0 };
-    //----PROJECTILES---
     for (auto &it: projectileQueue)
     {
         // Remove Projectile after Collision with Entity or Ground
@@ -213,7 +212,7 @@ void GameState::updateLogic()
     // Delete Removed Projectiles
     for (int j: deleteEntities)
     {
-        projectileQueue.erase( projectileQueue.begin() + j );
+        projectileVector.erase( projectileVector.begin() + j );
     }
     deleteEntities.clear();
     i = 0;
@@ -243,8 +242,6 @@ void GameState::updateLogic()
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
-                    sound["gunshot"]->stop();
-                    sound["gunshot"]->play();
                 }
             }
         }
@@ -282,8 +279,6 @@ void GameState::updateLogic()
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
-                    sound["gunshot"]->stop();
-                    sound["gunshot"]->play();
                 }
             }
         }
@@ -346,7 +341,7 @@ void GameState::handleCollisions()
         }
 
     // Handle Collision between Projectiles and Entities
-    for (auto &itProjectile : projectileQueue)
+    for (auto &itProjectile : projectileVector)
     {
         // Collision between Friendly Projectiles and Enemy Entities
         if (itProjectile->getIsFriendly())
@@ -396,7 +391,7 @@ void GameState::renderFrame()
     {
         window->draw(it->getSprite());
     }
-    for(auto &it: projectileQueue)
+    for(auto &it: projectileVector)
     {
         window->draw(it->getSprite());
     }
@@ -434,11 +429,10 @@ void GameState::spawnFriendly(std::string troopType)
     // Check if Player Gold is Greater Than Troop Cost
     if (gold >= dataMap.stats[troopType]["cost"])
     {
-        // Remove Troop Cost from Player Gold
-        gold -= dataMap.stats[troopType]["cost"];
-
-        // Spawn Correct Troop Type
-        if (troopType == "Melee")
+        gold -= dataMap.stats[troop]["cost"];
+        // Läs på om emplace
+        // Lös kollision
+        if (troop == "Melee")
         {
             friendlyVector.insert(it, std::make_shared<Melee> 
             ( dataMap, true, spawnPoint, frameDuration) );
