@@ -443,7 +443,7 @@ void GameState::spawnFriendly(std::string troopType)
 
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
-        else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, spawnPoint, frameDuration))
+        else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, frameDuration))
         {}
     }    
 }
@@ -479,7 +479,7 @@ void GameState::spawnEnemy(int type)
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
         case BUY_TURRET:
-            if(enemyVector.back()->buyTurret(enemyStats, false, spawnPoint, frameDuration))
+            if(enemyVector.back()->buyTurret(enemyStats, false, frameDuration))
             {}
             break;
         default:

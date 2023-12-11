@@ -29,8 +29,7 @@ class GUI
 
     protected:
     //  VARIABLES
-        unsigned int     buttonSize;
-        unsigned int     originalBaseHP;
+        float     buttonSize;
         FileReader::Data dataMap;
         std::string      heartFile;
 
@@ -41,10 +40,6 @@ class GUI
         std::vector<std::shared_ptr<Button>> winButtons;
         std::vector<std::shared_ptr<Button>> loseButtons;
 
-        std::vector<std::string>             menuTexts;
-        std::vector<std::string>             pausedTexts;
-        std::vector<std::string>             winTexts;
-        std::vector<std::string>             loseTexts;
         std::vector<sf::Texture>             gameTextures;
 
         sf::RectangleShape  interface;

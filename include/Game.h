@@ -34,35 +34,35 @@ class Game
     
 
     private:
-    //  FUNCTIONS
+    //  FUNCTIONS //
     void saveFrame();
+
     // Variables //
     std::shared_ptr<sf::RenderWindow> window;
+    std::shared_ptr<sf::Time> frameDurationPtr;
+
     sf::Event event;
     sf::Clock clock;
-    std::shared_ptr<sf::Time> frameDurationPtr;
     
-    // States
+    // States //
     std::stack<std::unique_ptr<State>> states;
-    int     currentState;
-    std::shared_ptr<sf::Music> music;
-    std::map<std::string, std::shared_ptr<sf::Sound>> sound;
-    std::vector<std::shared_ptr<sf::SoundBuffer>> soundBuffer;
-    int    nextState;
-
-    sf::Texture cursor;
     sf::Texture lastFrame;
+    int     currentState;
+    int     nextState;
+
+    // Sounds //
+    std::vector<std::shared_ptr<sf::SoundBuffer>> soundBuffer;
+    std::map<std::string, std::shared_ptr<sf::Sound>> sound;
+    std::shared_ptr<sf::Music> music;
+
+    //--------//
+
     sf::Sprite cursorSprite;
+    sf::Texture cursor;
 
     sf::Mouse mouse;
 
     FileReader::Data dataMap;
-
-    protected:
-
-
-
-
 };
 
 #endif

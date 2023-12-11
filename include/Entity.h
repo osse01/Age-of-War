@@ -33,7 +33,7 @@ class Entity
 
         virtual sf::Sprite& getSprite();
         bool        collides( std::shared_ptr<Entity> );
-        virtual bool buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>){return true;};
+        virtual bool buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>){return true;};
 
     protected:
         float              xpos;

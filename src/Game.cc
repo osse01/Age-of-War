@@ -15,8 +15,9 @@
 
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
-    event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, lastFrame{}, states {}, currentState { MENU_STATE },
-    music {std::make_shared<sf::Music>()}, sound{}, soundBuffer{}, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
+    frameDurationPtr { std::make_shared<sf::Time> ()}, event {}, clock {}, states {}, lastFrame{},
+    currentState { MENU_STATE }, nextState {MENU_STATE}, soundBuffer{}, sound{},
+    music {std::make_shared<sf::Music>()}, cursorSprite {}, cursor {}, mouse{}, dataMap {}
 {
     // Create Fullscreen Window
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -250,7 +251,6 @@ void Game::getNextState()
 void Game::saveFrame()
 //  ---------------------------------------------
 {
-    sf::Texture previousFrame {};
-    //lastFrame.update(*window);
-    lastFrame.loadFromImage(window->capture());
+    lastFrame.create(window->getSize().x, window->getSize().y);
+    lastFrame.update(*window);
 }

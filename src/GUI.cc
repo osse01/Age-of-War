@@ -5,11 +5,12 @@
 // Standard Button RGB Color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/20 * data.windowScale}, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
+    : buttonSize { window->getSize().x/20 * data.windowScale}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{},
-      menuTexts{}, pausedTexts{}, winTexts{}, loseTexts{}, gameTextures {},
+      gameTextures {},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
-      interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{}, font{}, goldText{}, optionsText{}
+      interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{},
+      font{}, goldText{}, optionsText{}, musicText {}, soundText {}
 {
     // Add Textures to gameTextures
     sf::Texture tmpText {};
@@ -29,6 +30,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
     {
     case MENU_STATE:
         {
+            std::vector<std::string> menuTexts {};
+
             // Load Font
             if ( !font.loadFromFile(dataMap.files["GameFont"]) )
             {
@@ -53,6 +56,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         }
     case PAUSE_STATE:
         {
+            std::vector<std::string> pausedTexts {};
+
             // Load Font
             if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
             {
@@ -76,6 +81,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         }
     case WIN_STATE:
         {
+            std::vector<std::string> winTexts {};
+
             // Load Font
             if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
             {
@@ -98,6 +105,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         }
     case LOSE_STATE:
         {
+            std::vector<std::string> loseTexts {};
+
             // Load Font
             if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
             {
@@ -203,21 +212,21 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
         interface.setOutlineColor(sf::Color::Black);
 
         optionsText.setFont(font);
-        optionsText.setColor(sf::Color::Black);
+        optionsText.setFillColor(sf::Color::Black);
         optionsText.setString("Options");
         optionsText.setCharacterSize(1.5*buttonSize);
         optionsText.setOrigin(optionsText.getGlobalBounds().width/2, optionsText.getGlobalBounds().height/2);
         optionsText.setPosition(sf::Vector2f(window->getSize().x/2, window->getSize().y/2 - 2*buttonSize));
         
         musicText.setFont(font);
-        musicText.setColor(sf::Color::Black);
+        musicText.setFillColor(sf::Color::Black);
         musicText.setString("Music:");
         musicText.setCharacterSize(0.8*buttonSize);
         musicText.setOrigin(musicText.getGlobalBounds().width/2, musicText.getGlobalBounds().height);
         musicText.setPosition(sf::Vector2f(window->getSize().x/2 - 5.5*buttonSize, window->getSize().y/2));
 
         soundText.setFont(font);
-        soundText.setColor(sf::Color::Black);
+        soundText.setFillColor(sf::Color::Black);
         soundText.setString("Sound:");
         soundText.setCharacterSize(0.8*buttonSize);
         soundText.setOrigin(musicText.getGlobalBounds().width/2, musicText.getGlobalBounds().height);

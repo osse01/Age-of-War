@@ -29,8 +29,8 @@ class OptionsState : public State
     sf::Texture lastFrameTexture;
     sf::Sprite lastFrameSprite;
     int       nextState;
-    int       soundVolume;
-    int       musicVolume;
+    float       soundVolume;
+    float       musicVolume;
     bool      soundEnabled;
     bool      musicEnabled;
     bool      buttonPressed;

@@ -31,7 +31,7 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
 sf::Sprite Base::setHpBar()
 {
     // Set Position and Appearance for Initial Health Bar
-    float outline {hpTexture->getSize().x/5};
+    float outline {hpTexture->getSize().x/5.f};
     sf::RectangleShape hpBar {sf::Vector2f(hpTexture->getSize().x-2*outline,
                                             hpTexture->getSize().y-2*outline)};
     sf::RectangleShape currentHp {sf::Vector2f(hpTexture->getSize().x-2*outline,
@@ -98,7 +98,7 @@ bool Base::inRange( std::shared_ptr<Entity> other )
 }
 
 // Create Turret if None Exists
-bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, std::shared_ptr<sf::Time> frameDuration)
 {
     if (turret)
     {
