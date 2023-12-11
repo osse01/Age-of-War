@@ -45,10 +45,12 @@ void LoseState::handleEvent(sf::Event event)
                 // Change State to Menu State when Pressing First Button
                 case 1:
                     nextState = MENU_STATE;
+                    sound["button"]->play();
                     break;
                 // Quit Game when Pressing Second Button
                 case 2:
                     window->close();
+                    sound["button"]->play();
                     break;
                 default:
                     break;

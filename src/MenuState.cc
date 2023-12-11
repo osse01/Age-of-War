@@ -60,17 +60,21 @@ void MenuState::handleEvent(sf::Event event)
                     case 1:
                         nextState = GAME_STATE;
                         startAnimation();
+                        sound["button"]->play();
                         break;
                     // Change to Options State
                     case 2:
                         nextState = OPTIONS_STATE;
+                        sound["button"]->play();
                         break;
                     // Change to Credits State
                     case 3:
                         nextState = CREDITS_STATE;
+                        sound["button"]->play();
                         break;
                     // Quit Game
                     case 4:
+                        sound["button"]->play();
                         window->close();
                         break;
                     default:

@@ -77,6 +77,7 @@ void OptionsState::handleEvent(sf::Event event)
             break;
 
             case 7:
+            sound["button"]->play();
             nextState = previousState;
             break;
 

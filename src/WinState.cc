@@ -42,8 +42,10 @@ void WinState::handleEvent(sf::Event event)
             {
                 case 1:
                     nextState = MENU_STATE;
+                    sound["button"]->play();
                     break;
                 case 2:
+                    sound["button"]->play();
                     window->close();
                     break;
                 default:

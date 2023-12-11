@@ -2,10 +2,13 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
-#include "Projectile.h"
-
-#include "FileReader.h"
+#include <SFML/Audio.hpp>
+#include <experimental/random>
 #include "memory"
+
+
+#include "Projectile.h"
+#include "FileReader.h"
 
 class Entity
 {
@@ -23,6 +26,7 @@ class Entity
         virtual bool    inRange( std::shared_ptr<Entity> )    = 0;
         int     getHP();
         sf::RectangleShape getBox();
+        void playSound(std::map<std::string, std::shared_ptr<sf::Sound>>);
 
         bool getIsFriendly();
         bool isDead();
@@ -40,6 +44,8 @@ class Entity
 
         int   actionState;
         int   spriteCounter;
+        int   audioNumber;
+        
 
         sf::Texture         texture;
         sf::IntRect         rectSourceSprite;

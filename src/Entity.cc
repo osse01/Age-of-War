@@ -6,7 +6,7 @@
 Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
     : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
-      actionState { 0 }, spriteCounter { 0 }, texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] },
+      actionState { 0 }, spriteCounter { 0 }, audioNumber{1}, texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] },
       sprite {texture, rectSourceSprite},
       boundingbox { sf::Vector2f(data.boxSize[troopType].x, data.boxSize[troopType].y) },
       frameDuration {frameDuration}
@@ -84,6 +84,17 @@ bool Entity::getIsFriendly()
 sf::RectangleShape Entity::getBox() 
 {
     return boundingbox;
+}
+
+void Entity::playSound(std::map<std::string, std::shared_ptr<sf::Sound>> sound)
+{
+    if (rectSourceSprite.left%(12*128) == 4*128 && spriteCounter == 0)
+    {
+
+        sound["sword" + std::to_string(audioNumber)]->play();
+        audioNumber = std::experimental::randint(1,3);
+    }
+    
 }
 
 // Return Entity HP

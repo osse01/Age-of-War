@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
-#include <experimental/random>
+
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
@@ -236,7 +236,6 @@ void GameState::updateLogic()
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
-                    sound["gunshot"]->stop();
                     sound["gunshot"]->play();
                 }
             }
@@ -273,7 +272,6 @@ void GameState::updateLogic()
                 if ( tmpProjectile != nullptr)
                 {
                     projectileQueue.push_back(tmpProjectile);
-                    sound["gunshot"]->stop();
                     sound["gunshot"]->play();
                 }
             }
@@ -304,10 +302,8 @@ void GameState::handleCollisions()
     {
         if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
         {
-            if ( sound["sword1"]->getStatus() != sf::SoundSource::Playing )
-            {
-                sound["sword1"]->play();
-            }
+            friendlyVector.at(0)->playSound(sound);
+            enemyVector.at(0)->playSound(sound);
             friendlyVector.at(0) ->handleCollision(2, enemyVector.at(0)->getDamage());
             enemyVector.at(0)    ->handleCollision(2, friendlyVector.at(0)->getDamage());
         }

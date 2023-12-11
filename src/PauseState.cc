@@ -50,13 +50,16 @@ void PauseState::handleEvent(sf::Event event)
                 // Change to Game State
                 case 1:
                     nextState = GAME_STATE;
+                    sound["button"]->play();
                     break;
                 case 2:
-                nextState = OPTIONS_STATE;
+                    nextState = OPTIONS_STATE;
+                    sound["button"]->play();
                     break;
                 // Change to Menu State
                 case 3:
                     nextState = MENU_STATE;
+                    sound["button"]->play();
                     break;
                 default:
                     break;
