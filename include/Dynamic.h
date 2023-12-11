@@ -13,12 +13,10 @@ class Dynamic : public Entity
 
         virtual void handleCollision(int, int)   = 0;
         virtual void updatePos()                 = 0;
-        std::vector<std::shared_ptr<Projectile>> special(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f, float) override {
-            return std::vector<std::shared_ptr<Projectile>>{};};
 
         virtual int     getDamage()     override;
         int             getDeathValue() override;
-        float           getRange()      override;
+        virtual float           getRange()      override;
         
     protected:
         const float   DAMAGE;

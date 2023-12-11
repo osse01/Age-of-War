@@ -5,7 +5,7 @@
 #include <cmath>
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
+:   State(screen, dataMap, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileVector {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, stage { 1 }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemy{frameDuration}
@@ -45,6 +45,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     enemyVector.push_back(std::make_shared<Base>(dataMap, false,
     sf::Vector2f(groundSprite.getGlobalBounds().width/2, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
 
+    projectileVector.reserve(500);
 }
 
 GameState::~GameState()
@@ -116,15 +117,7 @@ void GameState::handleEvent(sf::Event event)
                         break;
                     case 2:
                         {
-                        std::vector<std::shared_ptr<Projectile>> tmpVector {friendlyVector.back()->special(dataMap, frameDuration,
-                        friendlyVector.back()->getSprite().getPosition(), (groundSprite.getGlobalBounds().width/2) - 2*friendlyVector.back()->getSprite().getGlobalBounds().width)};
-                        if ( !tmpVector.empty())
-                        {
-                            for ( auto tmpProjectile : tmpVector)
-                            {
-                                projectileQueue.push_back(tmpProjectile);
-                            }
-                        }
+                        friendlyVector.back()->specialAttack();
                         break;
                         }
                     case 1:
@@ -206,7 +199,7 @@ void GameState::updateLogic()
 
     //----PROJECTILES----
     int i { 0 };
-    for (auto &it: projectileQueue)
+    for (auto &it: projectileVector)
     {
         if (it->getSprite().getPosition().y >= window->getSize().y || it->isDead() )
         {
@@ -217,7 +210,7 @@ void GameState::updateLogic()
     }
     for (int j: deleteEntities)
     {
-        projectileQueue.erase( projectileQueue.begin() + j );
+        projectileVector.erase( projectileVector.begin() + j );
     }
     deleteEntities.clear();
     i = 0;
@@ -239,7 +232,7 @@ void GameState::updateLogic()
                 std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, enemyPos)};
                 if ( tmpProjectile != nullptr)
                 {
-                    projectileQueue.push_back(tmpProjectile);
+                    projectileVector.push_back(tmpProjectile);
                 }
             }
         }
@@ -268,7 +261,7 @@ void GameState::updateLogic()
                 std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, friendlyPos)};
                 if ( tmpProjectile != nullptr)
                 {
-                    projectileQueue.push_back(tmpProjectile);
+                    projectileVector.push_back(tmpProjectile);
                 }
             }
         }
@@ -321,7 +314,7 @@ void GameState::handleCollisions()
         }
 
     // Handle Collision between Projectiles and Entities
-    for (auto &itProjectile : projectileQueue)
+    for (auto &itProjectile : projectileVector)
     {
         if (itProjectile->getIsFriendly())
         {
@@ -369,7 +362,7 @@ void GameState::renderFrame()
     {
         window->draw(it->getSprite());
     }
-    for(auto &it: projectileQueue)
+    for(auto &it: projectileVector)
     {
         window->draw(it->getSprite());
     }
@@ -401,8 +394,7 @@ void GameState::spawnFriendly(std::string troop)
     if (gold >= dataMap.stats[troop]["cost"])
     {
         gold -= dataMap.stats[troop]["cost"];
-        // Läs på om emplace
-        // Lös kollision
+
         if (troop == "Melee")
         {
             friendlyVector.insert(it, std::make_shared<Melee> 

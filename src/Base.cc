@@ -87,15 +87,13 @@ void Base::takeDamage(int otherDamage)
     Entity::hp -= otherDamage;
 }
 
-std::vector<std::shared_ptr<Projectile>> Base::special(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration, sf::Vector2f startPos, float distance)
+void Base::specialAttack()
 //  ---------------------------------------------
 //  If we have a Turret, Call the Turrets special attack!!
 //  ---------------------------------------------
 {
-    std::vector<std::shared_ptr<Projectile>> tmp{};
     if (turret)
     {
-        tmp = turret->specialAttack(dataMap, frameDuration, startPos, distance);
+        turret->specialAttack();
     }
-    return tmp;
 }

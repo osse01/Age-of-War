@@ -16,12 +16,13 @@ public:
     // FUNCTIONS
     void  handleCollision  (int, int)  override;
     void  updatePos        ()          override;
+    float getRange         () override;
 
     void  aim1            (int, sf::Vector2f);
     void  aim2            (int, sf::Vector2f);
     void  changeSprite    ();
     void  updateCooldown  (std::shared_ptr<sf::Time>);  
-    std::vector<std::shared_ptr<Projectile>>  specialAttack    (FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f, float);
+    void specialAttack    ();
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                 std::shared_ptr<sf::Time>,
                                                 sf::Vector2f);
@@ -34,11 +35,16 @@ private:
     float   r;
     int     spriteCounter;
     int     actionState;
-    const float   Cooldown;
+    const float   cooldown;
     float   specialAttackCooldown;
+
+    const float  SPECIAL_ATTACK_SPEED;
+    float waitTime;
+    bool movingUp;
 
     const static int IDLE { 0 };
     const static int SHOOT { 1 };
+    const static int SPECIAL { 2 };
 };
 
 #endif

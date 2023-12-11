@@ -4,7 +4,8 @@
 
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
-  g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, Cooldown { data.stats["Turret"]["Cooldown"] }, specialAttackCooldown { Cooldown }
+  g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, cooldown { data.stats["Turret"]["cooldown"] }, specialAttackCooldown { cooldown },
+   SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
 }
@@ -23,16 +24,62 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
                                                     std::shared_ptr<sf::Time> frameDuration,
                                                     sf::Vector2f enemyPos)
 {
-    aim1(dataMap.stats["TurretProjectile"]["movementSpeed"], enemyPos);
     std::shared_ptr<Projectile> projectile {};
-    if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
-   {
-      if (!isFriendly)
-      {
-         angle = 180 - angle;
-      }
-      projectile = std::make_shared<Projectile> (dataMap, "TurretProjectile", Entity::isFriendly, sf::Vector2f(xpos, ypos), angle, frameDuration);
-   }
+   
+    switch (actionState)
+    {
+    case SPECIAL:
+    {
+        if (movingUp)
+        {
+            waitTime += frameDuration->asSeconds();
+            if (waitTime > 0.3)
+            {
+                angle += 10;
+                waitTime = 0;
+            }
+            if (angle > 90)
+            {
+                angle = 90;
+                movingUp = false;
+            }
+        }
+        if (!movingUp)
+        {
+            if (angle < 80)
+            {
+                actionState = SHOOT;
+            } 
+            if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
+            {
+                if (!isFriendly)
+                {
+                    angle = 180 - angle;
+                }
+                projectile = std::make_shared<Projectile> (dataMap, "SpecialProjectile", Entity::isFriendly, sf::Vector2f(xpos, ypos), angle, frameDuration);
+                angle -= 0.3;
+            }  
+        }
+        
+        
+        break;
+    }
+
+    default:
+    {
+        actionState = SHOOT;
+        aim1(dataMap.stats["TurretProjectile"]["movementSpeed"], enemyPos);
+        if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
+        {
+            if (!isFriendly)
+            {
+                angle = 180 - angle;
+            }
+            projectile = std::make_shared<Projectile> (dataMap, "TurretProjectile", Entity::isFriendly, sf::Vector2f(xpos, ypos), angle, frameDuration);
+        }
+        break;
+    }
+    }
 
     return projectile;
 }
@@ -44,7 +91,6 @@ sf::Sprite & Turret::getSprite()
 
 void Turret::aim1(int projectileSpeed, sf::Vector2f enemyPos)
 {
-    actionState = SHOOT;
     float x = enemyPos.x - xpos;
     float y = enemyPos.y - ypos;
     angle = 180/3.14 * atan(-y/x);
@@ -72,6 +118,13 @@ void Turret::changeSprite()
     case SHOOT:
         swapSprite = ATTACK_SPEED;
         break;
+    case SPECIAL:
+        swapSprite = SPECIAL_ATTACK_SPEED;
+        if (movingUp)
+        {
+            swapSprite = 0;
+        }
+        break;
     default:
         swapSprite = 0;
         break;
@@ -83,7 +136,7 @@ void Turret::changeSprite()
     {
         if(Entity::rectSourceSprite.left == 0)
         {
-            actionState = IDLE;
+            actionState = (actionState == SPECIAL) ? SPECIAL : IDLE;
             Entity::rectSourceSprite.left = 128*23;
         }
         else
@@ -96,29 +149,13 @@ void Turret::changeSprite()
     }
 }
 
-void Turret::aim2(int projectileSpeed, sf::Vector2f enemyPos)
-{
-    r = sqrt(pow(xpos-enemyPos.x, 2) + pow(ypos-enemyPos.y, 2));
-    angle = 180/3.14 * (1/2 * acos(( g/pow(projectileSpeed, 2) * pow(xpos-enemyPos.x, 2) - (ypos - enemyPos.y)) / r) + 1/2 * atan((xpos-enemyPos.x) / r));
-}
 
-std::vector<std::shared_ptr<Projectile>> Turret::specialAttack(FileReader::Data& dataMap, std::shared_ptr<sf::Time> frameDuration, sf::Vector2f startPos, float distance)
+void Turret::specialAttack()
 //  ---------------------------------------------
 {
-    std::vector<std::shared_ptr<Projectile>> projectileVector{};
-    if ( specialAttackCooldown == 0)
-    {
-        //  Fill vector with projectiles
-        for ( float step{startPos.x}; step < distance ; step +=50 )
-        {
-            startPos.x += step;
-            projectileVector.push_back(spawnProjectile(dataMap, frameDuration, startPos));
-        }
-
-        //  Set Cooldown
-        specialAttackCooldown = Cooldown;
-    }
-    return projectileVector;
+    actionState = SPECIAL;
+    waitTime = 0;
+    movingUp = true;
 }
 
 void Turret::updateCooldown(std::shared_ptr<sf::Time> frameDuration)
@@ -127,5 +164,9 @@ void Turret::updateCooldown(std::shared_ptr<sf::Time> frameDuration)
 //  ---------------------------------------------
 {
     (specialAttackCooldown <= 0) ? specialAttackCooldown = 0 : specialAttackCooldown -= frameDuration->asSeconds();
-    std::cout << "Cooldown " << specialAttackCooldown << std::endl;
+}
+
+float Turret::getRange()
+{
+    return  (actionState == SPECIAL) ? 2500 : RANGE;
 }
