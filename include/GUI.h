@@ -7,6 +7,8 @@
 #include "State.h"
 #include "FileReader.h"
 
+int const SPECIAL {1};
+
 class GUI
 {
     // -----------------------------------------------------------------
@@ -26,6 +28,7 @@ class GUI
         void drawHPBar(std::shared_ptr<sf::RenderWindow>, const sf::Sprite&,  int, int);
         int buttonClicked(int, float, float);
         unsigned int sliderPosition(int, float);
+        void setCooldown();
 
 
     protected:

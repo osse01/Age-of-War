@@ -162,6 +162,8 @@ void Button::setCooldown( float cd)
     {
         sf::RectangleShape timer{sf::Vector2f(buttonSprite.getGlobalBounds().width, (cd/cooldown)*buttonSprite.getGlobalBounds().height) };
         timer.setFillColor(sf::Color(190, 190, 190, 20));
+        timer.setOrigin(timer.getGlobalBounds().width/2, timer.getGlobalBounds().height/2 );
+        timer.setPosition(buttonSprite.getPosition());
         renderButton->draw(timer);
     }
 }

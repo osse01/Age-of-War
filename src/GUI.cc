@@ -626,3 +626,14 @@ void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& 
     window->draw(healthBar);
     window->draw(healthRec);
 }
+
+void GUI::setCooldown()
+//  ---------------------------------------------
+//  If Button has Ability, set the Cooldown.
+//  ---------------------------------------------
+{
+    if (gameButtons.at(SPECIAL)->hasAbility())
+    {
+        std::cout << "hej" << std::endl;
+    }
+}

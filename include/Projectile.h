@@ -44,6 +44,7 @@ class Projectile
     sf::Sprite          sprite;
     sf::RectangleShape  boundingbox;
     std::shared_ptr<sf::Time> frameDuration;
+    int                 counter;
 
     const int g {1000};
 };

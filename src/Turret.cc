@@ -4,7 +4,7 @@
 
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
-  g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, cooldown { data.stats["Turret"]["cooldown"] }, specialAttackCooldown { cooldown },
+  g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, currentCooldown { specialAttackCooldown },
    SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
@@ -69,7 +69,7 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
     default:
     {
         actionState = SHOOT;
-        aim1(dataMap.stats["TurretProjectile"]["movementSpeed"], enemyPos);
+        aim(enemyPos);
         if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
         {
             if (!isFriendly)
@@ -143,17 +143,29 @@ void Turret::changeSprite()
 void Turret::specialAttack()
 //  ---------------------------------------------
 {
-    actionState = SPECIAL;
-    waitTime = 0;
-    movingUp = true;
+    if (currentCooldown == 0)
+    {
+        actionState = SPECIAL;
+        waitTime = 0;
+        movingUp = true;
+        currentCooldown = specialAttackCooldown;
+    }
 }
 
 void Turret::updateCooldown(std::shared_ptr<sf::Time> frameDuration)
 //  ---------------------------------------------
-//  Reduce specialAttackCooldown.
+//  Reduce currentCooldown.
 //  ---------------------------------------------
 {
-    (specialAttackCooldown <= 0) ? specialAttackCooldown = 0 : specialAttackCooldown -= frameDuration->asSeconds();
+    (currentCooldown <= 0) ? currentCooldown = 0 : currentCooldown -= frameDuration->asSeconds();
+}
+
+float Turret::getcurrentCooldown()
+//  ---------------------------------------------
+//  Return currentCooldown
+//  ---------------------------------------------
+{
+    return currentCooldown;
 }
 
 float Turret::getRange()

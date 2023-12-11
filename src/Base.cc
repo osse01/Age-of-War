@@ -87,9 +87,10 @@ void Base::takeDamage(int otherDamage)
 void Base::specialAttack()
 //  ---------------------------------------------
 //  If we have a Turret, Call the Turrets special attack!!
+//  and then Return true or false.
 //  ---------------------------------------------
 {
-    if (turret)
+    if ( turret->getcurrentCooldown() == 0 )
     {
         turret->specialAttack();
     }

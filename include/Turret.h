@@ -14,15 +14,15 @@ public:
     virtual ~Turret() = default;
 
     // FUNCTIONS
-    void  handleCollision  (int, int)  override;
-    void  updatePos        ()          override;
-    float getRange         () override;
+    void  handleCollision     (int, int)  override;
+    void  updatePos           ()          override;
+    float getRange            () override;
+    float getcurrentCooldown  ();
 
-    void  aim1            (int, sf::Vector2f);
-    void  aim2            (int, sf::Vector2f);
+    void  aim             (sf::Vector2f);
     void  changeSprite    ();
     void  updateCooldown  (std::shared_ptr<sf::Time>);  
-    void specialAttack    ();
+    void  specialAttack    ();
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&,
                                                 std::shared_ptr<sf::Time>,
                                                 sf::Vector2f);
@@ -35,8 +35,8 @@ private:
     float   r;
     int     spriteCounter;
     int     actionState;
-    const float   cooldown;
-    float   specialAttackCooldown;
+    const float   specialAttackCooldown;
+    float   currentCooldown;
 
     const float  SPECIAL_ATTACK_SPEED;
     float waitTime;
