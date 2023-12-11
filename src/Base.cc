@@ -85,14 +85,14 @@ void Base::updatePos()
     }
 }
 
-// Call Turrets getRange
-float Base::getRange()
+// Call Turrets inRange
+bool Base::inRange( std::shared_ptr<Entity> other )
 {
     if (turret)
     {
-       return turret->getRange(); 
+       return turret->inRange(other); 
     }
-    return 0;
+    return false;
 }
 
 // Create Turret if None Exists

@@ -22,7 +22,7 @@ void handleCollision(int, int) override;
 void updatePos()               override;
 
 sf::Sprite & getSprite()       override;
-float        getRange()        override;
+bool        inRange( std::shared_ptr<Entity> other )        override;
 
 void  takeDamage(int);
 bool  buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>) override;

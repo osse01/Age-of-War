@@ -20,7 +20,7 @@ class Entity
         virtual void    updatePos()       = 0;
         virtual int     getDamage()     {return 0;};
         virtual int     getDeathValue() {return 0;};
-        virtual float   getRange()          = 0;
+        virtual bool    inRange( std::shared_ptr<Entity> )    = 0;
         int     getHP();
         sf::RectangleShape getBox();
 

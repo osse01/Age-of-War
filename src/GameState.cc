@@ -177,7 +177,7 @@ void GameState::updateLogic()
     // View Panning
     {
         sf::Mouse mouse {};
-        int margin {static_cast<int>(window->getSize().x/20)};
+        float margin {window->getSize().x/20*dataMap.windowScale};
         
             // Pan Left
             if (mouse.getPosition(*window).x < margin)
@@ -186,7 +186,7 @@ void GameState::updateLogic()
             }
 
             // Pan Right
-            else if (mouse.getPosition(*window).x > 19*margin)
+            else if (mouse.getPosition(*window).x > window->getSize().x - margin)
             {
                 windowPanning(false);
             }
@@ -231,8 +231,7 @@ void GameState::updateLogic()
 
             // Shoot Projectile if Enemy is In Range
             enemyPos = enemyVector.at(0)->getSprite().getPosition();
-            if (abs(it->getSprite().getPosition().x - enemyPos.x) 
-                <= it->getRange())
+            if (it->inRange(enemyVector.at(0)))
             {
                 std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, enemyPos)};
                 // Add Projectile to Projectile Queue
@@ -270,8 +269,7 @@ void GameState::updateLogic()
 
             // Shoot Projectile if Enemy is In Range
             friendlyPos = friendlyVector.at(0)->getSprite().getPosition();
-            if (abs(it->getSprite().getPosition().x - friendlyPos.x) 
-                <= it->getRange())
+            if (it->inRange(friendlyVector.at(0)))
             {
                 std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, friendlyPos)};
                 // Add Projectile to Projectile Queue
@@ -422,9 +420,10 @@ void GameState::spawnFriendly(std::string troopType)
 //  ---------------------------------------------
 {
     // Set Spawn Point for Troops
-    sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x,
-                              baseBounds.getPosition().y};
+    sf::FloatRect baseBounds {friendlyVector.back()
+                            ->getBox().getGlobalBounds()};
+    sf::Vector2f spawnPoint { baseBounds.left + baseBounds.width,
+                              baseBounds.top + baseBounds.height};
 
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = friendlyVector.end()-1;
@@ -462,9 +461,11 @@ void GameState::spawnEnemy(int type)
 //  ---------------------------------------------
 {
     // Set Spawn Point for Troops
-    sf::Sprite baseBounds {enemyVector.back()->getSprite()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x,
-                              baseBounds.getPosition().y};
+    sf::FloatRect baseBounds {enemyVector.back()
+                            ->getBox().getGlobalBounds()};
+    sf::Vector2f spawnPoint { baseBounds.left,
+                              baseBounds.top + baseBounds.height};
+
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = enemyVector.end()-1;
 

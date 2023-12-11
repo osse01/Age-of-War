@@ -21,9 +21,19 @@ int Dynamic::getDeathValue()
     return DEATH_VALUE;
 }
 
-float Dynamic::getRange()
+bool Dynamic::inRange( std::shared_ptr<Entity> other )
 // ---------------------------------------------
-// Return the Ranged object RANGE variable
+// Checks if other entity is in range
 {
-  return RANGE;
+  sf::FloatRect otherBounds { other->getBox().getGlobalBounds() };
+  float minDistance {std::abs(otherBounds.left 
+                          - (isFriendly ? boundingbox.getGlobalBounds().width
+                                          : -otherBounds.width) 
+                          - boundingbox.getGlobalBounds().left)};
+
+    if (RANGE > minDistance)
+    {
+      return true;
+    }
+    return false;
 }
