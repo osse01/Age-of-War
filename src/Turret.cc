@@ -12,6 +12,7 @@ void Turret::handleCollision(__attribute__((unused)) int,
                              __attribute__((unused)) int)
 {}
 
+// Update Turret Position Depending on Friendly or Enemy
 void Turret::updatePos()
 {
     int tmp = isFriendly ? -1 : 1;
@@ -19,6 +20,7 @@ void Turret::updatePos()
     changeSprite();
 }
 
+// Spawn and Return Turret Projectile
 std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
                                                     std::shared_ptr<sf::Time> frameDuration,
                                                     sf::Vector2f enemyPos)
@@ -33,11 +35,13 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
     return projectile;
 }
 
+// Return Turret Sprite
 sf::Sprite & Turret::getSprite()
 {
     return sprite;
 }
 
+// Aim towards Enemy
 void Turret::aim(sf::Vector2f enemyPos)
 {
     actionState = SHOOT;
@@ -48,6 +52,7 @@ void Turret::aim(sf::Vector2f enemyPos)
     angle += 23 * pow(x / 1200,1.15);
 }
 
+// Change Turret Sprite
 void Turret::changeSprite()
 {
     float swapSprite {};
@@ -64,10 +69,12 @@ void Turret::changeSprite()
 
     spriteCounter += swapSprite;
 
+    // Change to next Sprite in Sprite Sheet
     if ( spriteCounter * frameDuration->asSeconds() >= 3 )
     {
         if(Entity::rectSourceSprite.left == 0)
         {
+            // Set to Idle to Finish Animation
             actionState = IDLE;
             Entity::rectSourceSprite.left = 128*23;
         }
