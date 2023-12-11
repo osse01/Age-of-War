@@ -118,8 +118,14 @@ toggleSFX
 gunshotSFX
     filename assets/SFX/gunshot.ogg
 
-swordSFX
-    filename assets/SFX/sword.ogg
+sword1SFX
+    filename assets/SFX/sword1.ogg
+
+sword2SFX
+    filename assets/SFX/sword2.ogg
+
+sword3SFX
+    filename assets/SFX/sword3.ogg
 
 Enemy
     listSize    3
