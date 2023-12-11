@@ -95,3 +95,11 @@ void Base::specialAttack()
         turret->specialAttack();
     }
 }
+
+float Base::getCooldown()
+//  ---------------------------------------------
+//  Return Cooldown of Turret Special Ability
+//  ---------------------------------------------
+{
+    return (turret) ? turret->getcurrentCooldown() : 0;
+}

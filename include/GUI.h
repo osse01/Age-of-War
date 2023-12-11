@@ -24,7 +24,7 @@ class GUI
 
     //  FUNCTIONS
         void updateLogic(std::shared_ptr<sf::RenderWindow>, int, std::shared_ptr<sf::Time> = nullptr);
-        void draw(int, std::shared_ptr<sf::RenderWindow>, int=0);
+        void draw(int, std::shared_ptr<sf::RenderWindow>, int=0, float = 0);
         void drawHPBar(std::shared_ptr<sf::RenderWindow>, const sf::Sprite&,  int, int);
         int buttonClicked(int, float, float);
         unsigned int sliderPosition(int, float);

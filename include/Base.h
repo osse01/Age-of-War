@@ -25,7 +25,7 @@ public:
 
     std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f) override;
     void    specialAttack() override;
-
+    float   getCooldown  () override;
 
     sf::Sprite & getSprite()  override;
 

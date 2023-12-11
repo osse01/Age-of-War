@@ -48,7 +48,7 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
         }
         if (!movingUp)
         {
-            if (angle < 85)
+            if (angle < 65) // kanske borde ändras??
             {
                 actionState = SHOOT;
             } 

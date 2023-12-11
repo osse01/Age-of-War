@@ -22,6 +22,7 @@ class Entity
         virtual int     getDeathValue() {return 0;};
         virtual float   getRange()          = 0;
         virtual void    specialAttack() {};
+        virtual float   getCooldown() {};
 
         int     getHP();
         sf::RectangleShape getBox();
