@@ -1,7 +1,8 @@
 #include "../include/LoseState.h"
 
-LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
-: State(screen, dataMap, sound, frameDuration), nextState{LOSE_STATE},
+LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> music, 
+                     std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
+: State(screen, dataMap, music, sound, frameDuration), nextState{LOSE_STATE},
     textFont     {}, loseText {}, 
     greyOut      {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { LOSE_STATE, screen, dataMap }
 {

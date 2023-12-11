@@ -47,13 +47,13 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
 void Troop::updatePos()
 {
     collisionCounter += frameDuration->asSeconds();
-    if (!Entity::isFriendly)    
+    if (Entity::isFriendly)    
     {
-        Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos += MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     else
     {
-        Entity::xpos += MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
     }
 
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);

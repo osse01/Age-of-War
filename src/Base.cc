@@ -63,7 +63,8 @@ sf::Sprite & Base::getSprite()
     renderTexture->draw(sprite);
 
     sf::Sprite turretSprite {turret->getSprite()};
-    turretSprite.setPosition(sprite.getPosition().x + sprite.getGlobalBounds().width/2,
+    int tmp{isFriendly ? 1 : -1};
+    turretSprite.setPosition(sprite.getPosition().x + tmp * sprite.getGlobalBounds().width/2,
                              sprite.getPosition().y - 100);
     renderTexture->draw(turretSprite);
     renderTexture->display();
