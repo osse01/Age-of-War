@@ -3,16 +3,15 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <experimental/random>
 
-
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
 {
     music->play();
-    sound["sword"]->setLoop(true); 
 
     //  Load in Background Image
     if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]) && woodsTexture.loadFromFile(dataMap.files["Trees"])))
@@ -222,7 +221,6 @@ void GameState::updateLogic()
             if ( it->isDead() )
             {
                 deleteEntities.push_back(i);
-                sound["sword"]->pause();
             }
             i++;
 
@@ -261,7 +259,6 @@ void GameState::updateLogic()
             {
                 deleteEntities.push_back(i);
                 gold += it->getDeathValue();
-                sound["sword"]->pause();
             }
             i++;
 
@@ -309,9 +306,9 @@ void GameState::handleCollisions()
     {
         if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
         {
-            if ( sound["sword"]->getStatus() != sf::SoundSource::Playing)
+            if ( sound["sword1"]->getStatus() != sf::SoundSource::Playing )
             {
-                sound["sword"]->play();
+                sound["sword1"]->play();
             }
             friendlyVector.at(0) ->handleCollision(2, enemyVector.at(0)->getDamage());
             enemyVector.at(0)    ->handleCollision(2, friendlyVector.at(0)->getDamage());

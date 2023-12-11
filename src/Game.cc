@@ -16,7 +16,7 @@
 Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeight)
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
     event {}, clock {}, frameDurationPtr { std::make_shared<sf::Time> ()}, lastFrame{}, states {}, currentState { MENU_STATE },
-    music {std::make_shared<sf::Music>()}, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
+    music {std::make_shared<sf::Music>()}, sound{}, soundBuffer{}, nextState {MENU_STATE}, cursor {}, cursorSprite {}, mouse{}, dataMap {}
 {
     // Create Fullscreen Window
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -35,14 +35,17 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     music->setLoop(true);
     
     // Adds all SFX to map with sf::Music 
-    std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot", "sword"};
+    std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot", "sword1", "sword2", "sword3"};
     for ( const std::string & soundString : strings)
     {
-        sound[soundString] = std::make_shared<sf::Music>();
-        if ( !sound[soundString]->openFromFile( dataMap.files[soundString + "SFX"] ) )
+        sound[soundString] = std::make_shared<sf::Sound>();
+        sf::SoundBuffer tmpSoundBuffer {};
+        if ( !tmpSoundBuffer.loadFromFile(dataMap.files[soundString + "SFX"] ) )
         {
             std::cout << " >> Error: Could Not Find Sound File. Error in Game::Game()." << std::endl;
         }
+        soundBuffer.push_back( std::make_shared<sf::SoundBuffer>(tmpSoundBuffer) );
+        sound[soundString]->setBuffer( *soundBuffer.back() );
         sound[soundString]->setVolume(50);
     }
     // Load Sound Files
