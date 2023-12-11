@@ -5,7 +5,7 @@
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
   g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, currentCooldown { specialAttackCooldown },
-   SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
+   initAngle{}, SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
 }
@@ -31,12 +31,13 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
     {
     case SPECIAL:
     {
+        
         if (movingUp)
         {
             waitTime += frameDuration->asSeconds();
             if (waitTime > 0.3)
             {
-                angle += 10;
+                angle += (90 - initAngle)/8;
                 waitTime = 0;
             }
             if (angle > 90)
@@ -47,7 +48,7 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
         }
         if (!movingUp)
         {
-            if (angle < 80)
+            if (angle < 85)
             {
                 actionState = SHOOT;
             } 
@@ -149,6 +150,7 @@ void Turret::specialAttack()
         waitTime = 0;
         movingUp = true;
         currentCooldown = specialAttackCooldown;
+        initAngle= angle;
     }
 }
 

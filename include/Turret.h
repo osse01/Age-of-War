@@ -37,6 +37,7 @@ private:
     int     actionState;
     const float   specialAttackCooldown;
     float   currentCooldown;
+    float   initAngle;
 
     const float  SPECIAL_ATTACK_SPEED;
     float waitTime;
