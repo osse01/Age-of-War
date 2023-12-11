@@ -46,6 +46,7 @@ class Game
     std::stack<std::unique_ptr<State>> states;
     int     currentState;
     std::shared_ptr<sf::Music> music;
+    std::map<std::string, std::shared_ptr<sf::Music>> sound;
     int    nextState;
 
     sf::Texture cursor;

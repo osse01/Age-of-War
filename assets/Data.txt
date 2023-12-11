@@ -34,9 +34,9 @@ Tank
 
 Base
     hp            1500
-    boxSize       249 323
-    spriteDim     249 323
-    filename      cursor.png
+    boxSize       512 256
+    spriteDim     512 256
+    filename      base_sprite_sheet.png
 
 Turret
     range        800
@@ -64,7 +64,13 @@ TurretProjectile
     filename      assets/canonBall.png 
 
 GameMusic
+    volume 50
+    enabled 1
     filename assets/Age-of-War-Theme-Song.ogg
+
+GameSound
+    volume 50
+    enabled 1
 
 TitleFont
     filename assets/coolFont.ttf
@@ -92,3 +98,30 @@ GameCoin
 
 GUITexture
     filename assets/interfaceBackground.jpeg
+
+check
+    filename assets/check.png
+
+buttonSFX
+    filename assets/SFX/button.ogg
+
+buyTurretSFX
+    filename assets/SFX/buyTurret.ogg
+
+toggleSFX
+    filename assets/SFX/toggle.ogg
+
+gunshotSFX
+    filename assets/SFX/gunshot.ogg
+
+swordSFX
+    filename assets/SFX/sword.ogg
+
+Enemy
+    listSize    10
+    waveSize    4
+    waveLimit   5
+    timeDelay   100
+    turretTime  40
+    upgradeTime 15
+

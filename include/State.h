@@ -16,13 +16,15 @@ int const PAUSE_STATE   { 2 };
 int const WIN_STATE     { 3 };
 int const LOSE_STATE    { 4 };
 int const CREDITS_STATE { 5 }; 
+int const OPTIONS_STATE { 6 };
 
 class State
 //  =============   State CLASS    ===============
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    State(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::shared_ptr<sf::Time>);
+    State(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
+          std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>);
     virtual ~State();
     State(const State&) = delete;
     State& operator= (const State&) = delete;
@@ -33,11 +35,13 @@ public:
     virtual void renderFrame  ()          = 0;
     virtual int  getNextState ()          = 0;
     virtual void resetState   ()          = 0;
+    virtual void prevState    (int);
 
 protected:
     std::shared_ptr<sf::RenderWindow>   window;
-    std::shared_ptr<sf::Music> music{};
-    std::shared_ptr<sf::Time> frameDuration{};
+    std::shared_ptr<sf::Music> music;
+    std::map<std::string, std::shared_ptr<sf::Music>> sound;
+    std::shared_ptr<sf::Time> frameDuration;
     FileReader::Data& dataMap;
 };
 

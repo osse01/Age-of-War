@@ -56,6 +56,7 @@ void Projectile::updatePos()
     {
         dx = -dx;
     }
+
     xpos += dx;
     ypos += dy;
                         

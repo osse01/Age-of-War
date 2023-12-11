@@ -1,16 +1,17 @@
 #include "../include/GUI.h"
 #include <iostream>
+#include <cmath>
 
 // Standard Button RGB Color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
     : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, pausedButtons{}, winButtons{}, loseButtons{},
+      menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{},
       menuTexts{}, pausedTexts{}, winTexts{}, loseTexts{}, gameTextures {},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
       healthRec{ healthBar }, enemyHealthRec{ healthBar },
-      interfaceTexture{}, coinTexture{}, heartTexture{}, coinSprite{}, heartSprite{}, font{}, goldText{}
+      interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{}, font{}, goldText{}, optionsText{}
 {
     // Add Textures to gameTextures
     sf::Texture tmpText {};
@@ -204,6 +205,92 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             }
             break;
         }
+    
+    case OPTIONS_STATE:
+        {
+        if ( !(font.loadFromFile(dataMap.files["GameFont"])) )
+        {
+            throw std::logic_error("\n  >> Error. Could not load font file. "
+            "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
+        }
+        if ( !interfaceTexture.loadFromFile(dataMap.files["GUITexture"]) )
+        {
+            throw std::logic_error("\n  >> Error. Could not load interfaceBackground file. "
+            "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
+        }
+        if ( !checkTexture.loadFromFile(dataMap.files["check"]) )
+        {
+            throw std::logic_error("\n  >> Error. Could not load checkTexture file. "
+            "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) OPTIONS_STATE");
+        }
+
+        interface.setSize(sf::Vector2f(15*buttonSize, 8*buttonSize));
+        interface.setOrigin(interface.getSize().x/2, interface.getSize().y/2);
+        interface.setPosition(window->getSize().x/2, window->getSize().y/2 + buttonSize);
+        interfaceTexture.setSmooth(true);
+        interface.setTexture(&interfaceTexture);
+        interface.setOutlineThickness(4.f);
+        interface.setOutlineColor(sf::Color::Black);
+
+        optionsText.setFont(font);
+        optionsText.setColor(sf::Color::Black);
+        optionsText.setString("Options");
+        optionsText.setCharacterSize(1.5*buttonSize);
+        optionsText.setOrigin(optionsText.getGlobalBounds().width/2, optionsText.getGlobalBounds().height/2);
+        optionsText.setPosition(sf::Vector2f(window->getSize().x/2, window->getSize().y/2 - 2*buttonSize));
+        
+        musicText.setFont(font);
+        musicText.setColor(sf::Color::Black);
+        musicText.setString("Music:");
+        musicText.setCharacterSize(0.8*buttonSize);
+        musicText.setOrigin(musicText.getGlobalBounds().width/2, musicText.getGlobalBounds().height);
+        musicText.setPosition(sf::Vector2f(window->getSize().x/2 - 5.5*buttonSize, window->getSize().y/2));
+
+        soundText.setFont(font);
+        soundText.setColor(sf::Color::Black);
+        soundText.setString("Sound:");
+        soundText.setCharacterSize(0.8*buttonSize);
+        soundText.setOrigin(musicText.getGlobalBounds().width/2, musicText.getGlobalBounds().height);
+        soundText.setPosition(sf::Vector2f(window->getSize().x/2 - 5.5*buttonSize, window->getSize().y/2 + 1.2*buttonSize));
+    
+        checkSprite.setTexture(checkTexture);
+
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(8*buttonSize, buttonSize/4), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2), 
+                                    sf::Color(112, 58, 7) ));
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameMusic"]["volume"]/12.5 - 4), window->getSize().y/2), 
+                                    sf::Color(112, 58, 7)));
+        //Music Enabled
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2 - 0.4*buttonSize), 
+                                    checkSprite, (static_cast<bool>(dataMap.stats["GameMusic"]["enabled"])) ? sf::Color(204, 107, 16) : sf::Color(112, 58, 7),
+                                    (static_cast<bool>(dataMap.stats["GameMusic"]["enabled"])) ));
+        //std::cout << dataMap.stats["GameMusic"]["enabled"] << std::endl;
+        //Second Slider
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(8*buttonSize, buttonSize/4), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + 1.2*buttonSize),
+                                    sf::Color(112, 58, 7)));
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameSound"]["volume"]/12.5 - 4), window->getSize().y/2 + 1.2*buttonSize), 
+                                    sf::Color(112, 58, 7)));
+        //Sound Enabled
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + 6 * buttonSize, window->getSize().y/2 + 0.8*buttonSize), 
+                                    checkSprite, (static_cast<bool>(dataMap.stats["GameSound"]["enabled"])) ? sf::Color(204, 107, 16) : sf::Color(112, 58, 7),
+                                    (static_cast<bool>(dataMap.stats["GameSound"]["enabled"])) ));
+        //MenuButton
+        optionsButtons.push_back(std::make_shared<Button>(
+                                    sf::Vector2f(3*buttonSize, buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2, window->getSize().y/2 + 2.6*buttonSize), 
+                                    sf::Color(112, 58, 7), sf::Color::Black, "Back", font));
+        }
     default:
         break;
     }
@@ -266,6 +353,20 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             for (int i{0} ; i < static_cast<int>(loseButtons.size()) ; i++)
             {
                 window->draw(loseButtons.at(i)->draw());
+            }
+            break;
+        }
+        // Draw Buttons in Options State
+
+        case OPTIONS_STATE:
+        {
+            window->draw(interface);
+            window->draw(optionsText);
+            window->draw(musicText);
+            window->draw(soundText);
+            for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                window->draw(optionsButtons.at(i)->draw());
             }
             break;
         }
@@ -351,6 +452,23 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                 }
             }
             break;
+            case OPTIONS_STATE:
+            for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                if ( i == 0 || i == 2 || i == 3 || i == 5 )
+                {
+                    continue;
+                }
+                if (optionsButtons.at(i)->getGlobalBounds().contains(mouse.getPosition(*window).x, mouse.getPosition(*window).y))
+                {
+                    optionsButtons.at(i)->hover();
+                }
+                else
+                {
+                    optionsButtons.at(i)->stopHover(); 
+                }
+            }
+            break;
         default:
             break;
     }
@@ -420,16 +538,55 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                 }
             break;
         }
+        case OPTIONS_STATE:
+        {
+            for (int i{0} ; i < static_cast<int>(optionsButtons.size()) ; i++)
+            {
+                if (optionsButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
+                {
+                    if ( i == 2 )
+                    {
+                        optionsButtons.at(i)->click();
+                    }
+                    else if ( i == 5 )
+                    {
+                        optionsButtons.at(i)->click();
+                    }
+                    return i+1;
+                }
+            }
+            break;
+        }
         default:
             break;
     }
     return 0;
 }
+unsigned int GUI::sliderPosition(int buttonNmbr, float mouseX)
+// Function to return where the slider is currently being dragged
+{
+    optionsButtons.at(buttonNmbr)->setPosition(mouseX);
+
+    if ( optionsButtons.at(buttonNmbr)->getPosition().x <= 
+         optionsButtons.at(0)->getGlobalBounds().left )
+    {
+        optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left);
+    }
+    else if ( optionsButtons.at(buttonNmbr)->getPosition().x >= 
+              optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width )
+    {
+        optionsButtons.at(buttonNmbr)->setPosition(optionsButtons.at(0)->getGlobalBounds().left + optionsButtons.at(0)->getGlobalBounds().width);
+    }
+    else
+    {
+    }
+    return std::round(100 * ( optionsButtons.at(buttonNmbr)->getPosition().x - optionsButtons.at(0)->getGlobalBounds().left ) / 
+                            ( optionsButtons.at(0)->getGlobalBounds().width ));
+}
 
 void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)
 {
-    // Set Current Enemy Health Bar
-    enemyHealthBar.setPosition(groundSprite.getGlobalBounds().width/2 + buttonSize/2*1.5, 8*buttonSize);
+    enemyHealthBar.setPosition(19*window->getSize().x/20 - buttonSize/2*1.5, 8*buttonSize);
     enemyHealthBar.setScale(1/1.5, 1/1.5);
     enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
     enemyHealthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(enemyHP)/static_cast<double>(originalBaseHP)/1.5));

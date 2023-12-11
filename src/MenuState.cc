@@ -3,8 +3,9 @@
 #include <iostream>
 #include <cmath>
 
-MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
+MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> music, 
+                     std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
+:   State(screen, dataMap, music, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
     zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { MENU_STATE, screen, dataMap }
     //  -------------------------------------------------------
@@ -62,6 +63,7 @@ void MenuState::handleEvent(sf::Event event)
                         break;
                     // Change to Options State
                     case 2:
+                        nextState = OPTIONS_STATE;
                         break;
                     // Change to Credits State
                     case 3:
