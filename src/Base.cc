@@ -7,6 +7,8 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
     spriteSpeed {dataMap.stats["Base"]["spriteSpeed"]}
 {
     actionState = OPEN_GATE;
+    Entity::rectSourceSprite.left = 512*23;
+
     sprite.scale(dataMap.stats["Base"]["spriteScale"], dataMap.stats["Base"]["spriteScale"]);
     boundingbox.scale(dataMap.stats["Base"]["spriteScale"], dataMap.stats["Base"]["spriteScale"]);
 
@@ -153,7 +155,7 @@ void Base::changeSprite()
         }
         else
         {
-            if (Entity::rectSourceSprite.left == 12*512)
+            if (Entity::rectSourceSprite.left == 13*512)
             {
                 actionState = IDLE;
             }

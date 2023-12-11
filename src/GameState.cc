@@ -382,12 +382,10 @@ void GameState::renderFrame()
     for(auto &it: friendlyVector)
     {
         window->draw(it->getSprite());
-        window->draw(it->getBox());         // REMOVE LATER!!!
     }
     for(auto &it: enemyVector)
     {
         window->draw(it->getSprite());
-        window->draw(it->getBox());         // REMOVE LATER!!!
     }
     for(auto &it: projectileQueue)
     {

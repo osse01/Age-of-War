@@ -30,10 +30,6 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
     boundingbox.setPosition( xpos, ypos );
     boundingbox.setScale( data.windowScale, data.windowScale );
 
-    boundingbox.setOutlineThickness(1);
-    boundingbox.setOutlineColor(sf::Color::Red);            //REMOVE LATER!!!
-    boundingbox.setFillColor(sf::Color(0, 0, 0, 0));
-
     // Mirror Friendly Sprite
     if(isFriendly)
     {
