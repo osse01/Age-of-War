@@ -3,13 +3,12 @@
 Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     : Entity::Entity(dataMap, "Base", friendly, pos, frameDuration), turret {nullptr},
     renderTexture {std::make_shared<sf::RenderTexture>()}, renderSprite {},
-    turretPos {},
+    turretPos {}, maxHp {dataMap.stats["Base"]["hp"]}, hpTexture {std::make_shared<sf::RenderTexture>()},
     spriteSpeed {dataMap.stats["Base"]["spriteSpeed"]}
 {
     actionState = OPEN_GATE;
     sprite.scale(dataMap.stats["Base"]["spriteScale"], dataMap.stats["Base"]["spriteScale"]);
     boundingbox.scale(dataMap.stats["Base"]["spriteScale"], dataMap.stats["Base"]["spriteScale"]);
-
 
     renderTexture->create(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
     renderSprite.setTexture(renderTexture->getTexture());
@@ -21,8 +20,44 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
     boundingbox.setPosition(xpos, ypos);
 
     turretPos = sf::Vector2f(sprite.getGlobalBounds().width * 0.78f, sprite.getGlobalBounds().height * 0.54f);
-    turretPos.x *= (isFriendly) ? 1: -1;
-} 
+    turretPos.x = (isFriendly) ? turretPos.x : sprite.getGlobalBounds().width - turretPos.x;
+
+    hpTexture->create(sprite.getGlobalBounds().width/50, sprite.getGlobalBounds().height/3);
+
+}
+
+sf::Sprite Base::setHpBar()
+{
+    // Set Position and Appearance for Initial Health Bar
+    float outline {3};
+    sf::RectangleShape hpBar {sf::Vector2f(hpTexture->getSize().x-2*outline,
+                                            hpTexture->getSize().y-2*outline)};
+    sf::RectangleShape currentHp {sf::Vector2f(hpTexture->getSize().x-2*outline,
+                                            hpTexture->getSize().y-2*outline)};
+
+    hpBar.setOrigin(0,0);
+    hpBar.setPosition(outline,outline);
+    hpBar.setOutlineThickness(outline);
+    hpBar.setFillColor(sf::Color(109, 109, 110));
+    hpBar.setOutlineColor(sf::Color(0, 0, 0));
+    
+    currentHp.setOrigin(0,0);
+    currentHp.setPosition(outline, outline);
+    currentHp.setOutlineThickness(outline);
+    currentHp.setFillColor(sf::Color(200, 10, 0));
+    currentHp.setOutlineColor(sf::Color(0, 0, 0));
+
+    currentHp.setScale(sf::Vector2f(1, hp/maxHp));
+
+    hpTexture->clear();
+
+    hpTexture->draw(hpBar);
+    hpTexture->draw(currentHp);
+
+    sf::Sprite hpSprite {hpTexture->getTexture()};
+
+    return hpSprite;
+}
 
 // Call Turrets spawnProjectile
 std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
@@ -67,10 +102,8 @@ bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, sf::Vector2f pos,
     {
         return false;
     }
-    float tmp = xpos + (isFriendly) ? -renderSprite.getGlobalBounds().width/2 
-                                    : renderSprite.getGlobalBounds().width/2;
 
-    turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f(turretPos.x ,
+    turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f( renderSprite.getGlobalBounds().left + turretPos.x,
                                                                       ypos - (sprite.getGlobalBounds().height - turretPos.y)), frameDuration);
     return true;
 }
@@ -91,6 +124,12 @@ sf::Sprite & Base::getSprite()
                              turretSprite.setPosition(turretPos);
                              renderTexture->draw(turretSprite);
     }
+
+    sf::Sprite hpBar {setHpBar()};
+    float xPosHp = (isFriendly) ? renderTexture->getSize().x*0.65f : renderTexture->getSize().x*0.35f;
+    hpBar.setPosition(xPosHp, renderTexture->getSize().y/10);
+
+    renderTexture->draw(hpBar);
     
     renderTexture->display();
 

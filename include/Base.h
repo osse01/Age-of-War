@@ -30,12 +30,17 @@ bool  buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>
 //void getBaseStats();
 
 private:
+sf::Sprite setHpBar();
 void changeSprite();
 
 std::shared_ptr<Turret> turret;
 std::shared_ptr<sf::RenderTexture> renderTexture;
 sf::Sprite renderSprite;
 sf::Vector2f turretPos;
+
+float maxHp;
+
+std::shared_ptr<sf::RenderTexture> hpTexture;
 
 float spriteSpeed;
 

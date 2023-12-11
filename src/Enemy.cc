@@ -3,11 +3,13 @@
 
 
 
-Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
-:delayCounter{100}, timeCounter{0}, spawnList{}, frameDuration{frameDuration}
+Enemy::Enemy(FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration)
+:listSize{data.stats["Enemy"]["listSize"]}, waveSize{data.stats["Enemy"]["waveSize"]}, waveLimit{data.stats["Enemy"]["waveLimit"]},
+ waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]}, turretTime{data.stats["Enemy"]["turretTime"]}, upgradeTime{data.stats["Enemy"]["upgradeTime"]},  
+ delayCounter{delay}, totalTime{}, lastTime{totalTime + 1}, turret{true}, HP{true}, spawnList{}, frameDuration{frameDuration}, data{data}
 {
-    // Create List with Troops 
-    for(int i = 0; i < 10; i++)
+    // Create List with Troops
+    for(int i = 0; i < listSize; i++)
     {
         spawnList.push_back(6);
     }
@@ -17,11 +19,22 @@ Enemy::Enemy(std::shared_ptr<sf::Time> frameDuration)
 // Spawn Enemies after Certain Time
 std::vector<int> Enemy::enemyPlay()
 {
+    totalTime += frameDuration->asSeconds();
     std::vector<int> play{};
-    if(delayCounter >= 100)
+    if(delayCounter >= delay)
     {
         delayCounter = 0;
         return spawnAlgo();
+    }
+    if(turret && (totalTime > turretTime))
+    {
+        play.push_back(3);
+        turret = !turret;
+    }
+    if(totalTime / upgradeTime > lastTime)
+    {
+        lastTime++;
+        updateTroop();
     }
     delayCounter += std::experimental::randint(1,10)*(frameDuration->asSeconds());
     return play;
@@ -30,13 +43,13 @@ std::vector<int> Enemy::enemyPlay()
 // Return Vector with Enemies
 std::vector<int> Enemy::spawnAlgo()
 {
-    int tmp{std::experimental::randint(1,3)};
+    int tmp{std::experimental::randint(1,waveSize)};
     std::vector<int> spawn{};
-    timeCounter++;
-    if(timeCounter == 5)
+    waveCounter++;
+    if(waveCounter == waveLimit)
     {
         spawnList.erase(spawnList.begin());
-        timeCounter = 0;
+        waveCounter = 0;
         spawnList.push_back(std::experimental::randint(4,6));
 
     }
@@ -45,4 +58,14 @@ std::vector<int> Enemy::spawnAlgo()
         spawn.push_back(spawnList.at(std::experimental::randint(0, static_cast<int>(spawnList.size()-1))));
     }
     return spawn;
+}
+
+void Enemy::updateTroop()
+{
+    std::string tmp {HP ? "hp" : "damage"};
+    int value {HP ? 3 : 1};
+    data.stats["Melee"][tmp] += value;
+    data.stats["Ranged"][tmp] += value;
+    data.stats["Tank"][tmp] += value;
+    HP = !HP;
 }

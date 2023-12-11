@@ -1,9 +1,9 @@
 #include "../include/CreditsState.h"
 
 CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& dataMap,
-     std::shared_ptr<sf::Music> gameMusic, std::shared_ptr<sf::Time> frameDuration)
+     std::shared_ptr<sf::Music> gameMusic, std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
 //  ---------------------------------------------
-:   State(window, dataMap, gameMusic, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
+:   State(window, dataMap, gameMusic, sound, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
     nameList{}, nameFont{}, textFont{}, backgroundTexture{}, backgroundSprite{}, canvas{}, canvasSprite{}
 {
     // Load Background Image

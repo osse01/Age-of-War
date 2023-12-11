@@ -11,13 +11,14 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
       boundingbox { sf::Vector2f(data.boxSize[troopType].x * data.windowScale, data.boxSize[troopType].y * data.windowScale) },
       frameDuration {frameDuration}
 {
+    // Load Friendly or Enemy Image
     std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
     if(!texture.loadFromFile("assets/" + friendOrFoe + data.files[troopType]))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find background image. Error in Entity::Entity().");
     }
-    
+    // Set Sprite Position
     sprite.setTextureRect(rectSourceSprite);
 
     float spriteBoxDiff {(sprite.getGlobalBounds().height-boundingbox.getGlobalBounds().height)/2};
@@ -32,6 +33,7 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
     boundingbox.setOutlineColor(sf::Color::Red);            //REMOVE LATER!!!
     boundingbox.setFillColor(sf::Color(0, 0, 0, 0));
 
+    // Mirror Friendly Sprite
     if(isFriendly)
     {
         sprite.setScale(sf::Vector2f(-data.windowScale,data.windowScale));
@@ -59,31 +61,37 @@ bool Entity::collides( std::shared_ptr<Entity> other )
     return hasCollided;
 }
 
+// Return Entity Sprite
 sf::Sprite& Entity::getSprite()
 {
     return sprite;
 }
 
+// Check if Entity is Dead
 bool Entity::isDead()
 {
     return hp <= 0;
 }
 
+// Return True if Friendly
 bool Entity::getIsFriendly()
 {
     return isFriendly;
 }
 
+// Return Entity Bounding Box
 sf::RectangleShape Entity::getBox() 
 {
     return boundingbox;
 }
 
+// Return Entity HP
 int Entity::getHP()
 {
     return hp;
 }
 
+// Virtual Function for spawnProjectile 
 std::shared_ptr<Projectile> Entity::spawnProjectile(
     __attribute__((unused)) FileReader::Data&,
     __attribute__((unused)) std::shared_ptr<sf::Time>,

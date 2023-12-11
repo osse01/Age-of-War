@@ -14,7 +14,8 @@ void Turret::handleCollision(__attribute__((unused)) int,
 
 void Turret::updatePos()
 {
-    sprite.setRotation(-angle);
+    int tmp = isFriendly ? -1 : 1;
+    sprite.setRotation( angle * tmp );
     changeSprite();
 }
 
@@ -25,9 +26,9 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
     aim(enemyPos);
     std::shared_ptr<Projectile> projectile {};
     if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
-   {
-      projectile = std::make_shared<Projectile> (dataMap, "TurretProjectile", Entity::isFriendly, sf::Vector2f(xpos, ypos), angle, frameDuration);
-   }
+    {
+        projectile = std::make_shared<Projectile> (dataMap, "TurretProjectile", Entity::isFriendly, sf::Vector2f(xpos, ypos), angle, frameDuration);
+    }
 
     return projectile;
 }
@@ -40,22 +41,11 @@ sf::Sprite & Turret::getSprite()
 void Turret::aim(sf::Vector2f enemyPos)
 {
     actionState = SHOOT;
-    float x = enemyPos.x - xpos;
+    float x = std::abs(enemyPos.x - xpos);
     float y = enemyPos.y - ypos;
-    angle = 180/3.14 * atan(-y/x);
-    angle += 23 * pow(std::abs(x) / 1200,1.15);
-    if (!isFriendly)
-    {
-        x = -x;
-        angle = 180 - angle;
-    }
-    // float v = projectileSpeed;
-// 
-    // float root = v*v*v*v - g*g*x*x - 2*g*y*v*v; 
-    // std::cout << x << std::endl;
-    // std::cout << y << std::endl;
-    // angle = 180/3.14 * ( (atan(v*v + sqrt(root)) / (g*x)) );
     
+    angle = 180/3.14 * atan(-y/x);
+    angle += 23 * pow(x / 1200,1.15);
 }
 
 void Turret::changeSprite()
