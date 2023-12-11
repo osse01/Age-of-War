@@ -107,6 +107,9 @@ void GameState::handleEvent(sf::Event event)
                         spawnFriendly("Turret");
                         sound["button"]->play();
                         break;
+                    case SPECIAL_ABILITY:
+                        // special ability
+                        break;
                     case PAUSE:
                         nextState = PAUSE_STATE;
                         sound["button"]->play();

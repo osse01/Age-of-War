@@ -118,6 +118,7 @@ swordSFX
     filename assets/SFX/sword.ogg
 
 specialAttack
+    cooldown 10
     filename assets/special.png
 
 settingsIcon

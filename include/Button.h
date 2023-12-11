@@ -14,27 +14,31 @@ class Button
     public:
     //  CONSTRUCTORS
         Button(sf::Vector2f const, sf::Vector2f const, sf::Color const, sf::Color const, std::string const, sf::Font&);
-        Button(sf::Vector2f const, sf::Vector2f const, sf::Sprite& , sf::Color const, bool=true);
+        Button(sf::Vector2f const, sf::Vector2f const, sf::Sprite& , sf::Color const, bool=true, bool = false, float = 0);
         Button(sf::Vector2f const, sf::Vector2f const, sf::Color const);
 
         //Button(sf::RectangleShape, sf::Sprite, std::string="");
         ~Button() = default;
 
     //  FUNCTIONS
-    sf::FloatRect getGlobalBounds();
-    sf::Vector2f  getPosition();
-    bool          click();
-    sf::Sprite&   draw();
-    void          hover();
-    void          stopHover();
-    void          setPosition( float , float = 0.0f );
+    sf::FloatRect getGlobalBounds  ();
+    sf::Vector2f  getPosition      ();
+    bool          click            ();
+    sf::Sprite&   draw             ();
+    void          hover            ();
+    void          stopHover        ();
+    void          setPosition      ( float , float = 0.0f );
+    void          setCooldown      ( float );
+    bool          hasAbility       ();
 
 
 
     private:
     //  VARIABLES
-    int i;
-    bool clicked;
+    int   i;
+    bool  clicked;
+    bool  hasCooldown;
+    float cooldown;
     sf::RectangleShape                   button;
     std::shared_ptr<sf::Text>            text;
     sf::Sprite                           sprite;

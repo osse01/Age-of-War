@@ -191,6 +191,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             goldText.setFillColor(sf::Color::Yellow);
 
             // Create Game Buttons
+            bool hasCooldown{false};
+            float cooldown{0};
             for (int i{0} ; i < 6 ; i++)
             {
                 sf::Sprite sprite {gameTextures.at(i)};
@@ -205,9 +207,10 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 else if ( i == 1)   //  Special icon
                 {
                     sprite.setTextureRect(sf::IntRect(-10,0,256,256)); 
-                    
+                    hasCooldown = true;
+                    cooldown = data.stats["specialAttack"]["cooldown"];
                 }
-                else if ( i == 0)   //  Special icon
+                else if ( i == 0)   //  Settings icon
                 {
                     sprite.setTextureRect(sf::IntRect(0,0,128,128)); 
                 }
@@ -215,7 +218,8 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 gameButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(buttonSize, buttonSize), 
                                             sf::Vector2f(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2), 
-                                            sprite, sf::Color(112, 58, 7)));
+                                            sprite, sf::Color(112, 58, 7), true, hasCooldown, cooldown));
+                hasCooldown = false;
             }
             break;
         }
@@ -511,6 +515,11 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                 {
                     if (gameButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
+                        if (gameButtons.at(i)->hasAbility())
+                        {
+//                            gameButtons.at(i)->setCooldown();
+                            std::cout << "special attack" << std::endl;
+                        }
                         return i+1;
                     }
                 }
