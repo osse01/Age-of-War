@@ -30,10 +30,11 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     backgroundSprite.setPosition(view.getCenter());
     backgroundSprite.scale(view.getSize()/backgroundSprite.getGlobalBounds().width);
 
-    woodsSprite.scale(dataMap.windowScale, dataMap.windowScale);
     woodsSprite.setTexture(woodsTexture);
     woodsSprite.setOrigin(woodsSprite.getGlobalBounds().width/2, woodsSprite.getGlobalBounds().height);
     woodsSprite.setPosition(groundSprite.getGlobalBounds().width/2, groundSprite.getPosition().y-groundSprite.getGlobalBounds().height/3);
+    woodsSprite.scale(dataMap.stats["Trees"]["spriteScale"] * dataMap.windowScale,
+                      dataMap.stats["Trees"]["spriteScale"] * dataMap.windowScale);
 
     // Create Friendly Base
     friendlyVector.push_back(std::make_shared<Base>(dataMap, true,
@@ -404,8 +405,8 @@ void GameState::spawnFriendly(std::string troopType)
 {
     // Set Spawn Point for Troops
     sf::Sprite baseBounds {friendlyVector.back()->getSprite()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x,
-                              baseBounds.getPosition().y };
+    sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/5,
+                              baseBounds.getPosition().y - baseBounds.getGlobalBounds().height/20};
 
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = friendlyVector.end()-1;

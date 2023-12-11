@@ -6,6 +6,7 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
     turretPos {},
     spriteSpeed {dataMap.stats["Base"]["spriteSpeed"]}
 {
+    actionState = OPEN_GATE;
     sprite.scale(dataMap.stats["Base"]["spriteScale"], dataMap.stats["Base"]["spriteScale"]);
     boundingbox.scale(dataMap.stats["Base"]["spriteScale"], dataMap.stats["Base"]["spriteScale"]);
 
@@ -27,7 +28,11 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
 std::shared_ptr<Projectile> Base::spawnProjectile(FileReader::Data& stats,
     std::shared_ptr<sf::Time> frameDuration, sf::Vector2f enemyPos)
 {
-    return turret->spawnProjectile(stats, frameDuration, enemyPos);
+    if (turret)
+    {
+        return turret->spawnProjectile(stats, frameDuration, enemyPos);
+    }
+    return nullptr;
 }
 
 // Call takeDamage when Enemy Attacks
@@ -62,7 +67,11 @@ bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, sf::Vector2f pos,
     {
         return false;
     }
-    turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f(xpos + turretPos.x, ypos + turretPos.y), frameDuration);
+    float tmp = xpos + (isFriendly) ? -renderSprite.getGlobalBounds().width/2 
+                                    : renderSprite.getGlobalBounds().width/2;
+
+    turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f(turretPos.x ,
+                                                                      ypos - (sprite.getGlobalBounds().height - turretPos.y)), frameDuration);
     return true;
 }
 

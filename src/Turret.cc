@@ -26,10 +26,6 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
     std::shared_ptr<Projectile> projectile {};
     if ( rectSourceSprite.left == 22*128 && spriteCounter == 0 )
    {
-      if (!isFriendly)
-      {
-         angle = 180 - angle;
-      }
       projectile = std::make_shared<Projectile> (dataMap, "TurretProjectile", Entity::isFriendly, sf::Vector2f(xpos, ypos), angle, frameDuration);
    }
 
@@ -47,7 +43,7 @@ void Turret::aim(sf::Vector2f enemyPos)
     float x = enemyPos.x - xpos;
     float y = enemyPos.y - ypos;
     angle = 180/3.14 * atan(-y/x);
-    angle += 23 * pow(x / 1200,1.15);
+    angle += 23 * pow(std::abs(x) / 1200,1.15);
     if (!isFriendly)
     {
         x = -x;
