@@ -28,9 +28,6 @@ public:
 private:
     float angle;
     float g;
-    float r;
-    int   spriteCounter;
-    int   actionState;
 
     const static int IDLE { 0 };
     const static int SHOOT { 1 };

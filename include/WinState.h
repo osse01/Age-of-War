@@ -13,7 +13,7 @@ class WinState: public State
     public:
     // CONSTRUCTORS / DESTRUCTORS
     WinState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
-    std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>, sf::Texture&);
+    std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>, sf::Texture&);
     ~WinState() override;
     WinState(const WinState&) = delete;
     WinState& operator= (const WinState&) = delete;

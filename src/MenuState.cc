@@ -4,7 +4,7 @@
 #include <cmath>
 
 MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> music, 
-                     std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
+                     std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, music, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
     zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { MENU_STATE, screen, dataMap }
@@ -60,17 +60,21 @@ void MenuState::handleEvent(sf::Event event)
                     case 1:
                         nextState = GAME_STATE;
                         startAnimation();
+                        sound["button"]->play();
                         break;
                     // Change to Options State
                     case 2:
                         nextState = OPTIONS_STATE;
+                        sound["button"]->play();
                         break;
                     // Change to Credits State
                     case 3:
                         nextState = CREDITS_STATE;
+                        sound["button"]->play();
                         break;
                     // Quit Game
                     case 4:
+                        sound["button"]->play();
                         window->close();
                         break;
                     default:

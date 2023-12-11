@@ -3,7 +3,7 @@
 #include <cmath>
 
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 }, g {1000}, r {0}, spriteCounter {}, actionState { IDLE }
+: Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 }, g {1000}
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
 }
@@ -45,7 +45,7 @@ sf::Sprite & Turret::getSprite()
 void Turret::aim(sf::Vector2f enemyPos)
 {
     actionState = SHOOT;
-    float x = abs(enemyPos.x - xpos);
+    float x = std::abs(enemyPos.x - xpos);
     float y = enemyPos.y - ypos;
     
     angle = 180/3.14 * atan(-y/x);

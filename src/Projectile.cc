@@ -3,13 +3,13 @@
 #include <iostream>
 
 Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool friendly, sf::Vector2f pos, float angle, std::shared_ptr<sf::Time> frameDuration)
-: DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats["TurretProjectile"]["movementSpeed"] }, 
-  INITIAL_ANGLE {angle}, xpos { pos.x }, ypos { pos.y }, dx {0.f}, dy {0.f}, x0 {xpos}, y0 {ypos}, hp { data.stats["TurretProjectile"]["hp"] }, 
+: DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats[projectileType]["movementSpeed"] }, 
+  INITIAL_ANGLE {angle}, xpos { pos.x }, ypos { pos.y }, dx {0.f}, dy {0.f}, x0 {xpos}, y0 {ypos}, hp { data.stats[projectileType]["hp"] }, 
   isFriendly { friendly }, hasCollided { false }, elapsedTime { 0.f }, texture {}, sprite {}, boundingbox { data.boxSize[projectileType] },
   frameDuration { frameDuration }
 {
     // Load Projectile Image
-    if(!texture.loadFromFile(data.files["TurretProjectile"]))
+    if(!texture.loadFromFile(data.files[projectileType]))
     {
         throw std::logic_error(
         "    >> Error: Could Not Find texture image. Error in Projectile::Projectile.");

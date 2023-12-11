@@ -4,7 +4,7 @@
 #include <cmath>
 
 PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> music, 
-                       std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
+                       std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
 :   State(screen, dataMap, music, sound, frameDuration), nextState{PAUSE_STATE},
     textFont {}, pausedText {}, greyOut {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { PAUSE_STATE, screen, dataMap }
 {
@@ -50,17 +50,28 @@ void PauseState::handleEvent(sf::Event event)
                 // Change to Game State
                 case 1:
                     nextState = GAME_STATE;
+                    sound["button"]->play();
                     break;
                 case 2:
-                nextState = OPTIONS_STATE;
+                    nextState = OPTIONS_STATE;
+                    sound["button"]->play();
                     break;
                 // Change to Menu State
                 case 3:
                     nextState = MENU_STATE;
+                    sound["button"]->play();
                     break;
                 default:
                     break;
             }
+        }
+        break;
+    }
+    case sf::Event::KeyPressed:
+    {
+        if ( sf::Keyboard::Escape == event.key.code )
+        {
+            nextState = GAME_STATE;
         }
         break;
     }

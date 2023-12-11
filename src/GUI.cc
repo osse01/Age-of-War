@@ -5,12 +5,10 @@
 // Standard Button RGB Color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/30 }, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
+    : buttonSize { window->getSize().x/20 * data.windowScale}, originalBaseHP{data.stats["Base"]["hp"]}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{},
       menuTexts{}, pausedTexts{}, winTexts{}, loseTexts{}, gameTextures {},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
-      healthBar{ sf::Vector2f(buttonSize/3, 6*buttonSize) }, enemyHealthBar{ healthBar },
-      healthRec{ healthBar }, enemyHealthRec{ healthBar },
       interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{}, font{}, goldText{}, optionsText{}
 {
     // Add Textures to gameTextures
@@ -62,7 +60,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) PAUSE_STATE");
             }
             // Add Texts for Buttons in Pause State
-            pausedTexts.push_back("Resume Game");
+            pausedTexts.push_back("Resume");
             pausedTexts.push_back("Options");
             pausedTexts.push_back("Main Menu");
 
@@ -139,34 +137,6 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             statsInterface.setOutlineThickness(2.f);
             statsInterface.setOutlineColor(sf::Color(0, 0, 0));
             statsInterface.setTexture(&interfaceTexture);
-
-            // Set Position and Appearance for Health Bar
-            healthBar.setOrigin(0,healthBar.getGlobalBounds().height);
-            healthBar.setPosition(buttonSize/2, 10*buttonSize);
-            healthBar.setOutlineThickness(3.f);
-            healthBar.setFillColor(sf::Color(109, 109, 110));
-            healthBar.setOutlineColor(sf::Color(0, 0, 0));
-            
-            // Set Position and Appearance for Initial Health Bar
-            healthRec.setOrigin(0,healthRec.getGlobalBounds().height);
-            healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
-            healthRec.setOutlineThickness(3.f);
-            healthRec.setFillColor(sf::Color(200, 10, 0));
-            healthRec.setOutlineColor(sf::Color(0, 0, 0));
-
-            // Set Position and Appearance for Enemy Health Bar
-            enemyHealthBar.setOrigin(0,enemyHealthBar.getGlobalBounds().height);
-            enemyHealthBar.setPosition(buttonSize/2, 10*buttonSize);
-            enemyHealthBar.setOutlineThickness(3.f);
-            enemyHealthBar.setFillColor(sf::Color(109, 109, 110));
-            enemyHealthBar.setOutlineColor(sf::Color(0, 0, 0));
-
-            // Set Position and Appearance for Initial Enemy Health Bar
-            enemyHealthRec.setOrigin(0,enemyHealthRec.getGlobalBounds().height);
-            enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
-            enemyHealthRec.setOutlineThickness(3.f);
-            enemyHealthRec.setFillColor(sf::Color(200, 10, 0));
-            enemyHealthRec.setOutlineColor(sf::Color(0, 0, 0));
             
             //  Set up Gold Information 
             if ( !(coinTexture.loadFromFile(dataMap.files["GameCoin"]) && heartTexture.loadFromFile(heartFile)))
@@ -582,24 +552,4 @@ unsigned int GUI::sliderPosition(int buttonNmbr, float mouseX)
     }
     return std::round(100 * ( optionsButtons.at(buttonNmbr)->getPosition().x - optionsButtons.at(0)->getGlobalBounds().left ) / 
                             ( optionsButtons.at(0)->getGlobalBounds().width ));
-}
-
-void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& groundSprite, int friendlyHP, int enemyHP)
-{
-    enemyHealthBar.setPosition(19*window->getSize().x/20 - buttonSize/2*1.5, 8*buttonSize);
-    enemyHealthBar.setScale(1/1.5, 1/1.5);
-    enemyHealthRec.setPosition(enemyHealthBar.getPosition().x, enemyHealthBar.getPosition().y);
-    enemyHealthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(enemyHP)/static_cast<double>(originalBaseHP)/1.5));
-    
-    // Set Current Health Bar
-    healthBar.setPosition(buttonSize/2*1.5, 8*buttonSize);
-    healthBar.setScale(1/1.5, 1/1.5);
-    healthRec.setPosition(healthBar.getPosition().x, healthBar.getPosition().y);
-    healthRec.setScale(sf::Vector2f(1/1.5, static_cast<double>(friendlyHP)/static_cast<double>(originalBaseHP)/1.5));
-    
-    // Draw Health Bars
-    window->draw(enemyHealthBar);
-    window->draw(enemyHealthRec);
-    window->draw(healthBar);
-    window->draw(healthRec);
 }
