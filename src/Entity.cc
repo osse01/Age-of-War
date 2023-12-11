@@ -8,7 +8,7 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
     : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
       actionState { 0 }, spriteCounter { 0 }, texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] },
       sprite {texture, rectSourceSprite},
-      boundingbox { sf::Vector2f(data.boxSize[troopType].x * data.windowScale, data.boxSize[troopType].y * data.windowScale) },
+      boundingbox { sf::Vector2f(data.boxSize[troopType].x, data.boxSize[troopType].y) },
       frameDuration {frameDuration}
 {
     // Load Friendly or Enemy Image
@@ -28,6 +28,7 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
 
     sprite.setPosition( xpos, ypos );
     boundingbox.setPosition( xpos, ypos );
+    boundingbox.setScale( data.windowScale, data.windowScale );
 
     boundingbox.setOutlineThickness(1);
     boundingbox.setOutlineColor(sf::Color::Red);            //REMOVE LATER!!!

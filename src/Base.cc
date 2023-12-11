@@ -29,7 +29,7 @@ Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::sha
 sf::Sprite Base::setHpBar()
 {
     // Set Position and Appearance for Initial Health Bar
-    float outline {3};
+    float outline {hpTexture->getSize().x/5};
     sf::RectangleShape hpBar {sf::Vector2f(hpTexture->getSize().x-2*outline,
                                             hpTexture->getSize().y-2*outline)};
     sf::RectangleShape currentHp {sf::Vector2f(hpTexture->getSize().x-2*outline,
