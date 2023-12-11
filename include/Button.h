@@ -30,6 +30,7 @@ class Button
     void          setPosition      ( float , float = 0.0f );
     void          setCooldown      ( float );
     bool          hasAbility       ();
+    void          updateCooldown   (std::shared_ptr<sf::Time>);
 
 
 

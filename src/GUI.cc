@@ -394,7 +394,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState, std::shared_ptr<sf::Time> frameDuration)
 {
     sf::Mouse mouse{}; 
 
@@ -425,6 +425,10 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                 else
                 {
                     gameButtons.at(i)->stopHover(); 
+                }
+                if ( i == SPECIAL )
+                {
+                    gameButtons.at(i)->updateCooldown(frameDuration);
                 }
             }
             break;
@@ -517,8 +521,7 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                     {
                         if (gameButtons.at(i)->hasAbility())
                         {
-//                            gameButtons.at(i)->setCooldown();
-                            std::cout << "special attack" << std::endl;
+                            gameButtons.at(i)->setCooldown(dataMap.stats["Turret"]["cooldown"]);
                         }
                         return i+1;
                     }
@@ -625,15 +628,4 @@ void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& 
     window->draw(enemyHealthRec);
     window->draw(healthBar);
     window->draw(healthRec);
-}
-
-void GUI::setCooldown()
-//  ---------------------------------------------
-//  If Button has Ability, set the Cooldown.
-//  ---------------------------------------------
-{
-    if (gameButtons.at(SPECIAL)->hasAbility())
-    {
-        std::cout << "hej" << std::endl;
-    }
 }

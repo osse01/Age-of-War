@@ -127,7 +127,7 @@ sf::Sprite& Button::draw()
         renderButton->draw(*text);
 
     }
-
+    setCooldown(cooldown);
     renderButton->display();
     buttonSprite.setTexture(renderButton->getTexture());
     return buttonSprite;
@@ -165,7 +165,16 @@ void Button::setCooldown( float cd)
         timer.setOrigin(timer.getGlobalBounds().width/2, timer.getGlobalBounds().height/2 );
         timer.setPosition(buttonSprite.getPosition());
         renderButton->draw(timer);
+        std::cout << "Button::setCooldown(float)" << std::endl;
     }
+}
+
+void Button::updateCooldown(std::shared_ptr<sf::Time> frameDuration)
+//  ---------------------------------------------
+//  Update the ability cooldown
+//  ---------------------------------------------
+{
+    
 }
 
 bool Button::hasAbility()

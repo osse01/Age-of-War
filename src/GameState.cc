@@ -302,7 +302,7 @@ void GameState::updateLogic()
     enemyPlay();
     
     // Update Logic for Graphics
-    gui.updateLogic(window, GAME_STATE);
+    gui.updateLogic(window, GAME_STATE, frameDuration);
         
 }
 
