@@ -30,13 +30,13 @@ void OptionsState::handleEvent(sf::Event event)
             buttonNumber = gui.buttonClicked(OPTIONS_STATE, mouse.x, mouse.y);
             break;
         }
-        case sf::Event::MouseButtonReleased:
-        {
-
-            break;
-        }
         default:
         break;
+    }
+    if ( sf::Keyboard::Escape == event.key.code )
+    {
+        nextState = previousState;
+        return;
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {

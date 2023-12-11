@@ -64,6 +64,14 @@ void PauseState::handleEvent(sf::Event event)
         }
         break;
     }
+    case sf::Event::KeyPressed:
+    {
+        if ( sf::Keyboard::Escape == event.key.code )
+        {
+            nextState = GAME_STATE;
+        }
+        break;
+    }
     default:
         break;
     }
