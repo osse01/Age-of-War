@@ -90,7 +90,7 @@ void Base::specialAttack()
 //  and then Return true or false.
 //  ---------------------------------------------
 {
-    if ( turret->getcurrentCooldown() == 0 )
+    if ( turret && turret->getcurrentCooldown() == 0 )
     {
         turret->specialAttack();
     }
