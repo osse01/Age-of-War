@@ -15,6 +15,7 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
     
     collisionCounter = 0;
 
+    // Move Back Troop after Collision
     if (Entity::isFriendly)    
     {
         Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
@@ -27,14 +28,18 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
     Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
 
+    
     switch ( troopState ) {
+        // Call changeSprite if Idle
         case IDLE:
             changeSprite();
             break;
+        // Call changeSprite and takeDamage if Attacking
         case ATTACK:
             changeSprite();
             takeDamage(otherDamage);
             break;
+        // Call takeDamage if Enemy is Attacking
         case TAKE_DAMAGE:
             takeDamage(otherDamage);
             break;
@@ -46,6 +51,7 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
 
 void Troop::updatePos()
 {
+    // Update Troop Position
     collisionCounter += frameDuration->asSeconds();
     if (Entity::isFriendly)    
     {
@@ -65,6 +71,7 @@ void Troop::updatePos()
     }
 }
 
+// Change to next Sprite
 void Troop::changeSprite()
 {
     float swapSprite {};
@@ -89,6 +96,7 @@ void Troop::changeSprite()
 
     if ( spriteCounter * frameDuration->asSeconds() >= 3 )
     {
+        // Set Sprite to first Sprite in Sprite Sheet
         if(Entity::rectSourceSprite.left == 128*23)
         {
             Entity::rectSourceSprite.left = 0;
@@ -103,11 +111,13 @@ void Troop::changeSprite()
     }
 }
 
+// Decrease HP from Enemy Damage
 void Troop::takeDamage(int otherDamage)
 {
         Entity::hp -= otherDamage;
 }
 
+// Return Troop Damage 
 int Troop::getDamage()
 {
     int damage {};
