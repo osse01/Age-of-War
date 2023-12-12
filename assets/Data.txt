@@ -45,7 +45,7 @@ Turret
     cost         600
     attackSpeed  70
     specialAttackSpeed 1100
-    cooldown     1040
+    cooldown     40
     specialAngle 75
     originX      96
     originY      32
