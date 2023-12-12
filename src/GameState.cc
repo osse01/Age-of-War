@@ -439,30 +439,38 @@ void GameState::spawnFriendly(std::string troopType)
     // Check if Player Gold is Greater Than Troop Cost
     if (gold >= dataMap.stats[troopType]["cost"])
     {
-        // Remove Troop Cost from Player Gold
-        gold -= dataMap.stats[troopType]["cost"];
+        
 
         // Spawn Correct Troop Type
         if (troopType == "Melee")
         {
             friendlyVector.insert(it, std::make_shared<Melee> 
             ( dataMap, true, spawnPoint, frameDuration) );
+            // Remove Troop Cost from Player Gold
+            gold -= dataMap.stats[troopType]["cost"];
         }
         else if(troopType == "Ranged")
         {
             friendlyVector.insert(it, std::make_shared<Ranged> 
              ( dataMap, true, spawnPoint, frameDuration ) );
+             // Remove Troop Cost from Player Gold
+            gold -= dataMap.stats[troopType]["cost"];
         }
         else if(troopType == "Tank")
         {
             friendlyVector.insert(it, std::make_shared<Tank> 
              ( dataMap, true, spawnPoint, frameDuration ) );
+             // Remove Troop Cost from Player Gold
+            gold -= dataMap.stats[troopType]["cost"];
         }
 
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
         else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, frameDuration, sound))
-        {}
+        {
+            // Remove Troop Cost from Player Gold
+            gold -= dataMap.stats[troopType]["cost"];
+        }
     }    
 }
 
