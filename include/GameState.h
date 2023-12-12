@@ -75,6 +75,8 @@ class GameState : public State
 
         int nextState;
         int gold;
+        bool turretAvailable;
+        
         GUI                 gui;
         FileReader::Data    enemyStats;
         Enemy               enemy;

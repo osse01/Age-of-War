@@ -125,7 +125,7 @@ bool Button::click()
     }
     return clicked;
 }
-sf::Sprite& Button::draw(float cd)
+sf::Sprite& Button::draw(float coolDown)
 {
     renderButton->clear(sf::Color::White);
     renderButton->draw(button);
@@ -141,7 +141,7 @@ sf::Sprite& Button::draw(float cd)
     
     if (hasCooldown)
     {
-        setCooldown(cd);
+        setCooldown(coolDown);
     }
     renderButton->display();
     buttonSprite.setTexture(renderButton->getTexture());

@@ -24,7 +24,7 @@ class GUI
 
     //  FUNCTIONS
         void updateLogic(std::shared_ptr<sf::RenderWindow>, int, std::shared_ptr<sf::Time> = nullptr);
-        void draw(int, std::shared_ptr<sf::RenderWindow>, int=0, float = 100);
+        void draw(int, std::shared_ptr<sf::RenderWindow>, int=0, float = 100, bool = true);
         int buttonClicked(int, float, float);
         unsigned int sliderPosition(int, float);
 

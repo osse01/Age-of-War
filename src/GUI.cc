@@ -7,8 +7,11 @@
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
     : buttonSize { window->getSize().x/25 * data.windowScale}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{}, goldTextVector{},
-      gameTextures {}, goldcostVector{static_cast<int>(data.stats["Melee"]["cost"]), static_cast<int>(data.stats["Ranged"]["cost"]), 
-      static_cast<int>(data.stats["Tank"]["cost"]), static_cast<int>(data.stats["Turret"]["cost"])},
+      gameTextures {}, goldcostVector{ 
+      static_cast<int>(data.stats["Turret"]["cost"]),
+      static_cast<int>(data.stats["Tank"]["cost"]),
+      static_cast<int>(data.stats["Ranged"]["cost"]),
+      static_cast<int>(data.stats["Melee"]["cost"])},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{},
       font{}, goldText{}, optionsText{}, musicText {}, soundText {}
@@ -184,20 +187,22 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             for (int i{0} ; i < 6 ; i++)
             {
                 sf::Sprite sprite {gameTextures.at(i)};
-                if (i>2)    //  Meelee, Ranged, Tank
+                if (i>2)    //  Tank, Ranged, Melee
+
                 {
                     sprite.setTextureRect(sf::IntRect(0,0,128,128));
-    
-                    tmpText.setString(std::to_string(goldcostVector.at(5-i)));
+                    // Gold Cost Vector is Indexed as Follows:
+                    // 0:Turret, 1:Tank, 2:Ranged, 3:Melee
+                    tmpText.setString(std::to_string(goldcostVector.at(i-2)));
                     tmpText.setOrigin(tmpText.getGlobalBounds().width/2, 0);
                     tmpText.setPosition(sf::Vector2f(window->getSize().x - buttonSize - i * 3*buttonSize/2, 1.5*buttonSize + tmpText.getGlobalBounds().height));
                     goldTextVector.push_back(tmpText); 
                 }
-                else if ( i == 2 )  // Canon
+                else if ( i == 2 )  // Turret
                 {
                     sprite.setTextureRect(sf::IntRect(16,-32,128,128)); 
 
-                    tmpText.setString(std::to_string(goldcostVector.at(5-i)));
+                    tmpText.setString(std::to_string(goldcostVector.at(0)));
                     tmpText.setOrigin(tmpText.getGlobalBounds().width/2, 0);
                     tmpText.setPosition(sf::Vector2f(window->getSize().x - buttonSize - i * 3*buttonSize/2, 1.5*buttonSize + tmpText.getGlobalBounds().height));
                     goldTextVector.push_back(tmpText);
@@ -312,7 +317,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
     }
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold, float abilityCooldown)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold, float abilityCooldown, bool turretAvailable)
 {
     switch (currentState)
     {
@@ -341,8 +346,14 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
                 window->draw(gameButtons.at(i)->draw(abilityCooldown));
                 if ( i  < 4)
                 {
-                    (gold < static_cast<int>(goldcostVector.at(3-i))) ? goldTextVector.at(i).setFillColor(sf::Color::Red) : goldTextVector.at(i).setFillColor(sf::Color::Yellow);
+                    (gold < static_cast<int>(goldcostVector.at(i))) ? goldTextVector.at(i).setFillColor(sf::Color::Red) 
+                    : goldTextVector.at(i).setFillColor(sf::Color::Yellow);
                     window->draw(goldTextVector.at(i));
+                }
+                if (!turretAvailable)
+                {
+                    goldTextVector.at(0).setFillColor(sf::Color::Red);
+                    window->draw(goldTextVector.at(0));
                 }
             }
             break;

@@ -9,7 +9,8 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 :   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileVector {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{static_cast<int>(dataMap.stats["StartStats"]["gold"])}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{static_cast<int>(dataMap.stats["StartStats"]["gold"])},
+    turretAvailable { true }, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
 {
     music->play();
 
@@ -408,7 +409,7 @@ void GameState::renderFrame()
 
     // Render Stationary Graphics
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCurrentCooldown());
+    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCurrentCooldown(), turretAvailable);
 }
 
 void GameState::resetState()
@@ -470,6 +471,7 @@ void GameState::spawnFriendly(std::string troopType)
         {
             // Remove Troop Cost from Player Gold
             gold -= dataMap.stats[troopType]["cost"];
+            turretAvailable = false;
         }
     }    
 }
