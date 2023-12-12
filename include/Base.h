@@ -26,6 +26,8 @@ bool        inRange( std::shared_ptr<Entity> other )        override;
 
 void  takeDamage(int);
 bool  buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>) override;
+void    specialAttack() override;
+float   getCurrentCooldown  () override;
 //void updateHp();
 //void getBaseStats();
 

@@ -14,13 +14,13 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
 {
     // Add Textures to gameTextures
     sf::Texture tmpText {};
-    tmpText.loadFromFile(dataMap.files["Cursor"]);
+    tmpText.loadFromFile(dataMap.files["settingsIcon"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile(dataMap.files["GameCoin"]);
+    tmpText.loadFromFile(dataMap.files["specialAttack"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile("assets/health.png");
+    tmpText.loadFromFile("assets/friendly_" + dataMap.files["Turret"]);
         gameTextures.push_back(tmpText);
-    tmpText.loadFromFile(dataMap.files["Trees"]);
+    tmpText.loadFromFile("assets/friendly_" + dataMap.files["Tank"]);
         gameTextures.push_back(tmpText);
     tmpText.loadFromFile("assets/friendly_" + dataMap.files["Ranged"]);
         gameTextures.push_back(tmpText);
@@ -170,17 +170,35 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             goldText.setFillColor(sf::Color::Yellow);
 
             // Create Game Buttons
+            bool hasCooldown{false};
+            float cooldown{0};
             for (int i{0} ; i < 6 ; i++)
             {
                 sf::Sprite sprite {gameTextures.at(i)};
-                if (i>3)
+                if (i>2)    //  Meelee, Ranged, Tank
                 {
-                    sprite.setTextureRect(sf::IntRect(0,0,128,128));
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128)); 
                 }
+                else if ( i == 2 )  // Canon
+                {
+                    sprite.setTextureRect(sf::IntRect(16,-32,128,128)); 
+                }
+                else if ( i == 1)   //  Special icon
+                {
+                    sprite.setTextureRect(sf::IntRect(-10,0,256,256)); 
+                    hasCooldown = true;
+                    cooldown = data.stats["Turret"]["cooldown"];
+                }
+                else if ( i == 0)   //  Settings icon
+                {
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128)); 
+                }
+
                 gameButtons.push_back(std::make_shared<Button>(
                                             sf::Vector2f(buttonSize, buttonSize), 
                                             sf::Vector2f(window->getSize().x - 3*buttonSize/2 - i * 3*buttonSize/2, buttonSize/2), 
-                                            sprite, sf::Color(112, 58, 7)));
+                                            sprite, sf::Color(112, 58, 7), true, hasCooldown, cooldown));
+                hasCooldown = false;
             }
             break;
         }
@@ -275,7 +293,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
     }
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold, float abilityCooldown)
 {
     switch (currentState)
     {
@@ -293,18 +311,19 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             // Draw Interface and Buttons in Game State
             window->draw(interface);
             window->draw(statsInterface);
+            
+            coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
+            heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
+
+            goldText.setString(std::to_string(gold));
+            goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, 0.5*buttonSize);
+
+            window->draw(goldText);
+            window->draw(coinSprite);
+            window->draw(heartSprite);
             for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
             {
-                coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
-                heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
-
-                goldText.setString(std::to_string(gold));
-                goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, 0.5*buttonSize);
-
-                window->draw(goldText);
-                window->draw(coinSprite);
-                window->draw(heartSprite);
-                window->draw(gameButtons.at(i)->draw());
+                window->draw(gameButtons.at(i)->draw(abilityCooldown));
             }
             break;
         }
@@ -355,7 +374,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState, std::shared_ptr<sf::Time> frameDuration)
 {
     sf::Mouse mouse{}; 
 
@@ -386,6 +405,10 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                 else
                 {
                     gameButtons.at(i)->stopHover(); 
+                }
+                if (gameButtons.at(i)->hasAbility())
+                {
+                    gameButtons.at(i)->updateCooldown(frameDuration);
                 }
             }
             break;
@@ -476,6 +499,10 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                 {
                     if (gameButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
+                        //if (gameButtons.at(i)->hasAbility())
+                        //{
+                        //    gameButtons.at(i)->setCooldown(dataMap.stats["Turret"]["cooldown"]);
+                        //}
                         return i+1;
                     }
                 }

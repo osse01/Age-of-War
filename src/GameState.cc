@@ -6,7 +6,7 @@
 
 
 GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
-:   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileQueue {},
+:   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileVector {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
@@ -43,6 +43,7 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     // Create Enemy Base
     enemyVector.push_back(std::make_shared<Base>(enemyStats, false,
     sf::Vector2f(groundSprite.getGlobalBounds().width, groundSprite.getPosition().y-groundSprite.getGlobalBounds().height/5), frameDuration));
+    projectileVector.reserve(500);
 }
 
 GameState::~GameState()
@@ -104,6 +105,9 @@ void GameState::handleEvent(sf::Event event)
                     case BUY_TURRET:
                         spawnFriendly("Turret");
                         sound["button"]->play();
+                        break;
+                    case SPECIAL_ABILITY:
+                        friendlyVector.back()->specialAttack();
                         break;
                     case PAUSE:
                         nextState = PAUSE_STATE;
@@ -193,7 +197,7 @@ void GameState::updateLogic()
     
     int i { 0 };
     //----PROJECTILES---
-    for (auto &it: projectileQueue)
+    for (auto &it: projectileVector)
     {
         // Remove Projectile after Collision with Entity or Ground
         if (it->getSprite().getPosition().y >= window->getSize().y || it->isDead() )
@@ -208,7 +212,7 @@ void GameState::updateLogic()
     // Delete Removed Projectiles
     for (int j: deleteEntities)
     {
-        projectileQueue.erase( projectileQueue.begin() + j );
+        projectileVector.erase( projectileVector.begin() + j );
     }
     deleteEntities.clear();
     i = 0;
@@ -235,7 +239,7 @@ void GameState::updateLogic()
                 // Add Projectile to Projectile Queue
                 if ( tmpProjectile != nullptr)
                 {
-                    projectileQueue.push_back(tmpProjectile);
+                    projectileVector.push_back(tmpProjectile);
                     sound["gunshot"]->play();
                 }
             }
@@ -271,7 +275,7 @@ void GameState::updateLogic()
                 // Add Projectile to Projectile Queue
                 if ( tmpProjectile != nullptr)
                 {
-                    projectileQueue.push_back(tmpProjectile);
+                    projectileVector.push_back(tmpProjectile);
                     sound["gunshot"]->play();
                 }
             }
@@ -290,7 +294,7 @@ void GameState::updateLogic()
     enemyPlay();
     
     // Update Logic for Graphics
-    gui.updateLogic(window, GAME_STATE);
+    gui.updateLogic(window, GAME_STATE, frameDuration);
         
 }
 
@@ -333,7 +337,7 @@ void GameState::handleCollisions()
         }
 
     // Handle Collision between Projectiles and Entities
-    for (auto &itProjectile : projectileQueue)
+    for (auto &itProjectile : projectileVector)
     {
         // Collision between Friendly Projectiles and Enemy Entities
         if (itProjectile->getIsFriendly())
@@ -383,14 +387,14 @@ void GameState::renderFrame()
     {
         window->draw(it->getSprite());
     }
-    for(auto &it: projectileQueue)
+    for(auto &it: projectileVector)
     {
         window->draw(it->getSprite());
     }
 
     // Render Stationary Graphics
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold);
+    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCurrentCooldown());
 }
 
 void GameState::resetState()
@@ -497,5 +501,4 @@ void GameState::enemyPlay()
     {
         spawnEnemy(type);
     }
-    
 }
