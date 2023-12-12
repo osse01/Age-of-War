@@ -3,7 +3,8 @@
 Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     : Entity::Entity(dataMap, "Base", friendly, pos, frameDuration), turret {nullptr},
     renderTexture {std::make_shared<sf::RenderTexture>()}, renderSprite {},
-    turretPos {}, maxHp {dataMap.stats["Base"]["hp"]}, hpTexture {std::make_shared<sf::RenderTexture>()},
+    turretPos {}, maxHp {dataMap.stats["Base"]["hp"]}, maxCooldown { dataMap.stats["Turret"]["cooldown"] },
+    hpTexture {std::make_shared<sf::RenderTexture>()},
     spriteSpeed {dataMap.stats["Base"]["spriteSpeed"]}
 {
     actionState = OPEN_GATE;
@@ -192,5 +193,5 @@ float Base::getCurrentCooldown()
 //  Return Cooldown of Turret Special Ability
 //  ---------------------------------------------
 {
-    return (turret) ? turret->getcurrentCooldown() : 0;
+    return (turret) ? turret->getcurrentCooldown() : maxCooldown;
 }

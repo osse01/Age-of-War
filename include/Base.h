@@ -41,6 +41,7 @@ sf::Sprite renderSprite;
 sf::Vector2f turretPos;
 
 float maxHp;
+float maxCooldown;
 
 std::shared_ptr<sf::RenderTexture> hpTexture;
 

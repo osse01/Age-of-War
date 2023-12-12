@@ -4,7 +4,7 @@ Melee
     movementSpeed 70
     attackSpeed   70
     cost          50
-    deathValue    75
+    deathValue    65
     boxSize       64 80
     spriteDim     128 128
     filename      melee_sprite_sheet.png
@@ -16,18 +16,18 @@ Ranged
     range         300
     attackSpeed   70
     cost          75
-    deathValue    100
+    deathValue    85
     boxSize       96 80
     spriteDim     128 128
     filename      ranged_sprite_sheet.png
 
 Tank
     damage        75
-    hp            600
+    hp            425
     movementSpeed 70
     attackSpeed   70
     cost          150
-    deathValue    200
+    deathValue    175
     boxSize       64 80
     spriteDim     128 128
     filename      melee_sprite_sheet.png
@@ -45,7 +45,7 @@ Turret
     cost         200
     attackSpeed  70
     specialAttackSpeed 1100
-    cooldown     15
+    cooldown     30
     specialAngle 75
     originX      96
     originY      32
@@ -69,7 +69,7 @@ TurretProjectile
     filename      assets/canonBall.png 
 
 SpecialProjectile
-    damage        200
+    damage        250
     hp            1
     movementSpeed 2000
     boxSize       20 20
@@ -161,11 +161,11 @@ CreditsFade
 
 Enemy
     listSize    3
-    waveSize    1
-    waveLimit   1
-    timeDelay   100
+    waveSize    2
+    waveLimit   2
+    timeDelay   80
     turretTime  10
-    upgradeTime 15
+    upgradeTime 8
 
 StartStats
     gold 200
