@@ -17,10 +17,9 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 
     // Add Text to Button
     text->setFillColor(sf::Color::Black);
-    text->setCharacterSize( static_cast<int>(0.65*buttonSize.y) );
+    text->setCharacterSize( static_cast<int>(0.6*buttonSize.y) );
     text->setOrigin(text->getGlobalBounds().width/2+2, text->getGlobalBounds().height/2 - 2);
     text->setPosition(button.getPosition());
-    //text->setScale( buttonSize.y/text->getGlobalBounds().height/3, buttonSize.y/text->getGlobalBounds().height/3 );
 
 
     // Create Button
