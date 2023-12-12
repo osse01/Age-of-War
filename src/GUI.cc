@@ -6,8 +6,9 @@
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
     : buttonSize { window->getSize().x/25 * data.windowScale}, dataMap{data}, heartFile{ "assets/health.png" },
-      menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{},
-      gameTextures {},
+      menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{}, goldTextVector{},
+      gameTextures {}, goldcostVector{static_cast<int>(data.stats["Melee"]["cost"]), static_cast<int>(data.stats["Ranged"]["cost"]), 
+      static_cast<int>(data.stats["Tank"]["cost"]), static_cast<int>(data.stats["Turret"]["cost"])},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
       interfaceTexture{}, coinTexture{}, heartTexture{}, checkTexture{}, coinSprite{}, heartSprite{}, checkSprite{},
       font{}, goldText{}, optionsText{}, musicText {}, soundText {}
@@ -166,11 +167,14 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             goldText.setOrigin(0, 0);
             goldText.setFont(font);
             goldText.setCharacterSize(buttonSize*0.4);
-            goldText.setString(std::to_string(dataMap.stats["StartStats"]["gold"]));
+            goldText.setString(std::to_string(data.stats["StartStats"]["gold"]));
             goldText.setFillColor(sf::Color::Yellow);
             goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, coinSprite.getGlobalBounds().top);
 
             // Create Game Buttons
+            sf::Text tmpText{};
+            tmpText.setFont(font);
+            tmpText.setCharacterSize(buttonSize*0.2);
             bool hasCooldown{false};
             float cooldown{0};
             for (int i{0} ; i < 6 ; i++)
@@ -178,11 +182,21 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 sf::Sprite sprite {gameTextures.at(i)};
                 if (i>2)    //  Meelee, Ranged, Tank
                 {
-                    sprite.setTextureRect(sf::IntRect(0,0,128,128)); 
+                    sprite.setTextureRect(sf::IntRect(0,0,128,128));
+    
+                    tmpText.setString(std::to_string(goldcostVector.at(5-i)));
+                    tmpText.setOrigin(tmpText.getGlobalBounds().width/2, 0);
+                    tmpText.setPosition(sf::Vector2f(window->getSize().x - buttonSize - i * 3*buttonSize/2, 1.5*buttonSize + tmpText.getGlobalBounds().height));
+                    goldTextVector.push_back(tmpText); 
                 }
                 else if ( i == 2 )  // Canon
                 {
                     sprite.setTextureRect(sf::IntRect(16,-32,128,128)); 
+
+                    tmpText.setString(std::to_string(goldcostVector.at(5-i)));
+                    tmpText.setOrigin(tmpText.getGlobalBounds().width/2, 0);
+                    tmpText.setPosition(sf::Vector2f(window->getSize().x - buttonSize - i * 3*buttonSize/2, 1.5*buttonSize + tmpText.getGlobalBounds().height));
+                    goldTextVector.push_back(tmpText);
                 }
                 else if ( i == 1)   //  Special icon
                 {
@@ -321,6 +335,11 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
             {
                 window->draw(gameButtons.at(i)->draw(abilityCooldown));
+                if ( i  < 4)
+                {
+                    (gold < static_cast<int>(goldcostVector.at(3-i))) ? goldTextVector.at(i).setFillColor(sf::Color::Red) : goldTextVector.at(i).setFillColor(sf::Color::Yellow);
+                    window->draw(goldTextVector.at(i));
+                }
             }
             break;
         }
