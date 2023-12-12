@@ -14,12 +14,14 @@ class Troop : public Dynamic
         int     getDamage()               override;
         void    handleCollision(int, int) override;
         void    updatePos()               override;
+        void    showHP(std::shared_ptr<sf::RenderWindow>)           override;
 
     protected:
         void changeSprite();
         void takeDamage(int);
 
         float collisionCounter;
+        float maxHp;
         const float MOVEMENTSPEED;
 
         const static int WALK   { 0 };

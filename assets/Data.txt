@@ -42,10 +42,10 @@ Base
 
 Turret
     range        800
-    cost         200
+    cost         600
     attackSpeed  70
     specialAttackSpeed 1100
-    cooldown     30
+    cooldown     40
     specialAngle 75
     originX      96
     originY      32

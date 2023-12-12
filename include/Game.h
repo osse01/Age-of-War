@@ -56,6 +56,7 @@ class Game
     sf::Music          mainMusic;
     sf::Music           credtisMusic;
 
+    //--------//
 
     //--------//
 

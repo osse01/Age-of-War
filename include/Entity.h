@@ -24,6 +24,7 @@ class Entity
         virtual int     getDamage()     {return 0;};
         virtual int     getDeathValue() {return 0;};
         virtual bool    inRange( std::shared_ptr<Entity> )    = 0;
+        virtual void   showHP(std::shared_ptr<sf::RenderWindow>){};
         virtual void    specialAttack() {};
         virtual float   getCurrentCooldown() {return 0.f;};
 
