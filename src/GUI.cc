@@ -208,7 +208,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 {
                     sprite.setTextureRect(sf::IntRect(-10,0,256,256)); 
                     hasCooldown = true;
-                    cooldown = data.stats["specialAttack"]["cooldown"];
+                    cooldown = data.stats["Turret"]["cooldown"];
                 }
                 else if ( i == 0)   //  Settings icon
                 {
@@ -314,7 +314,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
     }
 }
 
-void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold)
+void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int gold, float abilityCooldown)
 {
     switch (currentState)
     {
@@ -332,18 +332,19 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             // Draw Interface and Buttons in Game State
             window->draw(interface);
             window->draw(statsInterface);
+            
+            coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
+            heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
+
+            goldText.setString(std::to_string(gold));
+            goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, 0.5*buttonSize);
+
+            window->draw(goldText);
+            window->draw(coinSprite);
+            window->draw(heartSprite);
             for (int i{0} ; i < static_cast<int>(gameButtons.size()) ; i++)
             {
-                coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
-                heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
-
-                goldText.setString(std::to_string(gold));
-                goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, 0.5*buttonSize);
-
-                window->draw(goldText);
-                window->draw(coinSprite);
-                window->draw(heartSprite);
-                window->draw(gameButtons.at(i)->draw());
+                window->draw(gameButtons.at(i)->draw(abilityCooldown));
             }
             break;
         }
@@ -394,7 +395,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
     
 }
 
-void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState)
+void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState, std::shared_ptr<sf::Time> frameDuration)
 {
     sf::Mouse mouse{}; 
 
@@ -425,6 +426,10 @@ void GUI::updateLogic(std::shared_ptr<sf::RenderWindow> window, int currentState
                 else
                 {
                     gameButtons.at(i)->stopHover(); 
+                }
+                if (gameButtons.at(i)->hasAbility())
+                {
+                    gameButtons.at(i)->updateCooldown(frameDuration);
                 }
             }
             break;
@@ -515,11 +520,10 @@ int GUI::buttonClicked(int currentState, float mouseX, float mouseY)
                 {
                     if (gameButtons.at(i)->getGlobalBounds().contains(mouseX,mouseY))
                     {
-                        if (gameButtons.at(i)->hasAbility())
-                        {
-//                            gameButtons.at(i)->setCooldown();
-                            std::cout << "special attack" << std::endl;
-                        }
+                        //if (gameButtons.at(i)->hasAbility())
+                        //{
+                        //    gameButtons.at(i)->setCooldown(dataMap.stats["Turret"]["cooldown"]);
+                        //}
                         return i+1;
                     }
                 }
@@ -625,15 +629,4 @@ void GUI::drawHPBar(std::shared_ptr<sf::RenderWindow> window, const sf::Sprite& 
     window->draw(enemyHealthRec);
     window->draw(healthBar);
     window->draw(healthRec);
-}
-
-void GUI::setCooldown()
-//  ---------------------------------------------
-//  If Button has Ability, set the Cooldown.
-//  ---------------------------------------------
-{
-    if (gameButtons.at(SPECIAL)->hasAbility())
-    {
-        std::cout << "hej" << std::endl;
-    }
 }

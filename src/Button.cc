@@ -5,7 +5,7 @@
 // Constructor for Button without Sprite
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor, sf::Color outlineColor, std::string buttonText, sf::Font& font)
 //This is a button with text
-: i {0}, clicked {false}, hasCooldown{false}, cooldown{0}, button { sf::RectangleShape(buttonSize) }, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
+: i {0}, clicked {false}, hasCooldown{false}, cooldown{0}, currentCooldown{0}, button { sf::RectangleShape(buttonSize) }, timer{}, text {std::make_shared<sf::Text>(buttonText, font)}, sprite {},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {sf::Color(112, 58, 7)}
 {
     // Set Button Appearance and Position
@@ -36,8 +36,8 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillCo
 // Constructor for Button with Sprite
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& sprite, sf::Color fillColor, bool clicked, bool ability, float cd)
 // This is a button with a sprite
-: i {1}, clicked {clicked}, hasCooldown{ability}, cooldown{cd},
-  button { sf::RectangleShape(buttonSize) }, text {}, sprite { sprite },
+: i {1}, clicked {clicked}, hasCooldown{ability}, cooldown{cd},  currentCooldown{cooldown},
+  button { sf::RectangleShape(buttonSize) }, timer{ sf::RectangleShape(button)}, text {}, sprite { sprite },
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {},
   fillColor { fillColor }
 {
@@ -55,10 +55,20 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& spri
     Button::sprite.setPosition(buttonSize.x/2 + 2, buttonSize.y/2 + 2);
     Button::sprite.scale(renderButton->getSize().x/Button::sprite.getGlobalBounds().width, renderButton->getSize().y/Button::sprite.getGlobalBounds().height);
 
+    // Set cooldown
+    if (hasCooldown)
+    {
+        timer.setOrigin(timer.getGlobalBounds().width/2, timer.getGlobalBounds().height );
+        timer.setFillColor(sf::Color(190, 190, 190, 200));
+        timer.setPosition(sf::Vector2f(button.getPosition().x, button.getPosition().y + button.getGlobalBounds().height/2 - 2));
+
+    }
+
     // Create Button
     renderButton->clear(sf::Color::White);
     renderButton->draw(button);
     renderButton->draw(Button::sprite);
+    if (hasCooldown)  {renderButton->draw(timer);}
     renderButton->display();
 
     //Create Sprite with Button
@@ -69,7 +79,7 @@ Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Sprite& spri
 
 Button::Button(const sf::Vector2f buttonSize, sf::Vector2f pos, sf::Color fillColor)
 // This is a button with no sprite
-: i {2}, clicked {false}, hasCooldown{false}, cooldown{0}, button { sf::RectangleShape(buttonSize) }, text {}, sprite {},
+: i {2}, clicked {false}, hasCooldown{false}, cooldown{0},  currentCooldown{0}, button { sf::RectangleShape(buttonSize) }, timer{}, text {}, sprite {},
   renderButton {std::make_shared<sf::RenderTexture>()}, buttonSprite {}, fillColor {fillColor}
 {
     renderButton->create(buttonSize.x+4, buttonSize.y+4);
@@ -113,21 +123,24 @@ bool Button::click()
     }
     return clicked;
 }
-sf::Sprite& Button::draw()
+sf::Sprite& Button::draw(float cd)
 {
     renderButton->clear(sf::Color::White);
     renderButton->draw(button);
     
     if (i==1 && clicked)
     {
-    renderButton->draw(sprite);
+        renderButton->draw(sprite);
     }
     else if (i==0)
     {
         renderButton->draw(*text);
-
     }
-
+    
+    if (hasCooldown)
+    {
+        setCooldown(cd);
+    }
     renderButton->display();
     buttonSprite.setTexture(renderButton->getTexture());
     return buttonSprite;
@@ -151,22 +164,18 @@ void Button::setPosition(float xpos, float)
     buttonSprite.setPosition(xpos, buttonSprite.getPosition().y);
 }
 
-void Button::setCooldown( float cd)
+void Button::setCooldown(float currentCooldown)
 //  ---------------------------------------------
 //  Create a Gray Transparrent Rectangle on the 
 //  Button that Covers current cooldown / tot cooldown
 //  of the Button.
 //  ---------------------------------------------
 {
-    if (hasCooldown)
-    {
-        sf::RectangleShape timer{sf::Vector2f(buttonSprite.getGlobalBounds().width, (cd/cooldown)*buttonSprite.getGlobalBounds().height) };
-        timer.setFillColor(sf::Color(190, 190, 190, 20));
-        timer.setOrigin(timer.getGlobalBounds().width/2, timer.getGlobalBounds().height/2 );
-        timer.setPosition(buttonSprite.getPosition());
-        renderButton->draw(timer);
-    }
+    timer.setScale(1, (currentCooldown/cooldown));
+    renderButton->draw(timer);
 }
+
+
 
 bool Button::hasAbility()
 //  ---------------------------------------------
@@ -174,4 +183,12 @@ bool Button::hasAbility()
 //  ---------------------------------------------
 {
     return hasCooldown;
+}
+
+void Button::updateCooldown(std::shared_ptr<sf::Time> frameDuration)
+//  ---------------------------------------------
+//  Reduce currentCooldown.
+//  ---------------------------------------------
+{
+    (currentCooldown <= 0) ? currentCooldown = 0 : currentCooldown -= frameDuration->asSeconds();
 }

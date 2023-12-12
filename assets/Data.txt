@@ -4,7 +4,7 @@ Melee
     movementSpeed 70
     attackSpeed   70
     cost          50
-    deathValue    75
+    deathValue    60
     boxSize       64 64
     spriteDim     128 128
     filename      melee_sprite_sheet.png
@@ -16,7 +16,7 @@ Ranged
     range         300
     attackSpeed   70
     cost          75
-    deathValue    100
+    deathValue    85
     boxSize       96 64
     spriteDim     128 128
     filename      ranged_sprite_sheet.png
@@ -27,7 +27,7 @@ Tank
     movementSpeed 70
     attackSpeed   70
     cost          150
-    deathValue    200
+    deathValue    160
     boxSize       64 64
     spriteDim     128 128
     filename      melee_sprite_sheet.png
@@ -43,7 +43,7 @@ Turret
     cost         200
     attackSpeed  70
     specialAttackSpeed 1100
-    cooldown     5
+    cooldown     15
     originX      96
     originY      32
     spriteDim    128 64
@@ -128,7 +128,6 @@ swordSFX
     filename assets/SFX/sword.ogg
 
 specialAttack
-    cooldown 10
     filename assets/special.png
 
 settingsIcon

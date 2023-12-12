@@ -24,13 +24,13 @@ class Button
     sf::FloatRect getGlobalBounds  ();
     sf::Vector2f  getPosition      ();
     bool          click            ();
-    sf::Sprite&   draw             ();
+    sf::Sprite&   draw             (float = -1);
     void          hover            ();
     void          stopHover        ();
     void          setPosition      ( float , float = 0.0f );
     void          setCooldown      ( float );
     bool          hasAbility       ();
-
+    void          updateCooldown   (std::shared_ptr<sf::Time>);
 
 
     private:
@@ -39,11 +39,15 @@ class Button
     bool  clicked;
     bool  hasCooldown;
     float cooldown;
+    float   currentCooldown;
+
     sf::RectangleShape                   button;
+    sf::RectangleShape                   timer;
     std::shared_ptr<sf::Text>            text;
     sf::Sprite                           sprite;
     std::shared_ptr<sf::RenderTexture>   renderButton;
     sf::Sprite                           buttonSprite;
     sf::Color                            fillColor;
+
 };
 #endif

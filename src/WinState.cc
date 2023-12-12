@@ -6,6 +6,7 @@ WinState::WinState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& d
     textFont     {}, winText {}, 
     greyOut      {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { WIN_STATE, screen, dataMap }
 {
+    // Set Appearance and Position for Win Text
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         winText.setFont          (textFont);
@@ -40,9 +41,11 @@ void WinState::handleEvent(sf::Event event)
         {
             switch (gui.buttonClicked(WIN_STATE, mouse.x, mouse.y))
             {
+                // Change State to Menu State when Pressing First Button
                 case 1:
                     nextState = MENU_STATE;
                     break;
+                // Quit Game when Pressing Second Button
                 case 2:
                     window->close();
                     break;
@@ -57,26 +60,30 @@ void WinState::handleEvent(sf::Event event)
         break;
     }
 }
+
+// Handle User Input that Triggers an Event
 void WinState::updateLogic()
 {
     gui.updateLogic(window, WIN_STATE);
 }
 
+// Draw Win State
 void WinState::renderFrame()
 {
     window->clear(sf::Color(255, 0, 0));
-
     window->draw(gamestateFrameSprite);
     window->draw(greyOut);
     window->draw(winText);    
     gui.draw(WIN_STATE, window, 0);
 }
 
+// Return Next State
 int WinState::getNextState()
 {
     return nextState;
 }
 
+// Reset nextState Variable to Win State
 void WinState::resetState()
 {
     nextState = WIN_STATE;

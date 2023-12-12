@@ -302,7 +302,7 @@ void GameState::updateLogic()
     enemyPlay();
     
     // Update Logic for Graphics
-    gui.updateLogic(window, GAME_STATE);
+    gui.updateLogic(window, GAME_STATE, frameDuration);
         
 }
 
@@ -405,7 +405,7 @@ void GameState::renderFrame()
     // Render Stationary Graphics
     gui.drawHPBar(window, groundSprite, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold);
+    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCooldown());
 }
 
 void GameState::resetState()

@@ -8,13 +8,12 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
 :   State(screen, dataMap, music, sound, frameDuration), scale{1.0f}, t{0.0f}, nextState{MENU_STATE},
     texture{}, sprite{}, textFont{}, gameTitle{}, instructionText{},
     zoomFactor{sf::Vector2f(0.9f, 0.6f)}, gui { MENU_STATE, screen, dataMap }
-//  -------------------------------------------------------
-//  MenuState constructor. Loads in the Font Used for Text and background Image, the Name of the Files
-//  are Saved in the fontFile and backgroundFile Variables.
-//
-//  For Now File Names are Hardcoded Values. This must Change!!!
-//  -------------------------------------------------------
+    //  -------------------------------------------------------
+    //  Load in the Font Used for Text and Background Image
+    //  The Name of the Files are Saved in the fontFile and backgroundFile Variables
+    //  -------------------------------------------------------
 {
+    // Load Background Image
     if(texture.loadFromFile(dataMap.files["Background"]))
     {
         sprite.setTexture(texture);
@@ -26,6 +25,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
         throw std::logic_error("    >> Error: Could Not Find background image. Error in MenuState::MenuState().");
     }
 
+    // Set Game Title Appearance and Position
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         gameTitle.setFont(textFont);
@@ -56,16 +56,20 @@ void MenuState::handleEvent(sf::Event event)
             {
                 switch (gui.buttonClicked(MENU_STATE, mouse.x, mouse.y))
                 {
+                    // Change to Game State
                     case 1:
                         nextState = GAME_STATE;
                         startAnimation();
                         break;
+                    // Change to Options State
                     case 2:
                         nextState = OPTIONS_STATE;
                         break;
+                    // Change to Credits State
                     case 3:
                         nextState = CREDITS_STATE;
                         break;
+                    // Quit Game
                     case 4:
                         window->close();
                         break;
@@ -75,40 +79,31 @@ void MenuState::handleEvent(sf::Event event)
             }
             break;
         }
-    
         default:
             break;
     }
 }
 
+// Return Next State
 int MenuState::getNextState()
-//  ---------------------------------------------
-//  Returns Wich State is The Next State.
-//  ---------------------------------------------
 {
     return  nextState;
 }
 
-
+// Reset nextState Variable to Menu State
 void MenuState::resetState()
 {
     nextState = MENU_STATE;
 }
 
+// Handle User Input that Triggers an Event
 void MenuState::updateLogic()
-//  ---------------------------------------------
-//  Function to Handle User Input. User Input Triggers
-//  an Event.
-//  ---------------------------------------------
 {
         gui.updateLogic(window, MENU_STATE);
 }
 
+//Rescale Background such that it Looks like an Animation when Entering Game
 void MenuState::startAnimation()
-//  ---------------------------------------------
-//  This Fuction Rescales the background Such That it
-//  Looks like an animation.
-//  ---------------------------------------------
 {
     double  step{1};
     //// double  delay{0.5};
@@ -122,9 +117,9 @@ void MenuState::startAnimation()
 
         step -= 0.01;
         stepBackground -= 0.002;
-
         scale = std::pow(step, 2);
         // backgroundScale = std::pow(stepBackground, 2);
+
 
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setScale(zoomFactor*scale);
@@ -143,23 +138,17 @@ void MenuState::startAnimation()
         }
         while(window->pollEvent(event))
         {
-
         }
         window->draw(sprite);
         window->draw(gameTitle);
         window->draw(instructionText);
         window->display();
-
     }
 }
 
-
+// Render the Frame to Display
 void MenuState::renderFrame()
-//  ---------------------------------------------
-//  Render The Frame to Display.
-//  ---------------------------------------------
 {
-    
     window->clear(sf::Color(255, 255, 255));
 
     t = t + 0.25*frameDuration->asSeconds();
@@ -176,4 +165,3 @@ void MenuState::renderFrame()
 
     gui.draw(MENU_STATE, window, 0);
 }
-
