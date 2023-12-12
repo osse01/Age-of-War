@@ -104,7 +104,7 @@ void GameState::handleEvent(sf::Event event)
                         break;
                     case BUY_TURRET:
                         spawnFriendly("Turret");
-                        sound["button"]->play();
+                        sound["buyTurret"]->play();
                         break;
                     case SPECIAL_ABILITY:
                         friendlyVector.back()->specialAttack();
@@ -447,7 +447,7 @@ void GameState::spawnFriendly(std::string troopType)
 
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
-        else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, frameDuration))
+        else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, frameDuration, sound))
         {}
     }    
 }
@@ -483,7 +483,7 @@ void GameState::spawnEnemy(int type)
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
         case BUY_TURRET:
-            if(enemyVector.back()->buyTurret(enemyStats, false, frameDuration))
+            if(enemyVector.back()->buyTurret(enemyStats, false, frameDuration, sound))
             {}
             break;
         default:

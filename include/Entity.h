@@ -36,7 +36,7 @@ class Entity
 
         virtual sf::Sprite& getSprite();
         bool        collides( std::shared_ptr<Entity> );
-        virtual bool buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>){return true;};
+        virtual bool buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>, std::map<std::string, std::shared_ptr<sf::Sound>>){return true;};
 
     protected:
         float              xpos;

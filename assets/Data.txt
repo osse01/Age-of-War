@@ -153,6 +153,9 @@ sword2SFX
 sword3SFX
     filename assets/SFX/sword3.ogg
 
+turretClickSFX
+    filename assets/SFX/turretClick.ogg
+
 CreditsFade
     filename assets/gradient.png
 

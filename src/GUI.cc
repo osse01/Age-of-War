@@ -156,7 +156,9 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
             }
             coinSprite.setTexture(coinTexture);
             coinSprite.setOrigin(0, coinSprite.getGlobalBounds().height/2);
+            coinSprite.setOrigin(0, coinSprite.getGlobalBounds().height/2);
             coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
+            coinSprite.setPosition(0.5*buttonSize, statsInterface.getGlobalBounds().height/2);
             coinSprite.setPosition(0.5*buttonSize, statsInterface.getGlobalBounds().height/2);
 
             if ( !font.loadFromFile(dataMap.files["GameFont"]) )
@@ -165,10 +167,12 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) GAME_STATE");
             }
             goldText.setOrigin(0, 0);
+            goldText.setOrigin(0, 0);
             goldText.setFont(font);
             goldText.setCharacterSize(buttonSize*0.4);
             goldText.setString(std::to_string(data.stats["StartStats"]["gold"]));
             goldText.setFillColor(sf::Color::Yellow);
+            goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, coinSprite.getGlobalBounds().top);
             goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, coinSprite.getGlobalBounds().top);
 
             // Create Game Buttons

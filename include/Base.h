@@ -25,7 +25,7 @@ sf::Sprite & getSprite()       override;
 bool        inRange( std::shared_ptr<Entity> other )        override;
 
 void  takeDamage(int);
-bool  buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>) override;
+bool  buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>, std::map<std::string, std::shared_ptr<sf::Sound>>) override;
 void    specialAttack() override;
 float   getCurrentCooldown  () override;
 //void updateHp();

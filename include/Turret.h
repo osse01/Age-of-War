@@ -10,7 +10,7 @@ class Turret : public Dynamic
 {
 public:
     // CONSTRUCTORS / DESTRUCTORS
-    Turret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>);
+    Turret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>, std::map<std::string, std::shared_ptr<sf::Sound>>);
     virtual ~Turret() = default;
 
     // FUNCTIONS
@@ -43,6 +43,8 @@ private:
     const static int IDLE { 0 };
     const static int SHOOT { 1 };
     const static int SPECIAL { 2 };
+
+    std::map<std::string, std::shared_ptr<sf::Sound>> sound;
 };
 
 #endif
