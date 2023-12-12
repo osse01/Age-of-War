@@ -118,8 +118,6 @@ int CreditsState::getNextState()
 void CreditsState::updateLogic()
 //  ---------------------------------------------
 {
-    std::cout << "Window y \t" << window->getSize().y << std::endl;
-    std::cout << "canvas  \t" << canvasSprite.getGlobalBounds().height + canvasSprite.getGlobalBounds().top << std::endl;
     if ( window->getSize().y >= canvasSprite.getGlobalBounds().height + canvasSprite.getGlobalBounds().top  )
     {
         
@@ -164,11 +162,11 @@ void CreditsState::renderFrame()
 
     //Set Background Position 
     backgroundSprite1.setPosition(backgroundSprite1.getGlobalBounds().left,
-    backgroundSprite1.getGlobalBounds().top - 150 * frameDuration->asSeconds()); // Make slower later 40 första 30 andra orginal
+    backgroundSprite1.getGlobalBounds().top - 60 * frameDuration->asSeconds()); // Make slower later 40 första 30 andra orginal
     
     // Set Canvas Position
     canvasSprite.setPosition(backgroundSprite1.getGlobalBounds().left,
-    backgroundSprite1.getGlobalBounds().top - 150 * frameDuration->asSeconds());
+    backgroundSprite1.getGlobalBounds().top - 60 * frameDuration->asSeconds());
     
     // Draw Sprites
     window->draw(backgroundSprite1);
