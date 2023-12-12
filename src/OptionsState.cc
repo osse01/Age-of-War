@@ -1,12 +1,13 @@
 #include "../include/OptionsState.h"
 
 OptionsState::OptionsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data, std::shared_ptr<sf::Music> music, 
-                           std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
+                           std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture lastFrame)
 : State{window, data, music, sound, frameDuration}, 
   gui{OPTIONS_STATE, window, data}, data { data }, lastFrameTexture { lastFrame }, lastFrameSprite {},
   nextState {OPTIONS_STATE},
   soundVolume {data.stats["GameSound"]["volume"]}, musicVolume {data.stats["GameMusic"]["volume"]}, 
-  soundEnabled { data.stats["GameSound"]["enabled"] }, musicEnabled { data.stats["GameMusic"]["enabled"] },
+  soundEnabled { static_cast<bool>(data.stats["GameSound"]["enabled"]) },
+  musicEnabled { static_cast<bool>(data.stats["GameMusic"]["enabled"]) },
   buttonPressed { false }, buttonNumber { 0 }, previousState {}
 {
     music->play();
@@ -30,13 +31,13 @@ void OptionsState::handleEvent(sf::Event event)
             buttonNumber = gui.buttonClicked(OPTIONS_STATE, mouse.x, mouse.y);
             break;
         }
-        case sf::Event::MouseButtonReleased:
-        {
-
-            break;
-        }
         default:
         break;
+    }
+    if ( sf::Keyboard::Escape == event.key.code )
+    {
+        nextState = previousState;
+        return;
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -56,7 +57,7 @@ void OptionsState::handleEvent(sf::Event event)
 
             case 3:
             musicEnabled = !musicEnabled;
-            data.stats["GameMusic"]["enabled"] = musicEnabled;
+            data.stats["GameMusic"]["enabled"] = static_cast<float>(musicEnabled);
             sound["toggle"]->stop();
             sound["toggle"]->play();
             break;
@@ -72,12 +73,13 @@ void OptionsState::handleEvent(sf::Event event)
 
             case 6:
             soundEnabled = !soundEnabled;
-            data.stats["GameSound"]["enabled"] = soundEnabled;
+            data.stats["GameSound"]["enabled"] = static_cast<float>(soundEnabled);
             sound["toggle"]->stop();
             sound["toggle"]->play();
             break;
 
             case 7:
+            sound["button"]->play();
             nextState = previousState;
             break;
 
@@ -85,9 +87,15 @@ void OptionsState::handleEvent(sf::Event event)
             break;
         }
         music->setVolume(musicEnabled ? musicVolume : 0);
-        sound["button"]->setVolume(soundEnabled ? soundVolume : 0);
-        sound["toggle"]->setVolume(soundEnabled ? soundVolume : 0);
-        sound["buyTurret"]->setVolume(soundEnabled ? soundVolume : 0);
+        for (auto &it : sound )
+        {
+            if(it.first == "music")
+            {
+                it.second->setVolume(musicEnabled? musicVolume : 0);
+                break;
+            }
+            it. second -> setVolume(soundEnabled? soundVolume : 0);
+        }
     }
 
 }

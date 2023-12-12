@@ -18,7 +18,7 @@ class PauseState : public State
 public:
     // CONSTRUCTORS
     PauseState   (std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>,
-    std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>, sf::Texture&);
+    std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>, sf::Texture&);
     ~PauseState  () override;
     PauseState   (const PauseState&) = delete;
     PauseState& operator= ( const PauseState& ) = delete;

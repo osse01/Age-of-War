@@ -3,14 +3,15 @@
 #include <iostream>
 
 Troop::Troop(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), troopState { 1 }, spriteCounter { 0 }, collisionCounter {0}, MOVEMENTSPEED { data.stats[troopType]["movementSpeed"] }
+: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), collisionCounter {0},
+  MOVEMENTSPEED { data.stats[troopType]["movementSpeed"] * data.windowScale }
 {}
 
 void Troop::handleCollision(int nextTroopState, int otherDamage)
 {   
-    if (troopState != ATTACK)
+    if (actionState != ATTACK)
     {
-        troopState = nextTroopState;
+        actionState = nextTroopState;
     }
     
     collisionCounter = 0;
@@ -29,7 +30,7 @@ void Troop::handleCollision(int nextTroopState, int otherDamage)
     Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
 
     
-    switch ( troopState ) {
+    switch ( actionState ) {
         // Call changeSprite if Idle
         case IDLE:
             changeSprite();
@@ -53,20 +54,20 @@ void Troop::updatePos()
 {
     // Update Troop Position
     collisionCounter += frameDuration->asSeconds();
-    if (Entity::isFriendly)    
+    if (!Entity::isFriendly)    
     {
-        Entity::xpos += MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
     }
     else
     {
-        Entity::xpos -= MOVEMENTSPEED * (frameDuration->asSeconds());
+        Entity::xpos += MOVEMENTSPEED * (frameDuration->asSeconds());
     }
 
     Entity::sprite.setPosition(Entity::xpos, Entity::ypos);
     Entity::boundingbox.setPosition(Entity::xpos, Entity::ypos);
     if ( collisionCounter >= 2*frameDuration->asSeconds() )
     {
-        troopState = WALK;
+        actionState = WALK;
         changeSprite();
     }
 }
@@ -76,7 +77,7 @@ void Troop::changeSprite()
 {
     float swapSprite {};
 
-    switch (troopState)
+    switch (actionState)
     {
     case WALK:
         swapSprite = MOVEMENTSPEED;

@@ -4,9 +4,13 @@
 
 
 Enemy::Enemy(FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration)
-:listSize{data.stats["Enemy"]["listSize"]}, waveSize{data.stats["Enemy"]["waveSize"]}, waveLimit{data.stats["Enemy"]["waveLimit"]},
- waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]}, turretTime{data.stats["Enemy"]["turretTime"]}, upgradeTime{data.stats["Enemy"]["upgradeTime"]},  
- delayCounter{delay}, totalTime{}, lastTime{totalTime + 1}, turret{true}, HP{true}, spawnList{}, frameDuration{frameDuration}, data{data}
+: listSize{static_cast<int>(data.stats["Enemy"]["listSize"])},
+  waveSize{static_cast<int>(data.stats["Enemy"]["waveSize"])},
+  waveLimit{static_cast<int>(data.stats["Enemy"]["waveLimit"])},
+  waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]},
+  turretTime{data.stats["Enemy"]["turretTime"]},upgradeTime{data.stats["Enemy"]["upgradeTime"]},
+  delayCounter{delay}, totalTime{}, lastTime{totalTime + 1}, turret{true}, HP{true}, spawnList{},
+  frameDuration{frameDuration}, data{data}
 {
     // Create List with Troops
     for(int i = 0; i < listSize; i++)

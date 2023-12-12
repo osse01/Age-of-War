@@ -23,7 +23,7 @@ class Projectile
 
     // VARIABLES
     private:
-    const int           DAMAGE;
+    const float         DAMAGE;
     const float         MOVEMENTSPEED;
     const float         INITIAL_ANGLE;
     float               xpos;
@@ -32,7 +32,7 @@ class Projectile
     float               dy;
     float               x0;
     float               y0;
-    int                 hp;
+    float               hp;
     bool                isFriendly;
     bool                hasCollided;
     float               elapsedTime;
@@ -40,7 +40,6 @@ class Projectile
     sf::Sprite          sprite;
     sf::RectangleShape  boundingbox;
     std::shared_ptr<sf::Time> frameDuration;
-    int                 counter;
 
     const int g {1000};
 };

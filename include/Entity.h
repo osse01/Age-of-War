@@ -2,10 +2,13 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
-#include "Projectile.h"
-
-#include "FileReader.h"
+#include <SFML/Audio.hpp>
+#include <experimental/random>
 #include "memory"
+
+
+#include "Projectile.h"
+#include "FileReader.h"
 
 class Entity
 {
@@ -20,19 +23,20 @@ class Entity
         virtual void    updatePos()       = 0;
         virtual int     getDamage()     {return 0;};
         virtual int     getDeathValue() {return 0;};
-        virtual float   getRange()          = 0;
+        virtual bool    inRange( std::shared_ptr<Entity> )    = 0;
         virtual void    specialAttack() {};
-        virtual float   getCooldown() {};
+        virtual float   getCurrentCooldown() {return 0.f;};
 
         int     getHP();
         sf::RectangleShape getBox();
+        void playSound(std::map<std::string, std::shared_ptr<sf::Sound>>);
 
         bool getIsFriendly();
         bool isDead();
 
         virtual sf::Sprite& getSprite();
         bool        collides( std::shared_ptr<Entity> );
-        virtual bool buyTurret(FileReader::Data&, bool, sf::Vector2f, std::shared_ptr<sf::Time>){return true;};
+        virtual bool buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>){return true;};
 
     protected:
         float              xpos;
@@ -40,6 +44,12 @@ class Entity
         float                 hp;
         bool                isFriendly;
         bool                hasCollided;
+
+        int   actionState;
+        int   spriteCounter;
+        int   audioNumber;
+        
+
         sf::Texture         texture;
         sf::IntRect         rectSourceSprite;
         sf::Sprite          sprite;

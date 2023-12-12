@@ -4,7 +4,7 @@
 
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
-  g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, currentCooldown { specialAttackCooldown },
+  g {1000}, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, currentCooldown { specialAttackCooldown },
    initAngle{angle}, SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
@@ -50,7 +50,7 @@ std::shared_ptr<Projectile> Turret::spawnProjectile(FileReader::Data& dataMap,
         }
         if (!movingUp)
         {
-            if (angle < 65) // kanske borde ändras??
+            if (angle < dataMap.stats["Turret"]["specialAngle"]) // kanske borde ändras??
             {
                 actionState = SHOOT;
             } 
@@ -97,8 +97,8 @@ sf::Sprite & Turret::getSprite()
 // Aim towards Enemy
 void Turret::aim(sf::Vector2f enemyPos)
 {
-    float x = enemyPos.x - xpos;
-    float y = enemyPos.y - ypos;
+    float x = std::abs(enemyPos.x - xpos);
+    float y = std::abs(enemyPos.y - ypos);
     
     angle = 180/3.14 * atan(-y/x);
     angle += 23 * pow(x / 1200,1.15);
@@ -119,6 +119,9 @@ void Turret::changeSprite()
         if (movingUp)
         {
             swapSprite = 0;
+            spriteCounter = 0;
+            Entity::rectSourceSprite.left = 128*23;
+            Entity::sprite.setTextureRect(Entity::rectSourceSprite);
         }
         break;
     default:
@@ -133,6 +136,7 @@ void Turret::changeSprite()
     {
         if(Entity::rectSourceSprite.left == 0)
         {
+            // Set to Idle to Finish Animation
             actionState = (actionState == SPECIAL) ? SPECIAL : IDLE;
             Entity::rectSourceSprite.left = 128*23;
         }
@@ -176,7 +180,19 @@ float Turret::getcurrentCooldown()
     return currentCooldown;
 }
 
-float Turret::getRange()
+bool Turret::inRange( std::shared_ptr<Entity> other )
+// ---------------------------------------------
+// Checks if other entity is in range
 {
-    return  (actionState == SPECIAL) ? 2500 : RANGE;
+  sf::FloatRect otherBounds { other->getBox().getGlobalBounds() };
+  float minDistance {std::abs(otherBounds.left 
+                          - (isFriendly ? boundingbox.getGlobalBounds().width
+                                          : -otherBounds.width) 
+                          - boundingbox.getGlobalBounds().left)};
+
+    if ((actionState == SPECIAL) ? INFINITY : RANGE > minDistance)
+    {
+      return true;
+    }
+    return false;
 }

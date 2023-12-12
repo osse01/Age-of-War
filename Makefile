@@ -9,7 +9,11 @@ OBJS = $(wildcard src/*.cc)
 OBJS_TEST = $(filter-out src/main.cc, $(wildcard src/*.cc test/meleeTest.cc test/test_melee.o) )
 
 game: $(OBJS)
+	clear
 	$(CC) $(CCFLAGS) -o $@ $^ $(LDFLAGS)
+	./game
 
 testFile: $(OBJS_TEST)
+	clear
 	$(CC) $(CCFLAGS) -o $@ $^ $(LDFLAGS)
+	./testFile

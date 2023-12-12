@@ -4,8 +4,8 @@ Melee
     movementSpeed 70
     attackSpeed   70
     cost          50
-    deathValue    60
-    boxSize       64 64
+    deathValue    75
+    boxSize       64 80
     spriteDim     128 128
     filename      melee_sprite_sheet.png
 
@@ -16,8 +16,8 @@ Ranged
     range         300
     attackSpeed   70
     cost          75
-    deathValue    85
-    boxSize       96 64
+    deathValue    100
+    boxSize       96 80
     spriteDim     128 128
     filename      ranged_sprite_sheet.png
 
@@ -27,14 +27,16 @@ Tank
     movementSpeed 70
     attackSpeed   70
     cost          150
-    deathValue    160
-    boxSize       64 64
+    deathValue    200
+    boxSize       64 80
     spriteDim     128 128
     filename      melee_sprite_sheet.png
 
 Base
     hp            1500
-    boxSize       512 256
+    spriteSpeed   5
+    spriteScale   2
+    boxSize       300 249
     spriteDim     512 256
     filename      base_sprite_sheet.png
 
@@ -44,6 +46,7 @@ Turret
     attackSpeed  70
     specialAttackSpeed 1100
     cooldown     15
+    specialAngle 75
     originX      96
     originY      32
     spriteDim    128 64
@@ -74,12 +77,13 @@ SpecialProjectile
     filename      assets/canonBall.png
 
 GameMusic
-    volume 50
+    GameMusic
+    volume 20
     enabled 1
     filename assets/Age-of-War-Theme-Song.ogg
 
 GameSound
-    volume 50
+    volume 70
     enabled 1
 
 TitleFont
@@ -101,6 +105,7 @@ Ground
     filename assets/ground.png
     
 Trees
+    spriteScale 4
     filename assets/trees.png
 
 GameCoin
@@ -124,20 +129,26 @@ toggleSFX
 gunshotSFX
     filename assets/SFX/gunshot.ogg
 
-swordSFX
-    filename assets/SFX/sword.ogg
-
 specialAttack
     filename assets/special.png
 
 settingsIcon
     filename assets/settings.png
 
+sword1SFX
+    filename assets/SFX/sword1.ogg
+
+sword2SFX
+    filename assets/SFX/sword2.ogg
+
+sword3SFX
+    filename assets/SFX/sword3.ogg
+
 Enemy
-    listSize    10
-    waveSize    4
-    waveLimit   5
+    listSize    3
+    waveSize    1
+    waveLimit   1
     timeDelay   100
-    turretTime  40
+    turretTime  10
     upgradeTime 15
 
