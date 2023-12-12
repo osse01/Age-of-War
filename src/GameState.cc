@@ -371,6 +371,10 @@ void GameState::renderFrame()
 //  ---------------------------------------------
 {
     window->setView(view);
+
+    sf::Mouse mouse {};
+    sf::Vector2i pixelPos = mouse.getPosition(*window);
+    sf::Vector2f mousePos = window->mapPixelToCoords(pixelPos, view);
     
     // Render Background
     window->clear(sf::Color(255, 255, 255));
@@ -381,10 +385,20 @@ void GameState::renderFrame()
     // Render units
     for(auto &it: friendlyVector)
     {
+        //Display HP when hovering
+        if((it->getBox()).getGlobalBounds().contains(mousePos))
+        {
+            it->showHP(window);
+        }  
         window->draw(it->getSprite());
     }
     for(auto &it: enemyVector)
     {
+        //Display HP when hovering
+        if((it->getBox()).getGlobalBounds().contains(mousePos))
+        {
+            it->showHP(window);
+        }  
         window->draw(it->getSprite());
     }
     for(auto &it: projectileVector)

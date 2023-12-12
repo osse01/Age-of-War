@@ -1,9 +1,7 @@
 #include "../include/Troop.h"
 
-#include <iostream>
-
 Troop::Troop(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), collisionCounter {0},
+: Dynamic::Dynamic(data, troopType, friendly, pos, frameDuration), collisionCounter {0}, maxHp{data.stats[troopType]["hp"]}, 
   MOVEMENTSPEED { data.stats[troopType]["movementSpeed"] * data.windowScale }
 {}
 
@@ -127,4 +125,15 @@ int Troop::getDamage()
         damage = DAMAGE;
     }
     return damage;
+}
+
+void Troop::showHP(std::shared_ptr<sf::RenderWindow> window)
+{
+    sf::RectangleShape hpBar{sf::Vector2f(boundingbox.getSize().x, boundingbox.getSize().y/10)};
+    hpBar.setOrigin(0,hpBar.getGlobalBounds().height);
+    hpBar.setPosition(xpos-boundingbox.getSize().x/2, ypos-boundingbox.getSize().y);
+    hpBar.setFillColor(sf::Color(200,10,0));
+    hpBar.setScale(sf::Vector2f(hp/maxHp, 1));
+    window ->draw(hpBar);
+
 }
