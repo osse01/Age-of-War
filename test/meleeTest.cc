@@ -26,6 +26,7 @@ TEST_CASE ("CONSTRUCTORS AND GETTERS")
     {
         Melee meleeTroop {data, true, sf::Vector2f(0,0), frameDuration};
         Melee enemy {data, false, sf::Vector2f(0,0), frameDuration};
+        std::shared_ptr<Entity> ptr = std::make_shared<Melee> ( data, false, sf::Vector2f(0,0), frameDuration );
 
         //TROOP
         CHECK ( meleeTroop.spawnProjectile(data, frameDuration, sf::Vector2f(0,0)) == nullptr );
@@ -43,7 +44,7 @@ TEST_CASE ("CONSTRUCTORS AND GETTERS")
         
         CHECK ( meleeTroop.getDeathValue() == data.stats["Melee"]["deathValue"] );
         
-        CHECK ( meleeTroop.getRange() == data.stats["Melee"]["range"] );
+        CHECK ( meleeTroop.inRange(ptr) == false );
         
         CHECK ( meleeTroop.getHP() == data.stats["Melee"]["hp"] );
         
