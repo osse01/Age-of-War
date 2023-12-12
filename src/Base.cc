@@ -99,7 +99,7 @@ bool Base::inRange( std::shared_ptr<Entity> other )
 }
 
 // Create Turret if None Exists
-bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, std::shared_ptr<sf::Time> frameDuration)
+bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, std::shared_ptr<sf::Time> frameDuration, std::map<std::string, std::shared_ptr<sf::Sound>> sound)
 {
     if (turret)
     {
@@ -107,7 +107,7 @@ bool Base::buyTurret(FileReader::Data& stats, bool isFriendly, std::shared_ptr<s
     }
 
     turret = std::make_shared<Turret>(stats, isFriendly, sf::Vector2f( renderSprite.getGlobalBounds().left + turretPos.x,
-                                                                      ypos - (sprite.getGlobalBounds().height - turretPos.y)), frameDuration);
+                                                                      ypos - (sprite.getGlobalBounds().height - turretPos.y)), frameDuration, sound);
     return true;
 }
 
