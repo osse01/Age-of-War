@@ -9,7 +9,8 @@ class OptionsState : public State
 // This class handles all the logic for the options menu and is responsible for the sound options
 {
     public:
-    OptionsState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>, sf::Texture);
+    OptionsState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
+                 std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>, sf::Texture);
     ~OptionsState();
     OptionsState(const OptionsState&) = delete;
     OptionsState(OptionsState&&) = delete;
@@ -28,8 +29,8 @@ class OptionsState : public State
     sf::Texture lastFrameTexture;
     sf::Sprite lastFrameSprite;
     int       nextState;
-    int       soundVolume;
-    int       musicVolume;
+    float       soundVolume;
+    float       musicVolume;
     bool      soundEnabled;
     bool      musicEnabled;
     bool      buttonPressed;

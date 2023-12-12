@@ -13,7 +13,7 @@ class CreditsState: public State
     public:
     // CONSTRUCTORS / DESTRUCTORS
     CreditsState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
-                 std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>);
+                 std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>);
     ~CreditsState() override;
     CreditsState(const CreditsState&) = delete;
     CreditsState& operator= (const CreditsState&) = delete;

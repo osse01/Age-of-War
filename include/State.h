@@ -24,7 +24,7 @@ class State
 public:
     // CONSTRUCTORS / DESTRUCTORS
     State(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
-          std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>);
+          std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>);
     virtual ~State();
     State(const State&) = delete;
     State& operator= (const State&) = delete;
@@ -40,7 +40,7 @@ public:
 protected:
     std::shared_ptr<sf::RenderWindow>   window;
     std::shared_ptr<sf::Music> music;
-    std::map<std::string, std::shared_ptr<sf::Music>> sound;
+    std::map<std::string, std::shared_ptr<sf::Sound>> sound;
     std::shared_ptr<sf::Time> frameDuration;
     FileReader::Data& dataMap;
 };

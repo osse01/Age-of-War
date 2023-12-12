@@ -18,8 +18,7 @@ class Troop : public Dynamic
     protected:
         void changeSprite();
         void takeDamage(int);
-        int troopState;
-        int   spriteCounter;
+
         float collisionCounter;
         const float MOVEMENTSPEED;
 

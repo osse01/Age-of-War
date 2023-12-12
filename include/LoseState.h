@@ -13,7 +13,7 @@ class LoseState: public State
     public:
     // CONSTRUCTORS / DESTRUCTORS
     LoseState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
-              std::map<std::string, std::shared_ptr<sf::Music>>, std::shared_ptr<sf::Time>, sf::Texture&);
+              std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>, sf::Texture&);
     ~LoseState() override;
     LoseState(const LoseState&) = delete;
     LoseState& operator= (const LoseState&) = delete;

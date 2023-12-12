@@ -1,7 +1,7 @@
 #include "../include/LoseState.h"
 
 LoseState::LoseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> music, 
-                     std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
+                     std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
 : State(screen, dataMap, music, sound, frameDuration), nextState{LOSE_STATE},
     textFont     {}, loseText {}, 
     greyOut      {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { LOSE_STATE, screen, dataMap }
@@ -45,10 +45,12 @@ void LoseState::handleEvent(sf::Event event)
                 // Change State to Menu State when Pressing First Button
                 case 1:
                     nextState = MENU_STATE;
+                    sound["button"]->play();
                     break;
                 // Quit Game when Pressing Second Button
                 case 2:
                     window->close();
+                    sound["button"]->play();
                     break;
                 default:
                     break;

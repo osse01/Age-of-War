@@ -5,14 +5,13 @@
 #include <cmath>
 
 
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Music>> sound, std::shared_ptr<sf::Time> frameDuration)
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileVector {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
     zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{200}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
 {
     music->play();
-    sound["sword"]->setLoop(true); 
 
     //  Load in Background Image
     if(!(backgroundTexture.loadFromFile(dataMap.files["Background"]) && groundTexture.loadFromFile(dataMap.files["Ground"]) && woodsTexture.loadFromFile(dataMap.files["Trees"])))
@@ -22,36 +21,35 @@ GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     }
     //  Setup Ground Image and Background Image
     groundSprite.setTexture(groundTexture);
-    groundSprite.setOrigin(groundSprite.getGlobalBounds().width/2, groundSprite.getGlobalBounds().height); 
-    groundSprite.setPosition(window->getSize().x/2, view.getSize().y + screen->getSize().y/13);
+    groundSprite.setOrigin(0, groundSprite.getGlobalBounds().height); 
+    groundSprite.setPosition(0, view.getSize().y + screen->getSize().y/13);
+    groundSprite.scale(dataMap.windowScale, dataMap.windowScale);
 
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setOrigin(backgroundSprite.getGlobalBounds().width/2, backgroundSprite.getGlobalBounds().height/2);
-    backgroundSprite.setPosition(backgroundSprite.getGlobalBounds().width/2, backgroundSprite.getGlobalBounds().height/2);
-    backgroundSprite.scale(1.75, 1);
+    backgroundSprite.setPosition(view.getCenter());
+    backgroundSprite.scale(view.getSize()/backgroundSprite.getGlobalBounds().width);
 
-    woodsSprite.setScale(1, 1);
-    woodsTexture.setRepeated(true);
     woodsSprite.setTexture(woodsTexture);
-    woodsSprite.setTextureRect(sf::IntRect(0,0,
-     static_cast<int>(8*woodsSprite.getGlobalBounds().width),static_cast<int>(woodsSprite.getGlobalBounds().height)));
     woodsSprite.setOrigin(woodsSprite.getGlobalBounds().width/2, woodsSprite.getGlobalBounds().height);
-    woodsSprite.setPosition(groundSprite.getPosition().x, groundSprite.getPosition().y  ); 
-    woodsSprite.setScale(0.5, 0.5);
+    woodsSprite.setPosition(groundSprite.getGlobalBounds().width/2, groundSprite.getPosition().y-groundSprite.getGlobalBounds().height/3);
+    woodsSprite.scale(dataMap.stats["Trees"]["spriteScale"] * dataMap.windowScale,
+                      dataMap.stats["Trees"]["spriteScale"] * dataMap.windowScale);
 
     // Create Friendly Base
     friendlyVector.push_back(std::make_shared<Base>(dataMap, true,
-    sf::Vector2f(window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
+    sf::Vector2f(groundSprite.getGlobalBounds().left, groundSprite.getPosition().y-groundSprite.getGlobalBounds().height/5), frameDuration));
 
     // Create Enemy Base
-    enemyVector.push_back(std::make_shared<Base>(dataMap, false,
-    sf::Vector2f(window->getSize().x - window->getSize().x/20, 5*view.getSize().y/7+window->getSize().y/13), frameDuration));
-
+    enemyVector.push_back(std::make_shared<Base>(enemyStats, false,
+    sf::Vector2f(groundSprite.getGlobalBounds().width, groundSprite.getPosition().y-groundSprite.getGlobalBounds().height/5), frameDuration));
     projectileVector.reserve(500);
 }
 
 GameState::~GameState()
-{music->stop();}
+{
+    music->stop();
+}
 
 void GameState::handleEvent(sf::Event event)
 //  ---------------------------------------------
@@ -132,20 +130,19 @@ void GameState::windowPanning(bool direction)
 //  direction = false => move right
 //  ---------------------------------------------
 {
-    float   scale       { 100 };
-    //float   distance    { groundSprite.getGlobalBounds().width/2 };
-    float   backgroundScale      { 0.9 };
-    float   woodsScale      { 0.7 };
+    float   speed       { 100 };
+    float   woodsScale      { 1 - woodsSprite.getGlobalBounds().width
+                              / groundSprite.getGlobalBounds().width };
 
     // Pan Left
     if (direction)
     {
         int viewLeft {static_cast<int>(view.getCenter().x - view.getSize().x/2)};
-        if (!(viewLeft - 10 < friendlyVector.back()->getSprite().getPosition().x - friendlyVector.back()->getSprite().getGlobalBounds().width/2))
+        if (!(viewLeft - 10 < friendlyVector.back()->getSprite().getGlobalBounds().left))
         {
-            view.move(-scale*(frameDuration->asSeconds()), 0);
-            backgroundSprite.move(-backgroundScale*scale*(frameDuration->asSeconds()), 0);
-            woodsSprite.move(-woodsScale*scale*(frameDuration->asSeconds()), 0);
+            view.move(-speed*(frameDuration->asSeconds()), 0);
+            backgroundSprite.move(-speed*(frameDuration->asSeconds()), 0);
+            woodsSprite.move(-woodsScale*speed*(frameDuration->asSeconds()), 0);
         }
     }
 
@@ -153,11 +150,12 @@ void GameState::windowPanning(bool direction)
     else
     {
         int viewRight {static_cast<int>(view.getCenter().x + view.getSize().x/2)};
-        if (!(viewRight + 10 > enemyVector.back()->getSprite().getPosition().x + enemyVector.back()->getSprite().getGlobalBounds().width/2))
+        if (!(viewRight + 10 > enemyVector.back()->getSprite().getGlobalBounds().left 
+                               + enemyVector.back()->getSprite().getGlobalBounds().width))
         {
-            view.move(scale*(frameDuration->asSeconds()), 0);
-            backgroundSprite.move(backgroundScale*scale*(frameDuration->asSeconds()), 0);
-            woodsSprite.move(woodsScale*scale*(frameDuration->asSeconds()), 0);
+            view.move(speed*(frameDuration->asSeconds()), 0);
+            backgroundSprite.move(speed*(frameDuration->asSeconds()), 0);
+            woodsSprite.move(woodsScale*speed*(frameDuration->asSeconds()), 0);
         }
     }
 }
@@ -182,7 +180,7 @@ void GameState::updateLogic()
     // View Panning
     {
         sf::Mouse mouse {};
-        int margin {static_cast<int>(window->getSize().x/20)};
+        float margin {window->getSize().x/20*dataMap.windowScale};
         
             // Pan Left
             if (mouse.getPosition(*window).x < margin)
@@ -191,7 +189,7 @@ void GameState::updateLogic()
             }
 
             // Pan Right
-            else if (mouse.getPosition(*window).x > 19*margin)
+            else if (mouse.getPosition(*window).x > window->getSize().x - margin)
             {
                 windowPanning(false);
             }
@@ -227,7 +225,6 @@ void GameState::updateLogic()
             if ( it->isDead() )
             {
                 deleteEntities.push_back(i);
-                sound["sword"]->pause();
             }
             i++;
 
@@ -236,15 +233,13 @@ void GameState::updateLogic()
 
             // Shoot Projectile if Enemy is In Range
             enemyPos = enemyVector.at(0)->getSprite().getPosition();
-            if (abs(it->getSprite().getPosition().x - enemyPos.x) 
-                <= it->getRange())
+            if (it->inRange(enemyVector.at(0)))
             {
                 std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, enemyPos)};
                 // Add Projectile to Projectile Queue
                 if ( tmpProjectile != nullptr)
                 {
                     projectileVector.push_back(tmpProjectile);
-                    sound["gunshot"]->stop();
                     sound["gunshot"]->play();
                 }
             }
@@ -266,7 +261,6 @@ void GameState::updateLogic()
             {
                 deleteEntities.push_back(i);
                 gold += it->getDeathValue();
-                sound["sword"]->pause();
             }
             i++;
 
@@ -275,15 +269,13 @@ void GameState::updateLogic()
 
             // Shoot Projectile if Enemy is In Range
             friendlyPos = friendlyVector.at(0)->getSprite().getPosition();
-            if (abs(it->getSprite().getPosition().x - friendlyPos.x) 
-                <= it->getRange())
+            if (it->inRange(friendlyVector.at(0)))
             {
                 std::shared_ptr<Projectile> tmpProjectile {it->spawnProjectile(dataMap, frameDuration, friendlyPos)};
                 // Add Projectile to Projectile Queue
                 if ( tmpProjectile != nullptr)
                 {
                     projectileVector.push_back(tmpProjectile);
-                    sound["gunshot"]->stop();
                     sound["gunshot"]->play();
                 }
             }
@@ -314,10 +306,8 @@ void GameState::handleCollisions()
     {
         if ( friendlyVector.at(0)->collides(  enemyVector.at(0) ) )
         {
-            if ( sound["sword"]->getStatus() != sf::SoundSource::Playing)
-            {
-                sound["sword"]->play();
-            }
+            friendlyVector.at(0)->playSound(sound);
+            enemyVector.at(0)->playSound(sound);
             friendlyVector.at(0) ->handleCollision(2, enemyVector.at(0)->getDamage());
             enemyVector.at(0)    ->handleCollision(2, friendlyVector.at(0)->getDamage());
         }
@@ -403,9 +393,8 @@ void GameState::renderFrame()
     }
 
     // Render Stationary Graphics
-    gui.drawHPBar(window, groundSprite, friendlyVector.back()->getHP(), enemyVector.back()->getHP());
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCooldown());
+    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCurrentCooldown());
 }
 
 void GameState::resetState()
@@ -426,9 +415,10 @@ void GameState::spawnFriendly(std::string troopType)
 //  ---------------------------------------------
 {
     // Set Spawn Point for Troops
-    sf::RectangleShape baseBounds {friendlyVector.back()->getBox()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x + baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().height/2.5f};
+    sf::FloatRect baseBounds {friendlyVector.back()
+                            ->getBox().getGlobalBounds()};
+    sf::Vector2f spawnPoint { baseBounds.left + baseBounds.width,
+                              baseBounds.top + baseBounds.height};
 
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = friendlyVector.end()-1;
@@ -457,7 +447,7 @@ void GameState::spawnFriendly(std::string troopType)
 
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
-        else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, spawnPoint, frameDuration))
+        else if(troopType == "Turret" && friendlyVector.back()->buyTurret(dataMap, true, frameDuration))
         {}
     }    
 }
@@ -466,9 +456,11 @@ void GameState::spawnEnemy(int type)
 //  ---------------------------------------------
 {
     // Set Spawn Point for Troops
-    sf::RectangleShape baseBounds {enemyVector.back()->getBox()};
-    sf::Vector2f spawnPoint { baseBounds.getPosition().x - baseBounds.getGlobalBounds().width/2,
-                              baseBounds.getPosition().y + baseBounds.getGlobalBounds().height/2.5f };
+    sf::FloatRect baseBounds {enemyVector.back()
+                            ->getBox().getGlobalBounds()};
+    sf::Vector2f spawnPoint { baseBounds.left,
+                              baseBounds.top + baseBounds.height};
+
     // Place in Front of Base in friendlyVector (Base is at end())
     auto it = enemyVector.end()-1;
 
@@ -491,14 +483,13 @@ void GameState::spawnEnemy(int type)
         // Spawn Turret if None Exist
         // buyTurret Returns False if There Already Exists a Turret
         case BUY_TURRET:
-            if(enemyVector.back()->buyTurret(enemyStats, false, spawnPoint, frameDuration))
+            if(enemyVector.back()->buyTurret(enemyStats, false, frameDuration))
             {}
             break;
         default:
             break;
     };
 }
-
 
 void GameState::enemyPlay()
 //  ---------------------------------------------

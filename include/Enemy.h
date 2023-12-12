@@ -22,13 +22,13 @@ class Enemy
         int waveSize;
         int waveLimit;
         int waveCounter;
-        int delay; 
-        int turretTime;
-        int upgradeTime;
+        float delay; 
+        float turretTime;
+        float upgradeTime;
 
         float delayCounter;
-        double totalTime;
-        int lastTime;
+        float totalTime;
+        float lastTime;
 
         bool turret;
         bool HP;

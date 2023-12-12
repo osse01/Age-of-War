@@ -16,8 +16,8 @@ class Dynamic : public Entity
 
         virtual int     getDamage()     override;
         int             getDeathValue() override;
-        virtual float           getRange()      override;
-        
+        virtual bool            inRange( std::shared_ptr<Entity> )      override;
+
     protected:
         const float   DAMAGE;
         const float   ATTACK_SPEED;
