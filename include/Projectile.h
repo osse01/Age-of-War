@@ -16,10 +16,6 @@ class Projectile
     void updatePos();
     int  getDamage();
     bool  getIsFriendly();
-
-    int     getDeathValue();
-    float   getRange();
-
     bool isDead();
 
     sf::Sprite & getSprite();
