@@ -66,7 +66,7 @@ TurretProjectile
     filename      assets/canonBall.png 
 
 SpecialProjectile
-    damage        1000
+    damage        200
     hp            1
     movementSpeed 2000
     boxSize       20 20
@@ -89,7 +89,7 @@ GameFont
     filename assets/newFont.ttf
 
 CreditFont
-    filename assets/royalFont.ttf
+    filename assets/headerFont.ttf
 
 Background
     filename assets/background.jpeg
@@ -133,11 +133,14 @@ specialAttack
 settingsIcon
     filename assets/settings.png
 
+CreditsFade
+    filename assets/gradient.png
+
 Enemy
     listSize    10
     waveSize    4
     waveLimit   5
     timeDelay   100
     turretTime  40
-    upgradeTime 15
+    upgradeTime 10
 

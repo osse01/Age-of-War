@@ -35,9 +35,12 @@ class CreditsState: public State
     sf::Font            nameFont;
     sf::Font            textFont;
     sf::Texture         backgroundTexture;
-    sf::Sprite          backgroundSprite;
+    sf::Texture         fadeTexture;
+    sf::Sprite          backgroundSprite1;
+    sf::Sprite          backgroundSprite2;
     sf::RenderTexture   canvas;
     sf::Sprite          canvasSprite;
+    sf::Sprite          fadeSprite;
 
 };
 
