@@ -41,8 +41,11 @@ class GUI
         std::vector<std::shared_ptr<Button>> optionsButtons;
         std::vector<std::shared_ptr<Button>> winButtons;
         std::vector<std::shared_ptr<Button>> loseButtons;
+        std::vector<sf::Text>                goldTextVector;
+
 
         std::vector<sf::Texture>             gameTextures;
+        const std::vector<int>               goldcostVector;
 
         sf::RectangleShape  interface;
         sf::RectangleShape  statsInterface;
