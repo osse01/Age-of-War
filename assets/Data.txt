@@ -66,10 +66,19 @@ TurretProjectile
     filename      assets/canonBall.png 
 
 GameMusic
-    GameMusic
     volume 20
     enabled 1
     filename assets/Age-of-War-Theme-Song.ogg
+
+MainMusic
+    volume 50
+    enabled 1
+    filename assets/AgeOfWarMain.ogg
+
+CreditsMusic
+    volume 60
+    enabled 1
+    filename assets/AgeOfWarCredits.ogg
 
 GameSound
     volume 70

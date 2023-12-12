@@ -54,6 +54,9 @@ class Game
     std::vector<std::shared_ptr<sf::SoundBuffer>> soundBuffer;
     std::map<std::string, std::shared_ptr<sf::Sound>> sound;
     std::shared_ptr<sf::Music> music;
+    sf::Music          mainMusic;
+    sf::Music           credtisMusic;
+
 
     //--------//
 

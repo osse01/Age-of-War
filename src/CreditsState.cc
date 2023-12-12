@@ -38,7 +38,6 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader:
          "Error in CreditsState::CreditsState().");
     }
     setupCanvas();
-
 }
 
 CreditsState::~CreditsState()
