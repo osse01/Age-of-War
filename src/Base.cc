@@ -84,6 +84,7 @@ void Base::updatePos()
     if (turret)
     {
         turret->updatePos();
+        turret->updateCooldown(frameDuration);
     }
 }
 
@@ -172,4 +173,24 @@ void Base::takeDamage(int otherDamage)
 // otherDamage is Zero when Enemy is not Attacking
 {
     Entity::hp -= otherDamage;
+}
+
+void Base::specialAttack()
+//  ---------------------------------------------
+//  If we have a Turret, Call the Turrets special attack!!
+//  and then Return true or false.
+//  ---------------------------------------------
+{
+    if ( turret && turret->getcurrentCooldown() == 0 )
+    {
+        turret->specialAttack();
+    }
+}
+
+float Base::getCurrentCooldown()
+//  ---------------------------------------------
+//  Return Cooldown of Turret Special Ability
+//  ---------------------------------------------
+{
+    return (turret) ? turret->getcurrentCooldown() : 0;
 }
