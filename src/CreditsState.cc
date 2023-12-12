@@ -37,7 +37,7 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader:
     
     // Setup Vector of Contributors
     const std::vector<std::string> stringList {"Oskar Bollner", "Logan Eriksson", 
-    "Adam Hallberg", "Oscar Jemsson", "Johanna Nilsson", "Filip Ripstrand", "Eric Ekström", "Tim Lundqvist"};
+    "Adam Hallberg", "Oscar Jemsson", "Johanna Nilsson", "Filip Ripstrand", "Eric Ekstrom", "Tim Lundqvist"};
     for ( auto &name : stringList)
     {
         nameList.push_back(sf::Text{name, nameFont, 50});
@@ -46,7 +46,6 @@ CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader:
 
     // Setup Canvas
     setupCanvas();
-
 }
 
 CreditsState::~CreditsState()
@@ -99,6 +98,13 @@ void CreditsState::setupCanvas()
         canvas.draw(nameList.at(i));
     }
 
+    sf::Text header3{"Thanks for Playing!", nameFont, 150};
+    header3.setOrigin(header3.getGlobalBounds().width/2, header3.getGlobalBounds().height/2 );
+    header3.setPosition(canvas.getSize().x/2, window->getSize().y);
+    header3.setFillColor(sf::Color(255, 255, 255));
+    header3.setPosition(canvas.getSize().x/2, fadeSprite.getGlobalBounds().top + fadeSprite.getGlobalBounds().height/1.5 );
+    canvas.draw(header3);
+
     //  Setup menu at end
 
     backgroundSprite2.setPosition(0, fadeSprite.getGlobalBounds().height + fadeSprite.getGlobalBounds().top );
@@ -119,8 +125,6 @@ int CreditsState::getNextState()
 void CreditsState::updateLogic()
 //  ---------------------------------------------
 {
-    std::cout << "Window y \t" << window->getSize().y << std::endl;
-    std::cout << "canvas  \t" << canvasSprite.getGlobalBounds().height + canvasSprite.getGlobalBounds().top << std::endl;
     if ( window->getSize().y >= canvasSprite.getGlobalBounds().height + canvasSprite.getGlobalBounds().top  )
     {
         
@@ -165,11 +169,11 @@ void CreditsState::renderFrame()
 
     //Set Background Position 
     backgroundSprite1.setPosition(backgroundSprite1.getGlobalBounds().left,
-    backgroundSprite1.getGlobalBounds().top - 150 * frameDuration->asSeconds()); // Make slower later 40 första 30 andra orginal
+    backgroundSprite1.getGlobalBounds().top - 60 * frameDuration->asSeconds()); // Make slower later 40 första 30 andra orginal
     
     // Set Canvas Position
     canvasSprite.setPosition(backgroundSprite1.getGlobalBounds().left,
-    backgroundSprite1.getGlobalBounds().top - 150 * frameDuration->asSeconds());
+    backgroundSprite1.getGlobalBounds().top - 60 * frameDuration->asSeconds());
     
     // Draw Sprites
     window->draw(backgroundSprite1);

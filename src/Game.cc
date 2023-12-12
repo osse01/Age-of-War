@@ -17,7 +17,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
 :   window { std::make_shared<sf::RenderWindow> ( sf::VideoMode { gameWidth, gameHeight }, GAME_TITLE) },
     frameDurationPtr { std::make_shared<sf::Time> ()}, event {}, clock {}, states {}, lastFrame{},
     currentState { MENU_STATE }, nextState {MENU_STATE}, soundBuffer{}, sound{},
-    music {std::make_shared<sf::Music>()}, cursorSprite {}, cursor {}, mouse{}, dataMap {}
+    music {std::make_shared<sf::Music>()}, mainMusic{}, credtisMusic{}, cursorSprite {}, cursor {}, mouse{}, dataMap {}
 {
     // Create Fullscreen Window
     window->create(sf::VideoMode::getDesktopMode(), "My window", sf::Style::Fullscreen);
@@ -27,7 +27,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     dataMap = reader.returnData("assets/Data.txt");
     
 
-    // Open Music File
+    // Open Music Files
     if (!music->openFromFile(dataMap.files["GameMusic"]))
     {
         std::cout << "  >> Error: Could Not Find Music File. Error in Game::Game()." << std::endl;
@@ -35,6 +35,23 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     music->setVolume(dataMap.stats["GameMusic"]["volume"]);
     music->setLoop(true);
     
+    if (!mainMusic.openFromFile(dataMap.files["MainMusic"]))
+    {
+        throw std::logic_error("    >> Error: Could Not Find MainMusic. Error in MenuState::MenuState().");
+    }
+
+    mainMusic.setLoop(true);
+    mainMusic.setVolume(dataMap.stats["MainMusic"]["volume"]);
+    mainMusic.play();
+
+    if(!credtisMusic.openFromFile(dataMap.files["CreditsMusic"]))
+    {
+        throw std::logic_error("    >> Error: Could not open creditsMusic file."
+         "Error in CreditsState::CreditsState().");
+    }
+    credtisMusic.setLoop(false);
+    credtisMusic.setVolume(dataMap.stats["CreditsMusic"]["volume"]);
+
     // Adds all SFX to map with sf::Music 
     std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot", "sword1", "sword2", "sword3"};
     for ( const std::string & soundString : strings)
@@ -166,10 +183,13 @@ void Game::getNextState()
                     states.pop();
                 }
                 while(states.size() > 1);
+                credtisMusic.stop();
+                mainMusic.play();
                 break;
 
             // Remove Pause State or Create Game State
             case GAME_STATE:
+                mainMusic.stop();
                 if(currentState == PAUSE_STATE)
                 {
                     states.pop();
@@ -218,11 +238,15 @@ void Game::getNextState()
 
             // Create Credits State
             case CREDITS_STATE:
+                mainMusic.stop();
+                credtisMusic.play();
+
                 states.top()->resetState();
                 ptr = std::make_unique<CreditsState>(window, dataMap, music, sound, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case OPTIONS_STATE:
+                mainMusic.stop();
                 if(currentState == MENU_STATE) 
                 {
                     states.top()->resetState();

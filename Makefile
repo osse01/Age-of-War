@@ -8,10 +8,10 @@ LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 OBJS = $(wildcard src/*.cc)
 OBJS_TEST = $(filter-out src/main.cc, $(wildcard src/*.cc test/meleeTest.cc test/test_melee.o) )
 
-game: $(OBJS)
+play: $(OBJS)
 	clear
 	$(CC) $(CCFLAGS) -o $@ $^ $(LDFLAGS)
-	./game
+	./play
 
 testFile: $(OBJS_TEST)
 	clear

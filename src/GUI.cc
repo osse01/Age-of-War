@@ -5,7 +5,7 @@
 // Standard Button RGB Color: (112, 58, 7)
 
 GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader::Data& data)
-    : buttonSize { window->getSize().x/20 * data.windowScale}, dataMap{data}, heartFile{ "assets/health.png" },
+    : buttonSize { window->getSize().x/25 * data.windowScale}, dataMap{data}, heartFile{ "assets/health.png" },
       menuButtons {}, gameButtons {}, pausedButtons{}, optionsButtons {}, winButtons{}, loseButtons{},
       gameTextures {},
       interface { sf::Vector2f(19*buttonSize/2.f, 2*buttonSize) }, statsInterface { sf::Vector2f(7*buttonSize/2, 2*buttonSize) },
@@ -154,20 +154,21 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) GAME_STATE");
             }
             coinSprite.setTexture(coinTexture);
+            coinSprite.setOrigin(0, coinSprite.getGlobalBounds().height/2);
             coinSprite.setScale(0.0025*buttonSize, 0.0025*buttonSize);
-
-            heartSprite.setTexture(heartTexture);
-            heartSprite.setScale(0.00083*buttonSize, 0.000833*buttonSize);
+            coinSprite.setPosition(0.5*buttonSize, statsInterface.getGlobalBounds().height/2);
 
             if ( !font.loadFromFile(dataMap.files["GameFont"]) )
             {
                 throw std::logic_error("\n  >> Error. Could not load font file. "
                 "Error in GUI::GUI(int, std::shared_ptr<sf::RenderWindow>) GAME_STATE");
             }
-
+            goldText.setOrigin(0, 0);
             goldText.setFont(font);
             goldText.setCharacterSize(buttonSize*0.4);
+            goldText.setString(std::to_string(dataMap.stats["StartStats"]["gold"]));
             goldText.setFillColor(sf::Color::Yellow);
+            goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, coinSprite.getGlobalBounds().top);
 
             // Create Game Buttons
             bool hasCooldown{false};
@@ -312,11 +313,7 @@ void GUI::draw(int currentState, std::shared_ptr<sf::RenderWindow> window, int g
             window->draw(interface);
             window->draw(statsInterface);
             
-            coinSprite.setPosition(0.5*buttonSize, 0.5*buttonSize);
-            heartSprite.setPosition(0.5*buttonSize, 0.5*buttonSize + coinSprite.getGlobalBounds().height);
-
             goldText.setString(std::to_string(gold));
-            goldText.setPosition(0.5*buttonSize + coinSprite.getGlobalBounds().width, 0.5*buttonSize);
 
             window->draw(goldText);
             window->draw(coinSprite);
