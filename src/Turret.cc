@@ -5,7 +5,7 @@
 Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
 : Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
   g {1000}, r {0}, spriteCounter {}, actionState { IDLE }, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, currentCooldown { specialAttackCooldown },
-   initAngle{}, SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
+   initAngle{angle}, SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
 }
