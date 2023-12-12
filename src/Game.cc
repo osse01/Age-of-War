@@ -240,12 +240,13 @@ void Game::getNextState()
             case CREDITS_STATE:
                 mainMusic.stop();
                 credtisMusic.play();
-                
+
                 states.top()->resetState();
                 ptr = std::make_unique<CreditsState>(window, dataMap, music, sound, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case OPTIONS_STATE:
+                mainMusic.stop();
                 if(currentState == MENU_STATE) 
                 {
                     states.top()->resetState();
