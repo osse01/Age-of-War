@@ -15,7 +15,8 @@ class OptionsState : public State
     OptionsState(const OptionsState&) = delete;
     OptionsState(OptionsState&&) = delete;
 
-    // Functions
+    private:
+    // FUNCTIONS
     void handleEvent(sf::Event) override;
     void renderFrame() override;
     int getNextState() override;
@@ -23,7 +24,7 @@ class OptionsState : public State
     void resetState() override;
     void prevState(int) override;
 
-    private:
+    //VARIABLES
     GUI       gui;
     FileReader::Data& data;
     sf::Texture lastFrameTexture;

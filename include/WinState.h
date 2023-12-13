@@ -18,6 +18,7 @@ class WinState: public State
     WinState(const WinState&) = delete;
     WinState& operator= (const WinState&) = delete;
 
+    private:
     // FUNCTIONS
     void handleEvent (sf::Event) override;
     void updateLogic ()          override;
@@ -25,7 +26,7 @@ class WinState: public State
     int getNextState ()          override;
     void resetState ()           override;
 
-    private:
+    //VARIABLES
     int nextState;
 
     sf::Font            textFont;

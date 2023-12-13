@@ -42,15 +42,15 @@ class GameState : public State
         GameState& operator= (const GameState&) = delete;
     
     
-        // FUNCTIONS
+
+    private:
+        //  FUNCTIONS
         void handleEvent      (sf::Event) override;
         void updateLogic      ()          override;
         void renderFrame      ()          override;
         int  getNextState     ()          override;
         void resetState       ()          override;
 
-    private:
-        //  FUNCTIONS
         void windowPanning     (bool);
         void enemyPlay        ();
         void spawnFriendly    (std::string);

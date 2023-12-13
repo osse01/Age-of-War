@@ -18,6 +18,7 @@ class LoseState: public State
     LoseState(const LoseState&) = delete;
     LoseState& operator= (const LoseState&) = delete;
 
+    private:
     // FUNCTIONS
     void handleEvent (sf::Event) override;
     void updateLogic ()          override;
@@ -25,7 +26,7 @@ class LoseState: public State
     int getNextState ()          override;
     void resetState ()           override;
 
-    private:
+    //VARIABELS
     int nextState;
 
     sf::Font            textFont;

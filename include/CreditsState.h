@@ -18,17 +18,17 @@ public:
                   std::shared_ptr<sf::Time>);
     ~CreditsState() override;
     CreditsState( const CreditsState& ) = delete;
-    CreditsState& operator= ( const CreditsState& ) = delete;
+    CreditsState& operator= ( const CreditsState& ) = delete;  
 
+private:
     // FUNCTIONS
     void    handleEvent    ( sf::Event ) override;
     void    updateLogic    ()            override;
     void    renderFrame    ()            override;
     int     getNextState   ()            override;
-    void    resetState     ()            override;  
-
-private:
+    void    resetState     ()            override;
     void    setupCanvas    ();
+    
     // VARIABLES
     std::vector<sf::Text>   nameList;
     sf::RenderTexture       canvas;
