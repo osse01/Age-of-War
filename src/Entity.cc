@@ -99,7 +99,7 @@ sf::RectangleShape Entity::getBox()
 
 void Entity::playSound(std::map<std::string, std::shared_ptr<sf::Sound>> sound)
 {
-    if (rectSourceSprite.left%(12*128) == 4*128 && spriteCounter == 0)
+    if (rectSourceSprite.left%(12*128) == 4*128 && spriteCounter == 0 && troopType!= "Ranged")
     {
         
         sound[troopType + std::to_string(audioNumber)]->play();
