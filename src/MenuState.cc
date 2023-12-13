@@ -29,7 +29,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         gameTitle.setFont(textFont);
-        gameTitle.setString("AGE OF WAR");
+        gameTitle.setString("BATTLE OF THE NORTH");
         gameTitle.setCharacterSize(75);
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setPosition(window->getSize().x / 2, window->getSize().y / 3);
