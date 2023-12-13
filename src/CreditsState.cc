@@ -8,7 +8,7 @@ CreditsState::CreditsState( std::shared_ptr<sf::RenderWindow> window,
                             std::shared_ptr<sf::Time> frameDuration )
 :   
     // Data Member Initialization List
-    //---------------------------------------------------------------
+    //--------------------------------------------------------
     State( window, dataMap, gameMusic, sound, frameDuration ),
 
     nameList            {},
@@ -21,10 +21,9 @@ CreditsState::CreditsState( std::shared_ptr<sf::RenderWindow> window,
     fadeSprite          {},
     nameFont            {},
     textFont            {},
-
     elapsedTime         { 0 },
     nextState           { CREDITS_STATE }
-    //---------------------------------------------------------------
+    //--------------------------------------------------------
 {
     // Load Background Image
     if(!backgroundTexture.loadFromFile(dataMap.files["Background"]))

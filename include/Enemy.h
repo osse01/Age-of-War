@@ -1,44 +1,47 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <experimental/random>
 #include "FileReader.h"
-#include <memory>
+
 #include <SFML/Graphics.hpp>
+#include <experimental/random>
+#include <memory>
+#include <iostream>
 
 class Enemy
 {
-    public:
-        Enemy(FileReader::Data&, std::shared_ptr<sf::Time>);
-        ~Enemy() = default;
+public:
+    // CONSTRUCTORS // DESTRUCTORS
+    Enemy( FileReader::Data&, std::shared_ptr<sf::Time> );
+    ~Enemy() = default;
 
-        std::vector<int> enemyPlay();
+    // FUNCTIONS
+    std::vector<int> enemyPlay   ();
 
-    private:
-        std::vector<int> spawnAlgo();
-        void             updateTroop();
+private:
+    // FUNCTIONS
+    std::vector<int> spawnAlgo   ();
+    void             updateTroop ();
 
-        int listSize;
-        int waveSize;
-        int waveLimit;
-        int waveCounter;
-        float delay; 
-        float turretTime;
-        float upgradeTime;
+    // VARIABLES
+    int                         listSize;
+    int                         waveSize;
+    int                         waveLimit;
+    int                         waveCounter;
+    float                       delay; 
+    float                       turretTime;
+    float                       upgradeTime;
 
-        float delayCounter;
-        float totalTime;
-        float lastTime;
+    float                       delayCounter;
+    float                       totalTime;
+    float                       lastTime;
 
-        bool turret;
-        bool HP;
-        std::vector<int> spawnList;
-        std::shared_ptr<sf::Time> frameDuration;
+    bool                        turret;
+    bool                        HP;
 
-        FileReader::Data& data;
-
-
+    std::shared_ptr<sf::Time>   frameDuration;
+    std::vector<int>            spawnList;
+    FileReader::Data&           data;
 };
-
 
 #endif

@@ -19,9 +19,9 @@ public:
     int             getDeathValue()                     override;
     bool            inRange( std::shared_ptr<Entity> )  override;
 
-    virtual void    showHP(std::shared_ptr<sf::RenderWindow>){};
+    virtual void    showHP( std::shared_ptr<sf::RenderWindow> ){};
 
-    virtual void    handleCollision(int, int)   = 0;
+    virtual void    handleCollision( int, int )   = 0;
     virtual void    updatePos()                 = 0;
 
 
