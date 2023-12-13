@@ -1,10 +1,19 @@
 #include "../include/Dynamic.h"
 
 
-Dynamic::Dynamic(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-    : Entity::Entity(data, troopType, friendly, pos, frameDuration),
-      DAMAGE { data.stats[troopType]["damage"] }, ATTACK_SPEED { data.stats[troopType]["attackSpeed"] },
-      RANGE { data.stats[troopType]["range"] * data.windowScale }, DEATH_VALUE { data.stats[troopType]["deathValue"] }
+Dynamic::Dynamic( FileReader::Data& data, std::string troopType, 
+                  bool friendly, sf::Vector2f pos, 
+                  std::shared_ptr<sf::Time> frameDuration )
+:
+  // Data Member Initialization List
+  //------------------------------------------------------------------
+  Entity::Entity( data, troopType, friendly, pos, frameDuration ),
+
+  DAMAGE        { data.stats[troopType]["damage"]                   },
+  ATTACK_SPEED  { data.stats[troopType]["attackSpeed"]              },
+  RANGE         { data.stats[troopType]["range"] * data.windowScale },
+  DEATH_VALUE   { data.stats[troopType]["deathValue"]               }
+  //------------------------------------------------------------------
 {}
 
 int Dynamic::getDamage()
