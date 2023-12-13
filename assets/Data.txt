@@ -22,10 +22,10 @@ Ranged
     filename      ranged_sprite_sheet.png
 
 Tank
-    damage        75
-    hp            425
+    damage        100
+    hp            500
     movementSpeed 70
-    attackSpeed   70
+    attackSpeed   35
     cost          150
     deathValue    175
     boxSize       64 80

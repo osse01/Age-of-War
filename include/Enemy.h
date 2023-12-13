@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 #include <experimental/random>
 #include <memory>
-#include <iostream>
 
 class Enemy
 {

@@ -1,15 +1,29 @@
 #include "../include/Entity.h"
 
-#include <iostream>
-
-
 Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
     
-    : xpos { pos.x }, ypos { pos.y }, hp { data.stats[troopType]["hp"] }, isFriendly { friendly }, hasCollided { false },
-      actionState { 0 }, spriteCounter { 0 }, audioNumber{1}, texture{}, rectSourceSprite { sf::Vector2i(0,0),data.spriteDim[troopType] },
-      sprite {texture, rectSourceSprite},
-      boundingbox { sf::Vector2f(data.boxSize[troopType].x, data.boxSize[troopType].y) },
-      frameDuration {frameDuration}
+:
+    // Data Member Initialization List
+    //------------------------------------------------------------------
+    frameDuration       { frameDuration },
+    boundingbox         { sf::Vector2f(data.boxSize[troopType].x, 
+                          data.boxSize[troopType].y) },
+
+    rectSourceSprite    { sf::Vector2i(0,0),data.spriteDim[troopType] },
+    texture             {},
+
+    sprite              { texture, rectSourceSprite   },
+    hp                  { data.stats[troopType]["hp"] },
+
+    xpos                { pos.x    },
+    ypos                { pos.y    },
+    isFriendly          { friendly },
+    hasCollided         { false    },
+
+    actionState         { 0 },
+    spriteCounter       { 0 },
+    audioNumber         { 1 }
+    //------------------------------------------------------------------
 {
     // Load Friendly or Enemy Image
     std::string friendOrFoe = (isFriendly) ? "friendly_" : "enemy_";
