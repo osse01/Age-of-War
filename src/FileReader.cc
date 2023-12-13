@@ -1,8 +1,12 @@
 #include "../include/FileReader.h"
-#include <iostream>
 
 FileReader::FileReader(std::shared_ptr<sf::RenderWindow> window)
-    : windowScale {window->getSize().x/1920.f}, data{}
+:
+    // Data Member Initialization List
+    //---------------------------------------
+    windowScale { window->getSize().x/1920.f }, 
+    data        {}
+    //---------------------------------------
 {}
 
 FileReader::Data FileReader::returnData(const std::string& filename)
@@ -16,9 +20,8 @@ FileReader::Data FileReader::returnData(const std::string& filename)
 
     if (!file.is_open()) {
         throw std::logic_error("\n  >> Error: Failed to open the file <" 
-        + filename +  "> in FileReader::readFile()");
+        + filename +  "> in FileReader::returnData()");
     }
-
     else
     {
         Data data{};
