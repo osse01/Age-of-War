@@ -1,11 +1,30 @@
 #include "../include/CreditsState.h"
 
-CreditsState::CreditsState(std::shared_ptr<sf::RenderWindow> window, FileReader::Data& dataMap,
-     std::shared_ptr<sf::Music> gameMusic, std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
-//  ---------------------------------------------
-:   State(window, dataMap, gameMusic, sound, frameDuration), nextState{ CREDITS_STATE }, elapsedTime{ 0 },
-    nameList{}, nameFont{}, textFont{}, backgroundTexture{}, fadeTexture{}, backgroundSprite1{}, backgroundSprite2{}, canvas{},
-    canvasSprite{}, fadeSprite{}
+CreditsState::CreditsState( std::shared_ptr<sf::RenderWindow> window,
+                            FileReader::Data& dataMap,
+                            std::shared_ptr<sf::Music> gameMusic,
+                            std::map<std::string, 
+                            std::shared_ptr<sf::Sound>> sound, 
+                            std::shared_ptr<sf::Time> frameDuration)
+:   
+    // Data Member Initialization List
+    //---------------------------------------------------------------
+    State(window, dataMap, gameMusic, sound, frameDuration),
+
+    nameList            {},
+    canvas              {},
+    backgroundTexture   {},
+    fadeTexture         {},
+    backgroundSprite1   {}, 
+    backgroundSprite2   {},
+    canvasSprite        {},
+    fadeSprite          {},
+    nameFont            {},
+    textFont            {},
+
+    elapsedTime         { 0 },
+    nextState           { CREDITS_STATE }
+    //---------------------------------------------------------------
 {
     // Load Background Image
     if(!backgroundTexture.loadFromFile(dataMap.files["Background"]))
