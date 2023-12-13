@@ -39,12 +39,11 @@ public:
 
     sf::Sprite & getSprite      ()              override;
 
-    void    takeDamage          ( int );
-
 private:
     // FUNCTIONS
     sf::Sprite  setHpBar        ();
     void        changeSprite    ();
+    void    takeDamage          ( int );
 
     // VARIABLES
     std::shared_ptr<sf::RenderTexture>  renderTexture;

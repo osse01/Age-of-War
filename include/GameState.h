@@ -47,15 +47,15 @@ class GameState : public State
         void updateLogic      ()          override;
         void renderFrame      ()          override;
         int  getNextState     ()          override;
-        void spawnFriendly    (std::string);
-        void spawnEnemy       (int);
-        void handleCollisions ();
         void resetState       ()          override;
-        void enemyPlay        ();
 
     private:
         //  FUNCTIONS
         void windowPanning     (bool);
+        void enemyPlay        ();
+        void spawnFriendly    (std::string);
+        void spawnEnemy       (int);
+        void handleCollisions ();
 
         // VARIABLES
 

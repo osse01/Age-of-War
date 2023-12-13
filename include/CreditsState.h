@@ -26,9 +26,9 @@ public:
     void    renderFrame    ()            override;
     int     getNextState   ()            override;
     void    resetState     ()            override;  
-    void    setupCanvas    ();
 
 private:
+    void    setupCanvas    ();
     // VARIABLES
     std::vector<sf::Text>   nameList;
     sf::RenderTexture       canvas;
