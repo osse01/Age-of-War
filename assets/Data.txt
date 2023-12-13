@@ -30,7 +30,7 @@ Tank
     deathValue    175
     boxSize       64 80
     spriteDim     128 128
-    filename      melee_sprite_sheet.png
+    filename      tank_sprite_sheet.png
 
 Base
     hp            1500
