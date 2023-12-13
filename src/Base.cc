@@ -5,7 +5,7 @@ Base::Base( FileReader::Data& dataMap, bool friendly,sf::Vector2f pos,
     :
     // Data Member Initialization List
     //--------------------------------------------------------------
-    Entity::Entity ( dataMap, "Base", friendly, pos, frameDuration),
+    Entity::Entity ( dataMap, "Base", friendly, pos, frameDuration ),
 
     renderTexture   { std::make_shared<sf::RenderTexture>() },
     hpTexture       { std::make_shared<sf::RenderTexture>() },

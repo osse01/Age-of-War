@@ -5,11 +5,11 @@ CreditsState::CreditsState( std::shared_ptr<sf::RenderWindow> window,
                             std::shared_ptr<sf::Music> gameMusic,
                             std::map<std::string, 
                             std::shared_ptr<sf::Sound>> sound, 
-                            std::shared_ptr<sf::Time> frameDuration)
+                            std::shared_ptr<sf::Time> frameDuration )
 :   
     // Data Member Initialization List
     //---------------------------------------------------------------
-    State(window, dataMap, gameMusic, sound, frameDuration),
+    State( window, dataMap, gameMusic, sound, frameDuration ),
 
     nameList            {},
     canvas              {},

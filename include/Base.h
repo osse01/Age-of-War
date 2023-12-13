@@ -12,24 +12,25 @@ class Base : public Entity
 //  This Class Handles ...
 {
 public:
-    // CONSTRUCTORS
+    // CONSTRUCTORS / DESTRUCTORS
     Base( FileReader::Data&,
           bool, sf::Vector2f,
-          std::shared_ptr<sf::Time>);
+          std::shared_ptr<sf::Time> );
     ~Base() = default;
 
     // FUNCTIONS
-    std::shared_ptr<Projectile> spawnProjectile(
-                        FileReader::Data&, 
-                        std::shared_ptr<sf::Time>, 
-                        sf::Vector2f)                   override;
 
     bool buyTurret  ( FileReader::Data&, bool,
                         std::shared_ptr<sf::Time>,
                         std::map<std::string,
-                        std::shared_ptr<sf::Sound>>)    override;
+                        std::shared_ptr<sf::Sound>> ) override;
 
-    bool inRange    ( std::shared_ptr<Entity> other )   override;
+    bool inRange    ( std::shared_ptr<Entity> other ) override;
+
+    std::shared_ptr<Projectile> spawnProjectile(
+                        FileReader::Data&, 
+                        std::shared_ptr<sf::Time>, 
+                        sf::Vector2f )          override;
 
     void    handleCollision     ( int, int )    override;
     void    updatePos           ()              override;
@@ -38,12 +39,12 @@ public:
 
     sf::Sprite & getSprite      ()              override;
 
-    void  takeDamage            ( int );
+    void    takeDamage          ( int );
 
 private:
     // FUNCTIONS
-    sf::Sprite setHpBar();
-    void changeSprite();
+    sf::Sprite  setHpBar        ();
+    void        changeSprite    ();
 
     // VARIABLES
     std::shared_ptr<sf::RenderTexture>  renderTexture;

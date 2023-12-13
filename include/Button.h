@@ -15,15 +15,15 @@ public:
     // CONSTRUCTORS / DESTRUCTORS
     Button( sf::Vector2f const, sf::Vector2f const, 
             sf::Color    const, sf::Color    const,
-            std::string  const, sf::Font&);
+            std::string  const, sf::Font& );
 
     Button( sf::Vector2f const, sf::Vector2f const,
             sf::Sprite& , sf::Color const, 
-            bool=true, bool = false, float = 0);
+            bool=true, bool = false, float = 0 );
 
     Button( sf::Vector2f const, 
             sf::Vector2f const,
-            sf::Color    const);
+            sf::Color    const );
 
     ~Button() = default;
 
@@ -51,7 +51,6 @@ private:
     sf::Sprite                          buttonSprite;
     sf::Sprite                          sprite;
     sf::Color                           fillColor;
-
 
     float                               currentCooldown;
     float                               cooldown;
