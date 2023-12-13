@@ -131,7 +131,7 @@ void GameState::windowPanning(bool direction)
 //  direction = false => move right
 //  ---------------------------------------------
 {
-    float   speed       { 100 };
+    float   speed       { 200 };
     float   woodsScale      { 1 - woodsSprite.getGlobalBounds().width
                               / groundSprite.getGlobalBounds().width };
 
