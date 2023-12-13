@@ -2,10 +2,15 @@
 
 #include <cmath>
 
-Turret::Turret(FileReader::Data & data, bool isFriendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration, std::map<std::string, std::shared_ptr<sf::Sound>> sound)
-: Dynamic(data, "Turret", isFriendly, pos, frameDuration), angle { 30 },
-  g {1000}, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, currentCooldown { specialAttackCooldown },
-   initAngle{angle}, SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, waitTime {0.f}, movingUp {true}, sound { sound }
+Turret::Turret(FileReader::Data & data, 
+               bool isFriendly, sf::Vector2f pos, 
+               std::shared_ptr<sf::Time> frameDuration,
+               std::map<std::string, std::shared_ptr<sf::Sound>> sound)
+: Dynamic(data, "Turret", isFriendly, pos, frameDuration), 
+  angle { 30 }, g {1000}, specialAttackCooldown { data.stats["Turret"]["cooldown"] }, 
+  currentCooldown { specialAttackCooldown }, initAngle{angle},
+  SPECIAL_ATTACK_SPEED { data.stats["Turret"]["specialAttackSpeed"] }, 
+  waitTime {0.f}, movingUp {true}, sound { sound }
 {
     sprite.setOrigin(data.stats["Turret"]["originX"], data.stats["Turret"]["originY"]);
 }

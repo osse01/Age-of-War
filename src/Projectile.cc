@@ -2,7 +2,9 @@
 #include "cmath"
 #include <iostream>
 
-Projectile::Projectile(FileReader::Data& data, std::string projectileType, bool friendly, sf::Vector2f pos, float angle, std::shared_ptr<sf::Time> frameDuration)
+Projectile::Projectile(FileReader::Data& data, std::string projectileType, 
+                       bool friendly, sf::Vector2f pos, float angle,
+                       std::shared_ptr<sf::Time> frameDuration)
 : DAMAGE { data.stats[projectileType]["damage"] }, MOVEMENTSPEED { data.stats[projectileType]["movementSpeed"] }, 
   INITIAL_ANGLE {angle}, xpos { pos.x }, ypos { pos.y }, dx {0.f}, dy {0.f}, x0 {xpos}, y0 {ypos}, hp { data.stats[projectileType]["hp"] }, 
   isFriendly { friendly }, hasCollided { false }, elapsedTime { 0.f }, texture {}, sprite {}, boundingbox { data.boxSize[projectileType] },

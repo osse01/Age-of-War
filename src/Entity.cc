@@ -1,6 +1,8 @@
 #include "../include/Entity.h"
 
-Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+Entity::Entity(FileReader::Data& data, std::string troopType, 
+               bool friendly, sf::Vector2f pos, 
+               std::shared_ptr<sf::Time> frameDuration)
     
 :
     // Data Member Initialization List
