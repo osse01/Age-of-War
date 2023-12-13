@@ -39,7 +39,8 @@ CreditsState::CreditsState( std::shared_ptr<sf::RenderWindow> window,
     window->getSize().y /backgroundSprite2.getGlobalBounds().height);
     
     // Load Fonts
-    if(!(nameFont.loadFromFile(dataMap.files["CreditFont"]) && textFont.loadFromFile(dataMap.files["GameFont"])))
+    if(!(nameFont.loadFromFile(dataMap.files["CreditFont"]) &&
+         textFont.loadFromFile(dataMap.files["GameFont"])))
     {
         throw std::logic_error("    >> Error: Could Not Find font file(s)."
          "Error in CreditsState::CreditsState().");
@@ -55,7 +56,8 @@ CreditsState::CreditsState( std::shared_ptr<sf::RenderWindow> window,
     
     // Setup Vector of Contributors
     const std::vector<std::string> stringList {"Oskar Bollner", "Logan Eriksson", 
-    "Adam Hallberg", "Oscar Jemsson", "Johanna Nilsson", "Filip Ripstrand", "Eric Ekstrom", "Tim Lundqvist"};
+    "Adam Hallberg", "Oscar Jemsson", "Johanna Nilsson", "Filip Ripstrand", 
+    "Eric Ekstrom", "Tim Lundqvist"};
     for ( auto &name : stringList)
     {
         nameList.push_back(sf::Text{name, nameFont, 50});
@@ -73,7 +75,8 @@ CreditsState::~CreditsState()
 void CreditsState::setupCanvas()
 //  ---------------------------------------------
 {
-    canvas.create(window->getSize().x, window->getSize().y *(4) + fadeSprite.getGlobalBounds().height );    
+    canvas.create(window->getSize().x,
+                  window->getSize().y *(4) + fadeSprite.getGlobalBounds().height );    
 
     // Set Header Appearance and Position
     sf::Text header{"Credits", nameFont, 150};
@@ -85,7 +88,8 @@ void CreditsState::setupCanvas()
 
     //  Setup fadein to Menu
     fadeSprite.setOrigin(fadeSprite.getGlobalBounds().width/2, fadeSprite.getGlobalBounds().height);
-    fadeSprite.setPosition(canvas.getSize().x/2, canvas.getSize().y - backgroundSprite1.getGlobalBounds().height);
+    fadeSprite.setPosition(canvas.getSize().x/2,
+                           canvas.getSize().y - backgroundSprite1.getGlobalBounds().height);
     canvas.draw(fadeSprite);
 
     // Set Position and Color for Names of Main contributers
@@ -93,14 +97,16 @@ void CreditsState::setupCanvas()
     {
         nameList.at(i).setPosition(canvas.getSize().x/2, window->getSize().y *(1.5 + 0.25*i));
         nameList.at(i).setFillColor(sf::Color(255, 255, 255));
-        nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2, nameList.at(i).getGlobalBounds().height/2 );
+        nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2,
+                                 nameList.at(i).getGlobalBounds().height/2 );
 
         canvas.draw(nameList.at(i));
     }
 
     //  Special contributers
     sf::Text second_header{"Special Thanks", nameFont, 150};
-    second_header.setOrigin(second_header.getGlobalBounds().width/2, second_header.getGlobalBounds().height/2 );
+    second_header.setOrigin(second_header.getGlobalBounds().width/2,
+                            second_header.getGlobalBounds().height/2 );
     second_header.setPosition(canvas.getSize().x/2,  window->getSize().y *(1.5 + 0.25*6) );
     second_header.setFillColor(sf::Color(255, 255, 255));
     
@@ -111,7 +117,8 @@ void CreditsState::setupCanvas()
     {
         nameList.at(i).setPosition(canvas.getSize().x/2, window->getSize().y *(1.5 + 0.25*(i + 1)));
         nameList.at(i).setFillColor(sf::Color(255, 255, 255));
-        nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2, nameList.at(i).getGlobalBounds().height/2 );
+        nameList.at(i).setOrigin(nameList.at(i).getGlobalBounds().width/2,
+                                 nameList.at(i).getGlobalBounds().height/2 );
 
         canvas.draw(nameList.at(i));
     }
@@ -120,7 +127,8 @@ void CreditsState::setupCanvas()
     header3.setOrigin(header3.getGlobalBounds().width/2, header3.getGlobalBounds().height/2 );
     header3.setPosition(canvas.getSize().x/2, window->getSize().y);
     header3.setFillColor(sf::Color(255, 255, 255));
-    header3.setPosition(canvas.getSize().x/2, fadeSprite.getGlobalBounds().top + fadeSprite.getGlobalBounds().height/1.5 );
+    header3.setPosition(canvas.getSize().x/2, 
+                        fadeSprite.getGlobalBounds().top + fadeSprite.getGlobalBounds().height/1.5 );
     canvas.draw(header3);
 
     //  Setup menu at end
@@ -143,7 +151,8 @@ int CreditsState::getNextState()
 void CreditsState::updateLogic()
 //  ---------------------------------------------
 {
-    if ( window->getSize().y >= canvasSprite.getGlobalBounds().height + canvasSprite.getGlobalBounds().top  )
+    if ( window->getSize().y >= canvasSprite.getGlobalBounds().height + 
+                                canvasSprite.getGlobalBounds().top  )
     {
         
         nextState = MENU_STATE;
@@ -187,7 +196,7 @@ void CreditsState::renderFrame()
 
     //Set Background Position 
     backgroundSprite1.setPosition(backgroundSprite1.getGlobalBounds().left,
-    backgroundSprite1.getGlobalBounds().top - 60 * frameDuration->asSeconds()); // Make slower later 40 första 30 andra orginal
+    backgroundSprite1.getGlobalBounds().top - 60 * frameDuration->asSeconds());
     
     // Set Canvas Position
     canvasSprite.setPosition(backgroundSprite1.getGlobalBounds().left,
