@@ -114,7 +114,7 @@ Ground
     filename assets/ground.png
     
 Trees
-    spriteScale 1
+    spriteScale 4
     filename assets/trees.png
 
 GameCoin
