@@ -11,9 +11,9 @@ Melee
 
 Ranged
     damage        0
-    hp            150
+    hp            125
     movementSpeed 70
-    range         300
+    range         200
     attackSpeed   70
     cost          75
     deathValue    85
@@ -42,10 +42,10 @@ Base
 
 Turret
     range        800
-    cost         600
+    cost         900
     attackSpeed  70
     specialAttackSpeed 1100
-    cooldown     40
+    cooldown     60
     specialAngle 75
     originX      96
     originY      32
@@ -53,7 +53,7 @@ Turret
     filename canon_sprite_sheet.png
 
 RangedProjectile
-    damage        50
+    damage        40
     hp            1
     movementSpeed 1250
     boxSize       5 5
@@ -61,7 +61,7 @@ RangedProjectile
     filename      assets/musketBall.png
 
 TurretProjectile
-    damage        50
+    damage        60
     hp            1
     movementSpeed 1250
     boxSize       20 20
@@ -69,7 +69,7 @@ TurretProjectile
     filename      assets/canonBall.png 
 
 SpecialProjectile
-    damage        250
+    damage        300
     hp            1
     movementSpeed 2000
     boxSize       20 20
@@ -163,9 +163,10 @@ Enemy
     listSize    3
     waveSize    2
     waveLimit   2
-    timeDelay   80
-    turretTime  10
-    upgradeTime 8
+    timeDelay   70
+    turretTime  20
+    upgradeTime 7
+    enemyBaseHP 1500
 
 StartStats
     gold 200

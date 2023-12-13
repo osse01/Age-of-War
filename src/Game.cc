@@ -25,7 +25,6 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     // Load required data
     FileReader reader {window};
     dataMap = reader.returnData("assets/Data.txt");
-    
 
     // Open Music Files
     if (!music->openFromFile(dataMap.files["GameMusic"]))
