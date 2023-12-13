@@ -24,6 +24,8 @@ Enemy::Enemy( FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration )
     data            { data }
     //---------------------------------------------------------------------
 {
+    data.stats["Base"]["hp"] = data.stats["Enemy"]["enemyBaseHP"];
+
     // Create List with Troops
     for(int i = 0; i < listSize; i++)
     {
@@ -78,10 +80,14 @@ std::vector<int> Enemy::spawnAlgo()
 
 void Enemy::updateTroop()
 {
-    std::string tmp {HP ? "hp" : "damage"};
-    int value {HP ? 3 : 1};
-    data.stats["Melee"][tmp] += value;
-    data.stats["Ranged"][tmp] += value;
-    data.stats["Tank"][tmp] += value;
-    HP = !HP;
+    if (totalTime < 300)
+    {
+        std::string tmp {HP ? "hp" : "damage"};
+        int value {HP ? 5 : 2};
+        data.stats["Melee"][tmp] += value;
+        data.stats["Ranged"][tmp] += value;
+        data.stats["Tank"][tmp] += value;
+        HP = !HP; 
+    }
+    
 }
