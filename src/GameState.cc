@@ -76,6 +76,9 @@ void GameState::handleEvent(sf::Event event)
                 case sf::Keyboard::Escape:
                     nextState = PAUSE_STATE;
                     break;
+                case sf::Keyboard::T:
+                    friendlyVector.back()->buyTurret(dataMap, true, frameDuration, sound);
+                    break;
 
                 default:
                     break;
