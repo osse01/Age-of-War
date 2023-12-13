@@ -144,14 +144,23 @@ specialAttack
 settingsIcon
     filename assets/settings.png
 
-sword1SFX
+Melee1SFX
     filename assets/SFX/sword1.ogg
 
-sword2SFX
+Melee2SFX
     filename assets/SFX/sword2.ogg
 
-sword3SFX
+Melee3SFX
     filename assets/SFX/sword3.ogg
+
+Tank1SFX
+    filename assets/SFX/axe1.ogg
+
+Tank2SFX
+    filename assets/SFX/axe1.ogg
+
+Tank3SFX
+    filename assets/SFX/axe1.ogg
 
 turretClickSFX
     filename assets/SFX/turretClick.ogg

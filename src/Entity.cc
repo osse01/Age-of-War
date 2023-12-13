@@ -13,6 +13,7 @@ Entity::Entity(FileReader::Data& data, std::string troopType, bool friendly, sf:
     texture             {},
 
     sprite              { texture, rectSourceSprite   },
+    troopType           { troopType },
     hp                  { data.stats[troopType]["hp"] },
 
     xpos                { pos.x    },
@@ -100,8 +101,8 @@ void Entity::playSound(std::map<std::string, std::shared_ptr<sf::Sound>> sound)
 {
     if (rectSourceSprite.left%(12*128) == 4*128 && spriteCounter == 0)
     {
-
-        sound["sword" + std::to_string(audioNumber)]->play();
+        
+        sound[troopType + std::to_string(audioNumber)]->play();
         audioNumber = std::experimental::randint(1,3);
     }
     

@@ -52,6 +52,8 @@ protected:
     sf::Texture                 texture;
     sf::Sprite                  sprite;
     
+    std::string                 troopType;
+
     float                       hp;
     float                       xpos;
     float                       ypos;
