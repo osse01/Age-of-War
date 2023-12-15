@@ -1,17 +1,31 @@
 #include "../include/Enemy.h"
-#include <iostream>
 
+Enemy::Enemy( FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration )
+: 
+    // Data Member Initialization List
+    //---------------------------------------------------------------------
+    listSize        { static_cast<int>(data.stats["Enemy"]["listSize"])  },
+    waveSize        { static_cast<int>(data.stats["Enemy"]["waveSize"])  },
+    waveLimit       { static_cast<int>(data.stats["Enemy"]["waveLimit"]) },
 
+    waveCounter     {0}, 
 
-Enemy::Enemy(FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration)
-: listSize{static_cast<int>(data.stats["Enemy"]["listSize"])},
-  waveSize{static_cast<int>(data.stats["Enemy"]["waveSize"])},
-  waveLimit{static_cast<int>(data.stats["Enemy"]["waveLimit"])},
-  waveCounter{0}, delay{data.stats["Enemy"]["timeDelay"]},
-  turretTime{data.stats["Enemy"]["turretTime"]},upgradeTime{data.stats["Enemy"]["upgradeTime"]},
-  delayCounter{delay}, totalTime{}, lastTime{totalTime + 1}, turret{true}, HP{true}, spawnList{},
-  frameDuration{frameDuration}, data{data}
+    delay           { data.stats["Enemy"]["timeDelay"]   },
+    turretTime      { data.stats["Enemy"]["turretTime"]  },
+    upgradeTime     { data.stats["Enemy"]["upgradeTime"] },
+
+    delayCounter    { delay }, 
+    totalTime       {},  
+    lastTime        { totalTime + 1 }, 
+    turret          { true }, 
+    HP              { true }, 
+    frameDuration   { frameDuration }, 
+    spawnList       {},
+    data            { data }
+    //---------------------------------------------------------------------
 {
+    data.stats["Base"]["hp"] = data.stats["Enemy"]["enemyBaseHP"];
+
     // Create List with Troops
     for(int i = 0; i < listSize; i++)
     {
@@ -66,10 +80,14 @@ std::vector<int> Enemy::spawnAlgo()
 
 void Enemy::updateTroop()
 {
-    std::string tmp {HP ? "hp" : "damage"};
-    int value {HP ? 3 : 1};
-    data.stats["Melee"][tmp] += value;
-    data.stats["Ranged"][tmp] += value;
-    data.stats["Tank"][tmp] += value;
-    HP = !HP;
+    if (totalTime < 300)
+    {
+        std::string tmp {HP ? "hp" : "damage"};
+        int value {HP ? 5 : 2};
+        data.stats["Melee"][tmp] += value;
+        data.stats["Ranged"][tmp] += value;
+        data.stats["Tank"][tmp] += value;
+        HP = !HP; 
+    }
+    
 }

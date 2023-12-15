@@ -1,11 +1,23 @@
 #include "../include/Base.h"
 
-Base::Base(FileReader::Data& dataMap,  bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
-    : Entity::Entity(dataMap, "Base", friendly, pos, frameDuration), turret {nullptr},
-    renderTexture {std::make_shared<sf::RenderTexture>()}, renderSprite {},
-    turretPos {}, maxHp {dataMap.stats["Base"]["hp"]}, maxCooldown { dataMap.stats["Turret"]["cooldown"] },
-    hpTexture {std::make_shared<sf::RenderTexture>()},
-    spriteSpeed {dataMap.stats["Base"]["spriteSpeed"]}
+Base::Base( FileReader::Data& dataMap, bool friendly,sf::Vector2f pos,
+            std::shared_ptr<sf::Time> frameDuration )
+    :
+    // Data Member Initialization List
+    //--------------------------------------------------------------
+    Entity::Entity ( dataMap, "Base", friendly, pos, frameDuration ),
+
+    renderTexture   { std::make_shared<sf::RenderTexture>() },
+    hpTexture       { std::make_shared<sf::RenderTexture>() },
+
+    turret          { nullptr },
+    turretPos       {},
+    renderSprite    {},
+
+    maxCooldown     { dataMap.stats["Turret"]["cooldown"]  },
+    spriteSpeed     { dataMap.stats["Base"]["spriteSpeed"] },
+    maxHp           { dataMap.stats["Base"]["hp"]          }
+    //-------------------------------------------------------------- 
 {
     actionState = OPEN_GATE;
     Entity::rectSourceSprite.left = 512*23;

@@ -4,7 +4,8 @@
 #include <cmath>
 
 PauseState::PauseState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap, std::shared_ptr<sf::Music> music, 
-                       std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration, sf::Texture& lastFrame)
+                       std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration,
+                       sf::Texture& lastFrame)
 :   State(screen, dataMap, music, sound, frameDuration), nextState{PAUSE_STATE},
     textFont {}, pausedText {}, greyOut {}, gamestateFrameTexture{lastFrame}, gamestateFrameSprite{}, gui { PAUSE_STATE, screen, dataMap }
 {

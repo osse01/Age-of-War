@@ -29,7 +29,7 @@ MenuState::MenuState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data&
     if(textFont.loadFromFile(dataMap.files["TitleFont"]))
     {
         gameTitle.setFont(textFont);
-        gameTitle.setString("AGE OF WAR");
+        gameTitle.setString("BATTLE OF THE NORTH");
         gameTitle.setCharacterSize(75);
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
         gameTitle.setPosition(window->getSize().x / 2, window->getSize().y / 3);
@@ -110,9 +110,7 @@ void MenuState::updateLogic()
 void MenuState::startAnimation()
 {
     double  step{1};
-    //// double  delay{0.5};
     double  stepBackground{1};
-    //// float   backgroundScale{1};
     sf::Event event{};
     
     while (step > 0 && stepBackground >0)
@@ -122,7 +120,6 @@ void MenuState::startAnimation()
         step -= 0.01;
         stepBackground -= 0.002;
         scale = std::pow(step, 2);
-        // backgroundScale = std::pow(stepBackground, 2);
 
 
         gameTitle.setOrigin(gameTitle.getLocalBounds().width / 2, gameTitle.getLocalBounds().height / 2);
@@ -131,10 +128,6 @@ void MenuState::startAnimation()
         instructionText.setOrigin(instructionText.getLocalBounds().width / 2, instructionText.getLocalBounds().height / 2);
         instructionText.setScale(zoomFactor*scale);
 
-        //if(sprite.getGlobalBounds().width >= window->getSize().x)
-        //{
-        //    sprite.setScale(zoomFactor*backgroundScale);    
-        //}
         window->pollEvent(event);
         if(event.type == sf::Event::KeyPressed)
         {

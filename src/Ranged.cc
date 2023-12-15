@@ -1,6 +1,7 @@
 #include "../include/Ranged.h"
 
-Ranged::Ranged(FileReader::Data& data, bool friendly, sf::Vector2f pos, std::shared_ptr<sf::Time> frameDuration)
+Ranged::Ranged(FileReader::Data& data, bool friendly, sf::Vector2f pos, 
+               std::shared_ptr<sf::Time> frameDuration)
  : Troop::Troop(data, "Ranged", friendly, pos, frameDuration)
 {}
 
@@ -20,8 +21,10 @@ std::shared_ptr<Projectile> Ranged::spawnProjectile(FileReader::Data& data,
    {
       // Set Projectile Position
       int tmp {isFriendly ? 1 : -1};
-      pos = sf::Vector2f(xpos + tmp * sprite.getGlobalBounds().width/2, ypos - boundingbox.getGlobalBounds().height/2);
-      projectile = std::make_shared<Projectile> (data, "RangedProjectile", Entity::isFriendly, pos, angle, frameDuration);
+      pos = sf::Vector2f(xpos + tmp * sprite.getGlobalBounds().width/2, 
+                         ypos - boundingbox.getGlobalBounds().height/2);
+      projectile = std::make_shared<Projectile> (data, "RangedProjectile", 
+                                                 Entity::isFriendly, pos, angle, frameDuration);
    }
 
    return projectile;

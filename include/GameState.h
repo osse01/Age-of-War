@@ -42,20 +42,20 @@ class GameState : public State
         GameState& operator= (const GameState&) = delete;
     
     
-        // FUNCTIONS
+
+    private:
+        //  FUNCTIONS
         void handleEvent      (sf::Event) override;
         void updateLogic      ()          override;
         void renderFrame      ()          override;
         int  getNextState     ()          override;
+        void resetState       ()          override;
+
+        void windowPanning     (bool);
+        void enemyPlay        ();
         void spawnFriendly    (std::string);
         void spawnEnemy       (int);
         void handleCollisions ();
-        void resetState       ()          override;
-        void enemyPlay        ();
-
-    private:
-        //  FUNCTIONS
-        void windowPanning     (bool);
 
         // VARIABLES
 
@@ -75,6 +75,8 @@ class GameState : public State
 
         int nextState;
         int gold;
+        bool turretAvailable;
+        
         GUI                 gui;
         FileReader::Data    enemyStats;
         Enemy               enemy;

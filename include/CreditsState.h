@@ -10,37 +10,39 @@
 
 class CreditsState: public State
 {
-    public:
+public:
     // CONSTRUCTORS / DESTRUCTORS
-    CreditsState(std::shared_ptr<sf::RenderWindow>, FileReader::Data&, std::shared_ptr<sf::Music>, 
-                 std::map<std::string, std::shared_ptr<sf::Sound>>, std::shared_ptr<sf::Time>);
+    CreditsState( std::shared_ptr<sf::RenderWindow>, 
+                  FileReader::Data&, std::shared_ptr<sf::Music>, 
+                  std::map<std::string, std::shared_ptr<sf::Sound>>, 
+                  std::shared_ptr<sf::Time>);
     ~CreditsState() override;
-    CreditsState(const CreditsState&) = delete;
-    CreditsState& operator= (const CreditsState&) = delete;
+    CreditsState( const CreditsState& ) = delete;
+    CreditsState& operator= ( const CreditsState& ) = delete;  
 
+private:
     // FUNCTIONS
-    void    handleEvent    (sf::Event) override;
-    void    updateLogic    ()          override;
-    void    renderFrame    ()          override;
-    int     getNextState   ()          override;
-    void    resetState     ()          override;  
+    void    handleEvent    ( sf::Event ) override;
+    void    updateLogic    ()            override;
+    void    renderFrame    ()            override;
+    int     getNextState   ()            override;
+    void    resetState     ()            override;
     void    setupCanvas    ();
+    
+    // VARIABLES
+    std::vector<sf::Text>   nameList;
+    sf::RenderTexture       canvas;
+    sf::Texture             backgroundTexture;
+    sf::Texture             fadeTexture;
+    sf::Sprite              backgroundSprite1;
+    sf::Sprite              backgroundSprite2;
+    sf::Sprite              canvasSprite;
+    sf::Sprite              fadeSprite;
+    sf::Font                nameFont;
+    sf::Font                textFont;
 
-    private:
-    int     nextState;
-    double  elapsedTime;
-
-    std::vector<sf::Text> nameList;
-
-    sf::Font            nameFont;
-    sf::Font            textFont;
-    sf::Texture         backgroundTexture;
-    sf::Texture         fadeTexture;
-    sf::Sprite          backgroundSprite1;
-    sf::Sprite          backgroundSprite2;
-    sf::RenderTexture   canvas;
-    sf::Sprite          canvasSprite;
-    sf::Sprite          fadeSprite;
+    double                  elapsedTime;
+    int                     nextState;
 
 };
 

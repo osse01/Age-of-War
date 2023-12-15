@@ -12,47 +12,52 @@ class Base : public Entity
 //  This Class Handles ...
 {
 public:
-//CONSTRUCTORS
-    Base(FileReader::Data&, bool , sf::Vector2f, std::shared_ptr<sf::Time>);
+    // CONSTRUCTORS / DESTRUCTORS
+    Base( FileReader::Data&,
+          bool, sf::Vector2f,
+          std::shared_ptr<sf::Time> );
     ~Base() = default;
 
-//FUNCTIONS
-std::shared_ptr<Projectile> spawnProjectile(FileReader::Data&, std::shared_ptr<sf::Time>, sf::Vector2f) override;
-void handleCollision(int, int) override;
-void updatePos()               override;
+    // FUNCTIONS
 
-sf::Sprite & getSprite()       override;
-bool        inRange( std::shared_ptr<Entity> other )        override;
+    bool buyTurret  ( FileReader::Data&, bool,
+                        std::shared_ptr<sf::Time>,
+                        std::map<std::string,
+                        std::shared_ptr<sf::Sound>> ) override;
 
-void  takeDamage(int);
-bool  buyTurret(FileReader::Data&, bool, std::shared_ptr<sf::Time>, std::map<std::string, std::shared_ptr<sf::Sound>>) override;
-void    specialAttack() override;
-float   getCurrentCooldown  () override;
-//void updateHp();
-//void getBaseStats();
+    bool inRange    ( std::shared_ptr<Entity> other ) override;
+
+    std::shared_ptr<Projectile> spawnProjectile(
+                        FileReader::Data&, 
+                        std::shared_ptr<sf::Time>, 
+                        sf::Vector2f )          override;
+
+    void    handleCollision     ( int, int )    override;
+    void    updatePos           ()              override;
+    void    specialAttack       ()              override;
+    float   getCurrentCooldown  ()              override;
+
+    sf::Sprite & getSprite      ()              override;
 
 private:
-sf::Sprite setHpBar();
-void changeSprite();
+    // FUNCTIONS
+    sf::Sprite  setHpBar        ();
+    void        changeSprite    ();
+    void    takeDamage          ( int );
 
-std::shared_ptr<Turret> turret;
-std::shared_ptr<sf::RenderTexture> renderTexture;
-sf::Sprite renderSprite;
-sf::Vector2f turretPos;
+    // VARIABLES
+    std::shared_ptr<sf::RenderTexture>  renderTexture;
+    std::shared_ptr<sf::RenderTexture>  hpTexture;
+    std::shared_ptr<Turret>             turret;
+    sf::Vector2f                        turretPos;
+    sf::Sprite                          renderSprite;
 
-float maxHp;
-float maxCooldown;
+    const static int                    IDLE       { 0 };
+    const static int                    OPEN_GATE  { 1 };
 
-std::shared_ptr<sf::RenderTexture> hpTexture;
-
-float spriteSpeed;
-
-const static int IDLE { 0 };
-const static int OPEN_GATE { 1 };
-
+    float                               maxCooldown;
+    float                               spriteSpeed;
+    float                               maxHp;
 };
-
-
-
 
 #endif

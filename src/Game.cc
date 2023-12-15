@@ -25,7 +25,6 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     // Load required data
     FileReader reader {window};
     dataMap = reader.returnData("assets/Data.txt");
-    
 
     // Open Music Files
     if (!music->openFromFile(dataMap.files["GameMusic"]))
@@ -53,7 +52,10 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     credtisMusic.setVolume(dataMap.stats["CreditsMusic"]["volume"]);
 
     // Adds all SFX to map with sf::Music 
-    std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot", "sword1", "sword2", "sword3", "turretClick" };
+    std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot",
+                                      "Melee1", "Melee2", "Melee3", "Tank1", "Tank2", "Tank3", 
+                                      "turretClick" };
+
     for ( const std::string & soundString : strings)
     {
         sound[soundString] = std::make_shared<sf::Sound>();

@@ -5,11 +5,13 @@
 #include <cmath>
 
 
-GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
+GameState::GameState(std::shared_ptr<sf::RenderWindow> screen, FileReader::Data& dataMap,  std::shared_ptr<sf::Music> music, 
+                     std::map<std::string, std::shared_ptr<sf::Sound>> sound, std::shared_ptr<sf::Time> frameDuration)
 :   State(screen, dataMap, music, sound, frameDuration), friendlyVector {}, enemyVector {}, projectileVector {},
     backgroundTexture {},  groundTexture{}, woodsTexture{}, backgroundSprite {}, groundSprite{}, woodsSprite {},
     view { sf::FloatRect(0, screen->getSize().y/13, screen->getSize().x/1.5, screen->getSize().y/1.5) },
-    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{static_cast<int>(dataMap.stats["StartStats"]["gold"])}, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
+    zoomFactor { sf::Vector2f( 0.9f, 0.6f ) }, nextState { GAME_STATE }, gold{static_cast<int>(dataMap.stats["StartStats"]["gold"])},
+    turretAvailable { true }, gui { GAME_STATE, screen, dataMap }, enemyStats{dataMap}, enemy{enemyStats, frameDuration}
 {
     music->play();
 
@@ -75,6 +77,9 @@ void GameState::handleEvent(sf::Event event)
                 case sf::Keyboard::Escape:
                     nextState = PAUSE_STATE;
                     break;
+                case sf::Keyboard::T:
+                    friendlyVector.back()->buyTurret(dataMap, true, frameDuration, sound);
+                    break;
 
                 default:
                     break;
@@ -130,7 +135,7 @@ void GameState::windowPanning(bool direction)
 //  direction = false => move right
 //  ---------------------------------------------
 {
-    float   speed       { 100 };
+    float   speed       { 200 };
     float   woodsScale      { 1 - woodsSprite.getGlobalBounds().width
                               / groundSprite.getGlobalBounds().width };
 
@@ -408,7 +413,7 @@ void GameState::renderFrame()
 
     // Render Stationary Graphics
     window->setView(window->getDefaultView());
-    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCurrentCooldown());
+    gui.draw(GAME_STATE, window, gold, friendlyVector.back()->getCurrentCooldown(), turretAvailable);
 }
 
 void GameState::resetState()
@@ -470,6 +475,7 @@ void GameState::spawnFriendly(std::string troopType)
         {
             // Remove Troop Cost from Player Gold
             gold -= dataMap.stats[troopType]["cost"];
+            turretAvailable = false;
         }
     }    
 }
