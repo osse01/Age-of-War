@@ -20,19 +20,17 @@ class Clickable
         Clickable(Clickable&&) noexcept = delete;
         Clickable& operator=(Clickable&&) noexcept = delete;
         
-
-
-        void draw(sf::RenderWindow& window);
         bool create(unsigned int width, unsigned int height);
+        virtual const sf::Vector2f& draw() = 0;
 
 // Getters
 
         // Return the enum Status of the Object
-        Clickable::Status getStatus()   const;
+        Clickable::Status getStatus()          const;
         // Return the position of the Object
         const sf::Vector2f& getPosition()      const;
         // Return the rotation of the Object
-        float getRotation()             const;
+        float getRotation()                    const;
         //Return the color of the Object
         const sf::Color& getColor()            const;
         // Return the size of the Object
@@ -44,7 +42,10 @@ class Clickable
         // Return the global bounds of the Object
         const sf::FloatRect& getGlobalBounds() const;
         // Return the enum Type of the Object
-        Type getType()                  const;
+        Type getType()                         const;
+        // Return the Sprite Object
+        const sf::Sprite& getSprite()          const;
+        const sf::Texture& getTexture()        const;
 
 // Setters
         

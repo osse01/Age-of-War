@@ -24,11 +24,6 @@ Clickable::Clickable(Type type)
     status = Idle;
 }
 
-void Clickable::draw(sf::RenderWindow& window)
-{
-    window.draw(renderSprite);
-}
-
 bool Clickable::create(unsigned int width, unsigned int height)
 {
     return renderTexture.create(width, height);
@@ -77,6 +72,17 @@ Clickable::Type Clickable::getType() const
 {
     return type;
 }
+
+const sf::Sprite& Clickable::getSprite() const
+{
+    return renderSprite;
+}
+
+const sf::Texture& Clickable::getTexture() const
+{
+    return renderTexture.getTexture();
+}
+
 
 void Clickable::setPosition(const sf::Vector2f& newPosition)
 {
