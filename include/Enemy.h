@@ -4,7 +4,6 @@
 #include "FileReader.h"
 
 #include <SFML/Graphics.hpp>
-
 #include <random>
 #include <memory>
 
@@ -43,6 +42,5 @@ private:
     std::vector<int>            spawnList;
     FileReader::Data&           data;
 };
-
 
 #endif
