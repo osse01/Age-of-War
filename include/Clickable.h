@@ -14,7 +14,7 @@ class Clickable
         Clickable(sf::Vector2f size, sf::Vector2f initPosition, Type type);
         Clickable(Type type);
 
-        virtual ~Clickable();
+        virtual ~Clickable() = default;
         Clickable(const Clickable&) = delete;
         Clickable& operator=(const Clickable&) = delete;
         Clickable(Clickable&&) noexcept = delete;
