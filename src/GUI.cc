@@ -282,7 +282,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                                     sf::Color(112, 58, 7) ));
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameMusic"]["volume"]/12.5 - 4), window->getSize().y/2), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["Music"]["volume"]/12.5 - 4), window->getSize().y/2), 
                                     sf::Color(112, 58, 7)));
         //Music Enabled
         optionsButtons.push_back(std::make_shared<Button>(
@@ -298,7 +298,7 @@ GUI::GUI(int currentState, std::shared_ptr<sf::RenderWindow> window, FileReader:
                                     sf::Color(112, 58, 7)));
         optionsButtons.push_back(std::make_shared<Button>(
                                     sf::Vector2f(buttonSize, buttonSize), 
-                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["GameSound"]["volume"]/12.5 - 4), window->getSize().y/2 + 1.2*buttonSize), 
+                                    sf::Vector2f(window->getSize().x/2 + buttonSize * (data.stats["Sound"]["volume"]/12.5 - 4), window->getSize().y/2 + 1.2*buttonSize), 
                                     sf::Color(112, 58, 7)));
         //Sound Enabled
         optionsButtons.push_back(std::make_shared<Button>(

@@ -76,22 +76,20 @@ SpecialProjectile
     spriteDim     32 32
     filename      assets/canonBall.png
 
-GameMusic
-    volume 20
+Music
+    volume 50
     enabled 1
+
+GameMusic
     filename assets/Age-of-War-Theme-Song.ogg
 
 MainMusic
-    volume 50
-    enabled 1
     filename assets/AgeOfWarMain.ogg
 
 CreditsMusic
-    volume 60
-    enabled 1
     filename assets/AgeOfWarCredits.ogg
 
-GameSound
+Sound
     volume 70
     enabled 1
 

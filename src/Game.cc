@@ -31,7 +31,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     {
         std::cout << "  >> Error: Could Not Find Music File. Error in Game::Game()." << std::endl;
     }
-    music->setVolume(dataMap.stats["GameMusic"]["volume"]);
+    music->setVolume(dataMap.stats["Music"]["volume"]);
     music->setLoop(true);
     
     if (!mainMusic.openFromFile(dataMap.files["MainMusic"]))
@@ -40,7 +40,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
     }
 
     mainMusic.setLoop(true);
-    mainMusic.setVolume(dataMap.stats["MainMusic"]["volume"]);
+    mainMusic.setVolume(dataMap.stats["Music"]["volume"]);
     mainMusic.play();
 
     if(!credtisMusic.openFromFile(dataMap.files["CreditsMusic"]))
@@ -49,7 +49,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
          "Error in CreditsState::CreditsState().");
     }
     credtisMusic.setLoop(false);
-    credtisMusic.setVolume(dataMap.stats["CreditsMusic"]["volume"]);
+    credtisMusic.setVolume(dataMap.stats["Music"]["volume"]);
 
     // Adds all SFX to map with sf::Music 
     std::vector<std::string> strings {"button", "buyTurret", "toggle", "gunshot",
@@ -66,7 +66,7 @@ Game::Game(std::string const & GAME_TITLE, unsigned gameWidth, unsigned gameHeig
         }
         soundBuffer.push_back( std::make_shared<sf::SoundBuffer>(tmpSoundBuffer) );
         sound[soundString]->setBuffer( *soundBuffer.back() );
-        sound[soundString]->setVolume(50);
+        sound[soundString]->setVolume(dataMap.stats["Sound"]["volume"]);
     }
     // Load Sound Files
     
@@ -118,6 +118,10 @@ void Game::startGame ()
         // Display Frame
         window->display();
 
+//"\x1B[2J\x1B[H"
+        // [2J clears the screen once, [H sets the cursor to the top left corner
+        std::cout << u8"\033[2J\033[1;1H" << "FPS: " << 1 / frameDurationPtr->asSeconds()  << std::endl;
+
     }
 }
 
@@ -157,6 +161,9 @@ void Game::updateLogic()
     cursorSprite.setPosition(mouse.getPosition(*window).x, mouse.getPosition(*window).y);
     // Let Curent State Update Logic
     states.top()->updateLogic();
+    credtisMusic.setVolume(dataMap.stats["Music"]["volume"]);
+    mainMusic.setVolume(dataMap.stats["Music"]["volume"]);
+    music->setVolume(dataMap.stats["Music"]["volume"]);
 }
 
 
@@ -180,13 +187,12 @@ void Game::getNextState()
         {
             // Remove all States Except Menu State
             case MENU_STATE:
+                mainMusic.play();
                 do
                 {
                     states.pop();
                 }
                 while(states.size() > 1);
-                credtisMusic.stop();
-                mainMusic.play();
                 break;
 
             // Remove Pause State or Create Game State
@@ -242,13 +248,11 @@ void Game::getNextState()
             case CREDITS_STATE:
                 mainMusic.stop();
                 credtisMusic.play();
-
                 states.top()->resetState();
                 ptr = std::make_unique<CreditsState>(window, dataMap, music, sound, frameDurationPtr);            
                 states.push(std::move(ptr));
                 break;
             case OPTIONS_STATE:
-                mainMusic.stop();
                 if(currentState == MENU_STATE) 
                 {
                     states.top()->resetState();
