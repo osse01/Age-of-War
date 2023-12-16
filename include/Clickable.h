@@ -1,10 +1,19 @@
+<<<<<<< Updated upstream
 #ifndef CLICKABLE.H
 #define CLICKABLE.h
+=======
+#ifndef CLICKABLE_H
+#define CLICKABLE_H
+>>>>>>> Stashed changes
 
 #include <SFML/Graphics.hpp>
 
 
+<<<<<<< Updated upstream
 class Clickable
+=======
+class Clickable : public sf::Transformable
+>>>>>>> Stashed changes
 {
     
     public:
@@ -84,4 +93,8 @@ class Clickable
 
 };
 
+<<<<<<< Updated upstream
 #endif
+=======
+#endif
+>>>>>>> Stashed changes
