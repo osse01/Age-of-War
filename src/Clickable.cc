@@ -143,7 +143,3 @@ void Clickable::setScale(float factor)
 {
     renderSprite.setScale(factor, factor);
 }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
