@@ -1,4 +1,5 @@
 #include "../include/Enemy.h"
+#include <random> // Include the random library
 
 Enemy::Enemy( FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration )
 : 
@@ -54,26 +55,33 @@ std::vector<int> Enemy::enemyPlay()
         lastTime++;
         updateTroop();
     }
-    delayCounter += std::experimental::randint(1,10)*(frameDuration->asSeconds());
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(1, 10); // define the range
+    delayCounter += distr(gen)*(frameDuration->asSeconds()); // generate numbers
     return play;
 }
 
 // Return Vector with Enemies
 std::vector<int> Enemy::spawnAlgo()
 {
-    int tmp{std::experimental::randint(1,waveSize)};
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distr(1, waveSize); // define the range
+    int tmp{distr(gen)}; // generate numbers
     std::vector<int> spawn{};
     waveCounter++;
     if(waveCounter == waveLimit)
     {
         spawnList.erase(spawnList.begin());
         waveCounter = 0;
-        spawnList.push_back(std::experimental::randint(4,6));
-
+        std::uniform_int_distribution<> distr(4, 6); // define the range
+        spawnList.push_back(distr(gen)); // generate numbers
     }
     for(int i = 0; i <= tmp; i++)
     {
-        spawn.push_back(spawnList.at(std::experimental::randint(0, static_cast<int>(spawnList.size()-1))));
+        std::uniform_int_distribution<> distr(0, static_cast<int>(spawnList.size()-1)); // define the range
+        spawn.push_back(spawnList.at(distr(gen))); // generate numbers
     }
     return spawn;
 }

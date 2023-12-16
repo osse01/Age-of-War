@@ -103,11 +103,12 @@ void Entity::playSound(std::map<std::string, std::shared_ptr<sf::Sound>> sound)
 {
     if (rectSourceSprite.left%(12*128) == 4*128 && spriteCounter == 0 && troopType!= "Ranged" && troopType!= "Base")
     {
-        
         sound[troopType + std::to_string(audioNumber)]->play();
-        audioNumber = std::experimental::randint(1,3);
+        std::random_device rd;
+        std::mt19937 gen(rd()); 
+        std::uniform_int_distribution<> distr(1, 3); 
+        audioNumber = distr(gen); 
     }
-    
 }
 
 // Return Entity HP
