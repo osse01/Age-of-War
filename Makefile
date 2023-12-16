@@ -1,6 +1,6 @@
 
 CC = g++
-CCFLAGS = -std=c++17 -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -fmax-errors=3 -g 
+CCFLAGS = -std=c++17 -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -fmax-errors=3 -g -O3 
 
 MAKEFLAGS := --jobs=$(shell nproc)
 
