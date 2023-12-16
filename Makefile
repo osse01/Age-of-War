@@ -1,6 +1,6 @@
 
-CC = clang++
-CCFLAGS = -std=c++17 -I/usr/local/Cellar/sfml/2.6.1/include -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -fmax-errors=3 -g -w
+CC = g++
+CCFLAGS = -std=c++17 -I/usr/local/Cellar/sfml/2.6.1/include -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -fmax-errors=3 -g -w -O3
 
 MAKEFLAGS := --jobs=$(shell nproc)
 
