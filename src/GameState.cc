@@ -73,7 +73,6 @@ void GameState::handleEvent(sf::Event event)
                 case sf::Keyboard::Num3:
                     spawnFriendly("Tank");
                     break;
-
                 case sf::Keyboard::Escape:
                     nextState = PAUSE_STATE;
                     break;
@@ -184,20 +183,23 @@ void GameState::updateLogic()
 
     // View Panning
     {
+        //  Check Panning
         sf::Mouse mouse {};
         float margin {window->getSize().x/20*dataMap.windowScale};
-        
+
             // Pan Left
-            if (mouse.getPosition(*window).x < margin)
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || mouse.getPosition(*window).x < margin)
             {
                 windowPanning(true);
             }
 
             // Pan Right
-            else if (mouse.getPosition(*window).x > window->getSize().x - margin)
+            else if (mouse.getPosition(*window).x > window->getSize().x - margin || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
                 windowPanning(false);
             }
+        
+
     }
     
     int i { 0 };
