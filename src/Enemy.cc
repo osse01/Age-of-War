@@ -1,5 +1,4 @@
 #include "../include/Enemy.h"
-#include <random> // Include the random library
 
 Enemy::Enemy( FileReader::Data& data, std::shared_ptr<sf::Time> frameDuration )
 : 
