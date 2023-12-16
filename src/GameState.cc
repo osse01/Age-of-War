@@ -188,13 +188,13 @@ void GameState::updateLogic()
         float margin {window->getSize().x/20*dataMap.windowScale};
         
             // Pan Left
-            if (mouse.getPosition(*window).x < margin)
+            if (mouse.getPosition(*window).x < margin || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             {
                 windowPanning(true);
             }
 
             // Pan Right
-            else if (mouse.getPosition(*window).x > window->getSize().x - margin)
+            else if (mouse.getPosition(*window).x > window->getSize().x - margin || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
                 windowPanning(false);
             }
